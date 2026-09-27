@@ -1,0 +1,7 @@
+# Deny direct access to secrets + OTP session files
+<FilesMatch "^(config\.php|_lib\.php)$">
+  Require all denied
+</FilesMatch>
+
+RewriteEngine On
+RewriteRule ^sessions/ - [F,L]

@@ -1,0 +1,83 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Outfit', system-ui, sans-serif;
+  --font-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+
+  /* Man Mandir–inspired Fusora palette */
+  --color-bb-blue: #3d1a22;
+  --color-bb-blue-dark: #2a1017;
+  --color-bb-blue-deep: #1a0a0e;
+  --color-bb-yellow: #e8dfd0;
+  --color-bb-link: #3d1a22;
+  --color-bb-gray: #f7f3ec;
+  --color-bb-border: #ddd4c6;
+  --color-bb-text: #1a1210;
+  --color-bb-muted: #6b5e56;
+  --color-bb-price: #1a1210;
+  --color-bb-save: #8b2e2e;
+
+  --color-fusora-wine: #3d1a22;
+  --color-fusora-wine-soft: #5c2a35;
+  --color-fusora-cream: #f7f3ec;
+  --color-fusora-ivory: #fbf8f3;
+  --color-fusora-gold: #b8956c;
+  --color-fusora-sand: #e8dfd0;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100svh;
+    font-family: var(--font-sans);
+    color: var(--color-bb-text);
+    background: var(--color-fusora-ivory);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  #root {
+    min-height: 100svh;
+    overflow-x: hidden;
+  }
+
+  button,
+  input,
+  a,
+  select,
+  textarea {
+    font: inherit;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  h1,
+  h2,
+  h3,
+  .font-serif {
+    font-family: var(--font-serif);
+    font-weight: 500;
+  }
+}
+
+@layer utilities {
+  .text-display {
+    font-family: var(--font-serif);
+    letter-spacing: -0.02em;
+  }
+
+  .safe-pb {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+}
