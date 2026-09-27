@@ -13,10 +13,10 @@ export function CheckoutPage() {
     cart,
     locationLabel,
     store,
-    clearCart,
     openLocationModal,
     user,
     isLoggedIn,
+    placeOrder,
   } = useStore()
   const [done, setDone] = useState<string | null>(null)
   const [form, setForm] = useState({
@@ -54,9 +54,18 @@ export function CheckoutPage() {
       setDone('Enter a valid 10-digit mobile number.')
       return
     }
-    const orderId = `FUS${Date.now().toString().slice(-8)}`
-    clearCart()
-    setDone(orderId)
+    const order = placeOrder({
+      name: form.name,
+      phone: form.phone,
+      email: form.email,
+      address: form.address,
+      payment: form.payment,
+    })
+    if (!order) {
+      setDone('Could not place order. Please try again.')
+      return
+    }
+    setDone(order.id)
   }
 
   if (done && done.startsWith('FUS')) {
@@ -75,16 +84,22 @@ export function CheckoutPage() {
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link
-            to="/deals"
+            to={`/orders/${done}`}
             className="rounded-full bg-bb-blue px-6 py-3 text-xs font-semibold tracking-[0.16em] text-[#f7f3ec] uppercase"
           >
-            Continue shopping
+            Track order
           </Link>
           <Link
-            to="/support"
+            to="/orders"
             className="rounded-full border border-bb-border px-6 py-3 text-xs font-semibold tracking-[0.16em] uppercase"
           >
-            Support
+            My orders
+          </Link>
+          <Link
+            to="/deals"
+            className="rounded-full border border-bb-border px-6 py-3 text-xs font-semibold tracking-[0.16em] uppercase"
+          >
+            Continue shopping
           </Link>
         </div>
       </main>

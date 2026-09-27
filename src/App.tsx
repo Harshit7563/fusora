@@ -11,6 +11,7 @@ import { DealsPage } from './pages/DealsPage'
 import { HomePage } from './pages/HomePage'
 import { MembershipsPage } from './pages/MembershipsPage'
 import { NotFoundPage } from './pages/NotFoundPage'
+import { OrderDetailPage, OrdersPage } from './pages/OrdersPage'
 import { ProductPage } from './pages/ProductPage'
 import { StoresPage } from './pages/StoresPage'
 import { SupportPage } from './pages/SupportPage'
@@ -35,6 +36,8 @@ export default function App() {
             <Route path="wishlist" element={<WishlistPage />} />
             <Route path="account" element={<AccountPage />} />
             <Route path="register" element={<AccountPage />} />
+            <Route path="orders" element={<OrdersPage />} />
+            <Route path="orders/:id" element={<OrderDetailPage />} />
             <Route path="support" element={<SupportPage />} />
             <Route path="policies" element={<PoliciesIndexPage />} />
             <Route path="policies/:slug" element={<PolicyPage />} />

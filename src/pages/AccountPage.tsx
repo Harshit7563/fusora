@@ -2,19 +2,28 @@ import {
   CheckCircle2,
   Eye,
   EyeOff,
+  Heart,
   Loader2,
   Lock,
+  LogOut,
   Mail,
   MapPin,
+  Package,
   Phone,
   ShieldCheck,
+  Truck,
   User,
 } from 'lucide-react'
-import { useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { SITE_DOMAIN, SUPPORT_EMAIL, SUPPORT_MAILTO } from '../brand'
 import { FusoraLogo } from '../components/FusoraLogo'
-import { useStore } from '../context/StoreContext'
+import {
+  ORDER_STATUS_LABEL,
+  useStore,
+} from '../context/StoreContext'
+import { formatMoney } from '../data'
+import { usePageTitle } from '../hooks/usePageTitle'
 
 type Mode = 'signin' | 'register'
 
@@ -38,21 +47,197 @@ const emptyOtp: OtpState = {
   error: false,
 }
 
+function AccountDashboard() {
+  usePageTitle('My account')
+  const navigate = useNavigate()
+  const {
+    user,
+    signOut,
+    orders,
+    locationLabel,
+    openLocationModal,
+    wishlist,
+    cartCount,
+  } = useStore()
+
+  const mine = orders.filter(
+    (o) =>
+      user && o.userEmail.toLowerCase() === user.email.toLowerCase(),
+  )
+  const latest = mine[0]
+
+  return (
+    <main className="mx-auto max-w-[1000px] px-4 py-8 sm:py-10 lg:px-6">
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <p className="text-[0.7rem] font-medium tracking-[0.28em] text-bb-muted uppercase">
+            My account
+          </p>
+          <h1 className="font-serif mt-2 text-3xl text-bb-text sm:text-4xl">
+            Hello, {user?.name?.split(' ')[0] || 'there'}
+          </h1>
+          <p className="mt-2 text-sm text-bb-muted">
+            {user?.email} · {user?.phone}
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            signOut()
+            navigate('/account', { replace: true })
+          }}
+          className="inline-flex items-center gap-2 rounded-full border border-bb-border px-4 py-2.5 text-xs font-semibold tracking-[0.14em] uppercase"
+        >
+          <LogOut className="size-3.5" />
+          Sign out
+        </button>
+      </div>
+
+      <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {[
+          {
+            to: '/orders',
+            icon: Package,
+            title: 'My orders',
+            body: mine.length
+              ? `${mine.length} order${mine.length === 1 ? '' : 's'}`
+              : 'Track purchases',
+          },
+          {
+            to: latest ? `/orders/${latest.id}` : '/orders',
+            icon: Truck,
+            title: 'Track order',
+            body: latest
+              ? `${latest.id} · ${ORDER_STATUS_LABEL[latest.status]}`
+              : 'Enter order ID',
+          },
+          {
+            to: '/wishlist',
+            icon: Heart,
+            title: 'Wishlist',
+            body: `${wishlist.size} saved`,
+          },
+          {
+            to: '/cart',
+            icon: Package,
+            title: 'Cart',
+            body: cartCount ? `${cartCount} items` : 'Empty bag',
+          },
+        ].map((card) => (
+          <Link
+            key={card.title}
+            to={card.to}
+            className="rounded-2xl border border-bb-border bg-white p-4 transition hover:border-bb-blue"
+          >
+            <card.icon className="size-5 text-bb-blue" />
+            <p className="mt-3 text-sm font-semibold text-bb-text">
+              {card.title}
+            </p>
+            <p className="mt-1 text-xs text-bb-muted">{card.body}</p>
+          </Link>
+        ))}
+      </div>
+
+      <section className="mt-8 rounded-2xl border border-bb-border bg-white p-5">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="text-sm font-semibold tracking-[0.14em] uppercase">
+            Recent orders
+          </h2>
+          <Link
+            to="/orders"
+            className="text-xs font-semibold tracking-[0.14em] text-bb-link uppercase hover:underline"
+          >
+            View all
+          </Link>
+        </div>
+        {mine.length === 0 ? (
+          <p className="mt-4 text-sm text-bb-muted">
+            No orders yet.{' '}
+            <Link to="/deals" className="font-semibold text-bb-text underline">
+              Browse the shop
+            </Link>
+          </p>
+        ) : (
+          <ul className="mt-4 space-y-3">
+            {mine.slice(0, 3).map((order) => (
+              <li key={order.id}>
+                <Link
+                  to={`/orders/${order.id}`}
+                  className="flex items-center gap-3 rounded-xl border border-bb-border px-3 py-3 hover:border-bb-blue"
+                >
+                  <img
+                    src={order.items[0]?.image}
+                    alt=""
+                    className="size-12 rounded-lg object-cover bg-bb-gray"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-semibold">{order.id}</p>
+                    <p className="text-xs text-bb-muted">
+                      {ORDER_STATUS_LABEL[order.status]} ·{' '}
+                      {formatMoney(order.total)}
+                    </p>
+                  </div>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      <section className="mt-4 grid gap-4 sm:grid-cols-2">
+        <button
+          type="button"
+          onClick={openLocationModal}
+          className="flex items-start gap-3 rounded-2xl border border-bb-border bg-white p-5 text-left"
+        >
+          <MapPin className="mt-0.5 size-5 text-bb-blue" />
+          <span>
+            <span className="block text-sm font-semibold">Pickup location</span>
+            <span className="mt-1 block text-sm text-bb-muted">
+              {locationLabel} · Change
+            </span>
+          </span>
+        </button>
+        <Link
+          to="/memberships"
+          className="rounded-2xl border border-bb-border bg-white p-5"
+        >
+          <p className="text-sm font-semibold">Fusora Membership</p>
+          <p className="mt-1 text-sm text-bb-muted">
+            ₹1,095 / year · member benefits
+          </p>
+        </Link>
+      </section>
+
+      <p className="mt-8 text-center text-xs text-bb-muted">
+        Need help?{' '}
+        <a href={SUPPORT_MAILTO} className="underline">
+          {SUPPORT_EMAIL}
+        </a>
+      </p>
+    </main>
+  )
+}
+
 export function AccountPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const mode: Mode = location.pathname === '/register' ? 'register' : 'signin'
   const search = new URLSearchParams(location.search)
-  const nextPath = search.get('next') || '/deals'
+  const nextRaw = search.get('next')
+  const nextPath =
+    nextRaw && nextRaw.startsWith('/') && !nextRaw.startsWith('//')
+      ? nextRaw
+      : '/account'
   const {
     locationLabel,
     openLocationModal,
     registerAccount,
     signIn,
-    signOut,
-    user,
     isLoggedIn,
   } = useStore()
+
+  usePageTitle(mode === 'register' ? 'Create account' : 'Sign in')
 
   const [showPass, setShowPass] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
@@ -69,6 +254,40 @@ export function AccountPage() {
     terms: false,
   })
 
+  useEffect(() => {
+    if (!isLoggedIn) return
+    if (location.pathname === '/register') {
+      navigate(nextPath, { replace: true })
+      return
+    }
+    if (location.pathname === '/account' && nextRaw && nextPath !== '/account') {
+      navigate(nextPath, { replace: true })
+    }
+  }, [
+    isLoggedIn,
+    location.pathname,
+    navigate,
+    nextPath,
+    nextRaw,
+  ])
+
+  if (isLoggedIn && location.pathname === '/account' && !nextRaw) {
+    return <AccountDashboard />
+  }
+
+  if (isLoggedIn && location.pathname === '/account' && nextPath === '/account') {
+    return <AccountDashboard />
+  }
+
+  if (isLoggedIn) {
+    return (
+      <main className="mx-auto max-w-[420px] px-4 py-20 text-center">
+        <Loader2 className="mx-auto size-6 animate-spin text-bb-blue" />
+        <p className="mt-3 text-sm text-bb-muted">Taking you in…</p>
+      </main>
+    )
+  }
+
   const setMode = (next: Mode) => {
     setDone(null)
     setOtpState(emptyOtp)
@@ -77,9 +296,7 @@ export function AccountPage() {
   }
 
   const goAfterAuth = () => {
-    const target =
-      nextPath.startsWith('/') && !nextPath.startsWith('//') ? nextPath : '/deals'
-    navigate(target, { replace: true })
+    navigate(nextPath, { replace: true })
   }
 
   const sendOtp = async () => {
@@ -198,10 +415,7 @@ export function AccountPage() {
         setDone(result.message)
         return
       }
-      setDone(
-        `Welcome to Fusora, ${form.name.split(' ')[0] || 'member'}! Account created.`,
-      )
-      window.setTimeout(goAfterAuth, 600)
+      goAfterAuth()
       return
     }
     const result = signIn({
@@ -212,8 +426,7 @@ export function AccountPage() {
       setDone(result.message)
       return
     }
-    setDone(`Signed in as ${form.email || 'member'}. Welcome back!`)
-    window.setTimeout(goAfterAuth, 600)
+    goAfterAuth()
   }
 
   const field =
@@ -305,37 +518,8 @@ export function AccountPage() {
             <p className="mt-1 text-sm text-bb-muted">
               {mode === 'signin'
                 ? 'Enter your details to continue shopping.'
-                : 'Verify mobile via Zone Digital OTP, then join fusora.shop.'}
+                : 'Verify your mobile with OTP, then join fusora.shop.'}
             </p>
-
-            {isLoggedIn && user && (
-              <div className="mt-5 rounded-2xl border border-bb-border bg-fusora-ivory px-4 py-4">
-                <p className="text-sm font-semibold text-bb-text">
-                  Signed in as {user.name}
-                </p>
-                <p className="mt-1 text-xs text-bb-muted">
-                  {user.email} · {user.phone}
-                </p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  <Link
-                    to={nextPath.startsWith('/') ? nextPath : '/checkout'}
-                    className="rounded-full bg-bb-blue px-4 py-2 text-[0.65rem] font-semibold tracking-[0.14em] text-[#f7f3ec] uppercase"
-                  >
-                    Continue
-                  </Link>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      signOut()
-                      setDone(null)
-                    }}
-                    className="rounded-full border border-bb-border px-4 py-2 text-[0.65rem] font-semibold tracking-[0.14em] uppercase"
-                  >
-                    Sign out
-                  </button>
-                </div>
-              </div>
-            )}
 
             <form className="mt-6 space-y-4" onSubmit={onSubmit}>
               {mode === 'register' && (
@@ -377,9 +561,6 @@ export function AccountPage() {
 
               {mode === 'register' && (
                 <div className="space-y-3">
-                  <p className="rounded-xl border border-bb-border bg-fusora-ivory px-3 py-2 text-[0.7rem] tracking-wide text-bb-muted uppercase">
-                    Mobile OTP · Zone Digital SMS
-                  </p>
                   <label className="block text-sm font-semibold text-bb-text">
                     Mobile number
                     <div className="mt-1.5 flex gap-2">
@@ -404,11 +585,13 @@ export function AccountPage() {
                         <button
                           type="button"
                           onClick={sendOtp}
-                          disabled={otpState.busy !== 'idle' || !form.phone.trim()}
+                          disabled={
+                            otpState.busy !== 'idle' || !form.phone.trim()
+                          }
                           className="shrink-0 rounded-xl bg-bb-blue px-3.5 text-sm font-bold whitespace-nowrap text-white hover:bg-bb-blue-dark disabled:opacity-60"
                         >
                           {otpState.busy === 'send' ? (
-                            <Loader2 className="mx-auto size-4 animate-spin" />
+                            <Loader2 className="size-4 animate-spin" />
                           ) : otpState.sent ? (
                             'Resend'
                           ) : (
@@ -417,8 +600,8 @@ export function AccountPage() {
                         </button>
                       )}
                       {otpState.verified && (
-                        <span className="inline-flex shrink-0 items-center gap-1 rounded-xl bg-green-50 px-3 text-xs font-bold text-green-700">
-                          <CheckCircle2 className="size-4" />
+                        <span className="inline-flex items-center gap-1 rounded-xl bg-green-50 px-3 text-xs font-semibold text-green-700">
+                          <CheckCircle2 className="size-3.5" />
                           Verified
                         </span>
                       )}
@@ -430,30 +613,31 @@ export function AccountPage() {
                       Enter OTP
                       <div className="mt-1.5 flex gap-2">
                         <input
-                          type="text"
-                          inputMode="numeric"
-                          maxLength={6}
+                          required
                           value={otpState.otp}
                           onChange={(e) =>
                             setOtpState((s) => ({
                               ...s,
-                              otp: e.target.value.replace(/\D/g, '').slice(0, 6),
+                              otp: e.target.value
+                                .replace(/\D/g, '')
+                                .slice(0, 6),
                             }))
                           }
-                          className={`${field} mt-0 tracking-[0.35em]`}
-                          placeholder="••••"
-                          autoComplete="one-time-code"
+                          className={field}
+                          placeholder="4–6 digit OTP"
+                          inputMode="numeric"
                         />
                         <button
                           type="button"
                           onClick={verifyOtp}
                           disabled={
-                            otpState.busy !== 'idle' || otpState.otp.length < 4
+                            otpState.busy !== 'idle' ||
+                            otpState.otp.length < 4
                           }
                           className="shrink-0 rounded-xl border border-bb-blue bg-white px-3.5 text-sm font-bold whitespace-nowrap text-bb-blue hover:bg-bb-blue/5 disabled:opacity-60"
                         >
                           {otpState.busy === 'verify' ? (
-                            <Loader2 className="mx-auto size-4 animate-spin" />
+                            <Loader2 className="size-4 animate-spin" />
                           ) : (
                             'Verify'
                           )}
@@ -464,7 +648,7 @@ export function AccountPage() {
 
                   {otpState.message && (
                     <p
-                      className={`rounded-xl px-3 py-2 text-xs font-medium ${
+                      className={`rounded-xl px-3 py-2 text-sm ${
                         otpState.error
                           ? 'bg-red-50 text-bb-save'
                           : 'bg-green-50 text-green-800'
@@ -488,17 +672,17 @@ export function AccountPage() {
                     onChange={(e) =>
                       setForm((f) => ({ ...f, password: e.target.value }))
                     }
-                    className={`${field} pr-11 pl-10`}
-                    placeholder="••••••••"
+                    className={`${field} pr-10 pl-10`}
+                    placeholder="At least 6 characters"
                     autoComplete={
                       mode === 'signin' ? 'current-password' : 'new-password'
                     }
                   />
                   <button
                     type="button"
-                    className="absolute top-1/2 right-3 -translate-y-1/2 text-bb-muted hover:text-bb-text"
-                    onClick={() => setShowPass((s) => !s)}
-                    aria-label={showPass ? 'Hide password' : 'Show password'}
+                    className="absolute top-1/2 right-3 -translate-y-1/2 text-bb-muted"
+                    onClick={() => setShowPass((v) => !v)}
+                    aria-label="Toggle password"
                   >
                     {showPass ? (
                       <EyeOff className="size-4" />
@@ -522,17 +706,15 @@ export function AccountPage() {
                       onChange={(e) =>
                         setForm((f) => ({ ...f, confirm: e.target.value }))
                       }
-                      className={`${field} pr-11 pl-10`}
-                      placeholder="••••••••"
+                      className={`${field} pr-10 pl-10`}
+                      placeholder="Repeat password"
                       autoComplete="new-password"
                     />
                     <button
                       type="button"
-                      className="absolute top-1/2 right-3 -translate-y-1/2 text-bb-muted hover:text-bb-text"
-                      onClick={() => setShowConfirm((s) => !s)}
-                      aria-label={
-                        showConfirm ? 'Hide password' : 'Show password'
-                      }
+                      className="absolute top-1/2 right-3 -translate-y-1/2 text-bb-muted"
+                      onClick={() => setShowConfirm((v) => !v)}
+                      aria-label="Toggle confirm password"
                     >
                       {showConfirm ? (
                         <EyeOff className="size-4" />
@@ -544,9 +726,9 @@ export function AccountPage() {
                 </label>
               )}
 
-              {mode === 'signin' ? (
-                <div className="flex items-center justify-between text-sm">
-                  <label className="flex items-center gap-2 font-medium text-bb-text">
+              {mode === 'signin' && (
+                <div className="flex items-center justify-between gap-3 text-sm">
+                  <label className="inline-flex items-center gap-2 text-bb-muted">
                     <input
                       type="checkbox"
                       checked={form.remember}
@@ -557,19 +739,16 @@ export function AccountPage() {
                     />
                     Keep me signed in
                   </label>
-                  <button
-                    type="button"
+                  <a
+                    href={SUPPORT_MAILTO}
                     className="font-semibold text-bb-link hover:underline"
-                    onClick={() =>
-                      setDone(
-                        `Password reset link will be sent to ${SUPPORT_EMAIL}`,
-                      )
-                    }
                   >
                     Forgot password?
-                  </button>
+                  </a>
                 </div>
-              ) : (
+              )}
+
+              {mode === 'register' && (
                 <label className="flex items-start gap-2 text-sm text-bb-muted">
                   <input
                     type="checkbox"
@@ -600,7 +779,7 @@ export function AccountPage() {
 
               {done && (
                 <p
-                  className={`rounded-xl px-3 py-2.5 text-sm font-medium ${
+                  className={`rounded-xl px-3 py-2 text-sm ${
                     isErrorBanner(done)
                       ? 'bg-red-50 text-bb-save'
                       : 'bg-green-50 text-green-800'
@@ -618,7 +797,7 @@ export function AccountPage() {
               </button>
             </form>
 
-            <div className="my-6 flex items-center gap-3 text-xs text-bb-muted">
+            <div className="mt-6 flex items-center gap-3 text-xs tracking-wide text-bb-muted uppercase">
               <span className="h-px flex-1 bg-bb-border" />
               or
               <span className="h-px flex-1 bg-bb-border" />
@@ -626,8 +805,10 @@ export function AccountPage() {
 
             <button
               type="button"
-              onClick={() => setMode(mode === 'signin' ? 'register' : 'signin')}
-              className="w-full rounded-full border border-bb-border bg-white py-3 text-sm font-bold text-bb-text hover:bg-bb-gray"
+              onClick={() =>
+                setMode(mode === 'signin' ? 'register' : 'signin')
+              }
+              className="mt-4 w-full rounded-full border border-bb-border bg-white py-3 text-sm font-bold text-bb-text hover:bg-bb-gray"
             >
               {mode === 'signin'
                 ? 'New here? Create an account'
@@ -640,27 +821,15 @@ export function AccountPage() {
                 onClick={openLocationModal}
                 className="flex w-full items-center gap-2 text-left"
               >
-                <MapPin className="size-4 shrink-0 text-bb-blue" />
-                <span>
-                  Preferred store:{' '}
-                  <span className="font-semibold text-bb-link">
-                    {locationLabel}
-                  </span>
-                </span>
+                <MapPin className="size-4 text-bb-blue" />
+                Preferred store: {locationLabel}
               </button>
-              <Link
-                to="/memberships"
-                className="block font-semibold text-bb-link hover:underline"
-              >
+              <Link to="/memberships" className="block text-bb-muted">
                 Explore Fusora Membership — ₹1,095/year
               </Link>
-              <button
-                type="button"
-                onClick={() => navigate('/support')}
-                className="block text-bb-muted hover:text-bb-link"
-              >
+              <a href={SUPPORT_MAILTO} className="block text-bb-muted">
                 Need help? Contact {SUPPORT_EMAIL}
-              </button>
+              </a>
             </div>
           </div>
         </section>

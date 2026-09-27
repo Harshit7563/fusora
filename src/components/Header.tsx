@@ -190,6 +190,15 @@ export function Header() {
               </Link>
             </li>
             <li>
+              <Link
+                to="/orders"
+                onClick={() => setMenuOpen(false)}
+                className="block rounded-xl px-3 py-3 text-sm font-medium tracking-wide text-bb-text uppercase"
+              >
+                My orders
+              </Link>
+            </li>
+            <li>
               <button
                 type="button"
                 onClick={() => {

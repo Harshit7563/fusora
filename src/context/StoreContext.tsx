@@ -48,11 +48,45 @@ const CART_KEY = 'fusora-cart'
 const WISH_KEY = 'fusora-wishlist'
 const AUTH_KEY = 'fusora-auth'
 const ACCOUNTS_KEY = 'fusora-accounts'
+const ORDERS_KEY = 'fusora-orders'
 
 export type AuthUser = {
   name: string
   email: string
   phone: string
+}
+
+export type OrderStatus =
+  | 'placed'
+  | 'confirmed'
+  | 'packing'
+  | 'ready'
+  | 'out_for_delivery'
+  | 'delivered'
+  | 'cancelled'
+
+export type OrderItem = {
+  id: string
+  name: string
+  image: string
+  price: number
+  qty: number
+}
+
+export type Order = {
+  id: string
+  userEmail: string
+  createdAt: number
+  status: OrderStatus
+  payment: 'cod' | 'upi'
+  total: number
+  name: string
+  phone: string
+  email: string
+  address: string
+  hub: string
+  locationLabel: string
+  items: OrderItem[]
 }
 
 type StoredAccount = AuthUser & {
@@ -136,6 +170,15 @@ type StoreContextValue = {
     password: string
   }) => { ok: true } | { ok: false; message: string }
   signOut: () => void
+  orders: Order[]
+  placeOrder: (input: {
+    name: string
+    phone: string
+    email: string
+    address: string
+    payment: 'cod' | 'upi'
+  }) => Order | null
+  getOrder: (id: string) => Order | undefined
   cart: CartItem[]
   cartCount: number
   cartOpen: boolean
@@ -194,6 +237,36 @@ function normalizePhone(phone: string) {
   return digits.length > 10 ? digits.slice(-10) : digits
 }
 
+function readOrders(): Order[] {
+  try {
+    const raw = localStorage.getItem(ORDERS_KEY)
+    if (!raw) return []
+    const parsed = JSON.parse(raw) as Order[]
+    return Array.isArray(parsed) ? parsed : []
+  } catch {
+    return []
+  }
+}
+
+export const ORDER_STATUS_LABEL: Record<OrderStatus, string> = {
+  placed: 'Order placed',
+  confirmed: 'Confirmed',
+  packing: 'Packing at hub',
+  ready: 'Ready for pickup',
+  out_for_delivery: 'Out for delivery',
+  delivered: 'Delivered',
+  cancelled: 'Cancelled',
+}
+
+export const ORDER_TRACK_STEPS: OrderStatus[] = [
+  'placed',
+  'confirmed',
+  'packing',
+  'ready',
+  'out_for_delivery',
+  'delivered',
+]
+
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [userLocation, setUserLocation] = useState<UserLocation | null>(() =>
     readSavedUserLocation(),
@@ -228,6 +301,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   })
   const [cartOpen, setCartOpen] = useState(false)
   const [user, setUser] = useState<AuthUser | null>(() => readSavedAuth())
+  const [orders, setOrders] = useState<Order[]>(() => readOrders())
   const [wishlist, setWishlist] = useState<Set<string>>(() => {
     try {
       const raw = localStorage.getItem(WISH_KEY)
@@ -248,6 +322,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     localStorage.setItem(WISH_KEY, JSON.stringify([...wishlist]))
   }, [wishlist])
+
+  useEffect(() => {
+    localStorage.setItem(ORDERS_KEY, JSON.stringify(orders))
+  }, [orders])
 
   const setStore = useCallback((next: StoreLocation) => {
     setStoreState(next)
@@ -450,6 +528,49 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     ? `Nearest: ${STORES.find((s) => s.id === userLocation.nearestHubId)?.name ?? 'Hub'}`
     : store?.name ?? 'Tap to detect'
 
+  const placeOrder = useCallback(
+    (input: {
+      name: string
+      phone: string
+      email: string
+      address: string
+      payment: 'cod' | 'upi'
+    }): Order | null => {
+      if (!user || cart.length === 0) return null
+      const order: Order = {
+        id: `FUS${Date.now().toString().slice(-8)}`,
+        userEmail: user.email,
+        createdAt: Date.now(),
+        status: 'placed',
+        payment: input.payment,
+        total: cart.reduce((s, i) => s + i.price * i.qty, 0),
+        name: input.name.trim(),
+        phone: normalizePhone(input.phone),
+        email: normalizeEmail(input.email),
+        address: input.address.trim(),
+        hub: store?.name ?? 'Fusora hub',
+        locationLabel,
+        items: cart.map((i) => ({
+          id: i.id,
+          name: i.name,
+          image: i.image,
+          price: i.price,
+          qty: i.qty,
+        })),
+      }
+      setOrders((prev) => [order, ...prev])
+      setCart([])
+      setToast(`Order ${order.id} placed`)
+      return order
+    },
+    [user, cart, store, locationLabel],
+  )
+
+  const getOrder = useCallback(
+    (id: string) => orders.find((o) => o.id === id),
+    [orders],
+  )
+
   const value: StoreContextValue = {
     store,
     setStore,
@@ -472,6 +593,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     registerAccount,
     signIn,
     signOut,
+    orders,
+    placeOrder,
+    getOrder,
     cart,
     cartCount,
     cartOpen,
