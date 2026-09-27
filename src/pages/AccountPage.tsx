@@ -42,7 +42,17 @@ export function AccountPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const mode: Mode = location.pathname === '/register' ? 'register' : 'signin'
-  const { locationLabel, openLocationModal } = useStore()
+  const search = new URLSearchParams(location.search)
+  const nextPath = search.get('next') || '/deals'
+  const {
+    locationLabel,
+    openLocationModal,
+    registerAccount,
+    signIn,
+    signOut,
+    user,
+    isLoggedIn,
+  } = useStore()
 
   const [showPass, setShowPass] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
@@ -62,7 +72,14 @@ export function AccountPage() {
   const setMode = (next: Mode) => {
     setDone(null)
     setOtpState(emptyOtp)
-    navigate(next === 'register' ? '/register' : '/account')
+    const q = search.toString() ? `?${search.toString()}` : ''
+    navigate(next === 'register' ? `/register${q}` : `/account${q}`)
+  }
+
+  const goAfterAuth = () => {
+    const target =
+      nextPath.startsWith('/') && !nextPath.startsWith('//') ? nextPath : '/deals'
+    navigate(target, { replace: true })
   }
 
   const sendOtp = async () => {
@@ -171,12 +188,32 @@ export function AccountPage() {
         setDone('Please accept Terms & Privacy to continue.')
         return
       }
+      const result = registerAccount({
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        password: form.password,
+      })
+      if (!result.ok) {
+        setDone(result.message)
+        return
+      }
       setDone(
         `Welcome to Fusora, ${form.name.split(' ')[0] || 'member'}! Account created.`,
       )
+      window.setTimeout(goAfterAuth, 600)
+      return
+    }
+    const result = signIn({
+      email: form.email,
+      password: form.password,
+    })
+    if (!result.ok) {
+      setDone(result.message)
       return
     }
     setDone(`Signed in as ${form.email || 'member'}. Welcome back!`)
+    window.setTimeout(goAfterAuth, 600)
   }
 
   const field =
@@ -189,7 +226,10 @@ export function AccountPage() {
     msg.includes('OTP') ||
     msg.includes('failed') ||
     msg.includes('error') ||
-    msg.includes('Could not')
+    msg.includes('Could not') ||
+    msg.includes('Incorrect') ||
+    msg.includes('No account') ||
+    msg.includes('already exists')
 
   return (
     <main className="min-h-[calc(100svh-8rem)] bg-bb-gray/50">
@@ -267,6 +307,35 @@ export function AccountPage() {
                 ? 'Enter your details to continue shopping.'
                 : 'Verify mobile via Zone Digital OTP, then join fusora.shop.'}
             </p>
+
+            {isLoggedIn && user && (
+              <div className="mt-5 rounded-2xl border border-bb-border bg-fusora-ivory px-4 py-4">
+                <p className="text-sm font-semibold text-bb-text">
+                  Signed in as {user.name}
+                </p>
+                <p className="mt-1 text-xs text-bb-muted">
+                  {user.email} · {user.phone}
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <Link
+                    to={nextPath.startsWith('/') ? nextPath : '/checkout'}
+                    className="rounded-full bg-bb-blue px-4 py-2 text-[0.65rem] font-semibold tracking-[0.14em] text-[#f7f3ec] uppercase"
+                  >
+                    Continue
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      signOut()
+                      setDone(null)
+                    }}
+                    className="rounded-full border border-bb-border px-4 py-2 text-[0.65rem] font-semibold tracking-[0.14em] uppercase"
+                  >
+                    Sign out
+                  </button>
+                </div>
+              </div>
+            )}
 
             <form className="mt-6 space-y-4" onSubmit={onSubmit}>
               {mode === 'register' && (

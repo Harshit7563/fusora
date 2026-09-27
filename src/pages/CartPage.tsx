@@ -5,7 +5,8 @@ import { usePageTitle } from '../hooks/usePageTitle'
 
 export function CartPage() {
   usePageTitle('Cart')
-  const { cart, setQty, removeFromCart, openCart, locationLabel } = useStore()
+  const { cart, setQty, removeFromCart, openCart, locationLabel, isLoggedIn } =
+    useStore()
   const total = cart.reduce((s, i) => s + i.price * i.qty, 0)
 
   return (
@@ -90,10 +91,10 @@ export function CartPage() {
                 Quick cart
               </button>
               <Link
-                to="/checkout"
+                to={isLoggedIn ? '/checkout' : '/account?next=/checkout'}
                 className="rounded-full bg-bb-blue px-6 py-2.5 text-xs font-semibold tracking-[0.14em] text-[#f7f3ec] uppercase"
               >
-                Checkout
+                {isLoggedIn ? 'Checkout' : 'Sign in to checkout'}
               </Link>
             </div>
           </div>

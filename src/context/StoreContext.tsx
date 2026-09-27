@@ -46,6 +46,18 @@ const USER_LOC_KEY = 'fusora-user-location'
 const STORE_KEY = 'fusora-store'
 const CART_KEY = 'fusora-cart'
 const WISH_KEY = 'fusora-wishlist'
+const AUTH_KEY = 'fusora-auth'
+const ACCOUNTS_KEY = 'fusora-accounts'
+
+export type AuthUser = {
+  name: string
+  email: string
+  phone: string
+}
+
+type StoredAccount = AuthUser & {
+  password: string
+}
 
 function haversineKm(a: { lat: number; lng: number }, b: { lat: number; lng: number }) {
   const R = 6371
@@ -111,6 +123,19 @@ type StoreContextValue = {
   openLocationModal: () => void
   closeLocationModal: () => void
   detectLocation: () => void
+  user: AuthUser | null
+  isLoggedIn: boolean
+  registerAccount: (input: {
+    name: string
+    email: string
+    phone: string
+    password: string
+  }) => { ok: true } | { ok: false; message: string }
+  signIn: (input: {
+    email: string
+    password: string
+  }) => { ok: true } | { ok: false; message: string }
+  signOut: () => void
   cart: CartItem[]
   cartCount: number
   cartOpen: boolean
@@ -135,6 +160,38 @@ function readSavedUserLocation(): UserLocation | null {
   } catch {
     return null
   }
+}
+
+function readSavedAuth(): AuthUser | null {
+  try {
+    const raw = localStorage.getItem(AUTH_KEY)
+    if (!raw) return null
+    const parsed = JSON.parse(raw) as AuthUser
+    if (!parsed?.email) return null
+    return parsed
+  } catch {
+    return null
+  }
+}
+
+function readAccounts(): StoredAccount[] {
+  try {
+    const raw = localStorage.getItem(ACCOUNTS_KEY)
+    if (!raw) return []
+    const parsed = JSON.parse(raw) as StoredAccount[]
+    return Array.isArray(parsed) ? parsed : []
+  } catch {
+    return []
+  }
+}
+
+function normalizeEmail(email: string) {
+  return email.trim().toLowerCase()
+}
+
+function normalizePhone(phone: string) {
+  const digits = phone.replace(/\D/g, '')
+  return digits.length > 10 ? digits.slice(-10) : digits
 }
 
 export function StoreProvider({ children }: { children: ReactNode }) {
@@ -170,6 +227,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     }
   })
   const [cartOpen, setCartOpen] = useState(false)
+  const [user, setUser] = useState<AuthUser | null>(() => readSavedAuth())
   const [wishlist, setWishlist] = useState<Set<string>>(() => {
     try {
       const raw = localStorage.getItem(WISH_KEY)
@@ -312,6 +370,77 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setToast('Added to cart')
   }, [])
 
+  const registerAccount = useCallback(
+    (input: {
+      name: string
+      email: string
+      phone: string
+      password: string
+    }): { ok: true } | { ok: false; message: string } => {
+      const email = normalizeEmail(input.email)
+      const phone = normalizePhone(input.phone)
+      const name = input.name.trim()
+      const password = input.password
+      if (!name || !email || !phone || phone.length !== 10 || password.length < 6) {
+        return { ok: false, message: 'Please fill all fields correctly.' }
+      }
+      const accounts = readAccounts()
+      if (accounts.some((a) => normalizeEmail(a.email) === email)) {
+        return { ok: false, message: 'An account with this email already exists. Sign in.' }
+      }
+      if (accounts.some((a) => normalizePhone(a.phone) === phone)) {
+        return {
+          ok: false,
+          message: 'An account with this mobile already exists. Sign in.',
+        }
+      }
+      const nextAccount: StoredAccount = { name, email, phone, password }
+      localStorage.setItem(ACCOUNTS_KEY, JSON.stringify([...accounts, nextAccount]))
+      const session: AuthUser = { name, email, phone }
+      localStorage.setItem(AUTH_KEY, JSON.stringify(session))
+      setUser(session)
+      setToast('Account created — you are signed in')
+      return { ok: true }
+    },
+    [],
+  )
+
+  const signIn = useCallback(
+    (input: {
+      email: string
+      password: string
+    }): { ok: true } | { ok: false; message: string } => {
+      const email = normalizeEmail(input.email)
+      const accounts = readAccounts()
+      const match = accounts.find((a) => normalizeEmail(a.email) === email)
+      if (!match) {
+        return {
+          ok: false,
+          message: 'No account found. Create an account first.',
+        }
+      }
+      if (match.password !== input.password) {
+        return { ok: false, message: 'Incorrect password.' }
+      }
+      const session: AuthUser = {
+        name: match.name,
+        email: match.email,
+        phone: match.phone,
+      }
+      localStorage.setItem(AUTH_KEY, JSON.stringify(session))
+      setUser(session)
+      setToast(`Signed in as ${session.name.split(' ')[0] || 'member'}`)
+      return { ok: true }
+    },
+    [],
+  )
+
+  const signOut = useCallback(() => {
+    localStorage.removeItem(AUTH_KEY)
+    setUser(null)
+    setToast('Signed out')
+  }, [])
+
   const locationLabel =
     locationStatus === 'detecting'
       ? 'Detecting…'
@@ -338,6 +467,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       }
     },
     detectLocation,
+    user,
+    isLoggedIn: Boolean(user),
+    registerAccount,
+    signIn,
+    signOut,
     cart,
     cartCount,
     cartOpen,

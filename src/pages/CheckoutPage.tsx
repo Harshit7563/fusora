@@ -1,5 +1,5 @@
-import { CheckCircle2, MapPin } from 'lucide-react'
-import { useMemo, useState, type FormEvent } from 'react'
+import { CheckCircle2, Lock, MapPin } from 'lucide-react'
+import { useEffect, useMemo, useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { formatMoney } from '../data'
 import { useStore } from '../context/StoreContext'
@@ -15,6 +15,8 @@ export function CheckoutPage() {
     store,
     clearCart,
     openLocationModal,
+    user,
+    isLoggedIn,
   } = useStore()
   const [done, setDone] = useState<string | null>(null)
   const [form, setForm] = useState({
@@ -25,6 +27,16 @@ export function CheckoutPage() {
     payment: 'cod' as 'cod' | 'upi',
   })
 
+  useEffect(() => {
+    if (!user) return
+    setForm((f) => ({
+      ...f,
+      name: f.name || user.name,
+      email: f.email || user.email,
+      phone: f.phone || user.phone,
+    }))
+  }, [user])
+
   const total = useMemo(
     () => cart.reduce((s, i) => s + i.price * i.qty, 0),
     [cart],
@@ -32,6 +44,10 @@ export function CheckoutPage() {
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault()
+    if (!isLoggedIn || !user) {
+      navigate('/account?next=/checkout')
+      return
+    }
     if (cart.length === 0) return
     const phone = form.phone.replace(/\D/g, '')
     if (phone.length < 10) {
@@ -89,6 +105,45 @@ export function CheckoutPage() {
     )
   }
 
+  if (!isLoggedIn) {
+    return (
+      <main className="mx-auto max-w-[480px] px-4 py-14 text-center sm:py-16">
+        <span className="mx-auto grid size-14 place-items-center rounded-full bg-[#efe8dc] text-bb-blue">
+          <Lock className="size-6" />
+        </span>
+        <h1 className="font-serif mt-5 text-3xl text-bb-text">Sign in to order</h1>
+        <p className="mt-3 text-sm leading-relaxed text-bb-muted">
+          Login required before checkout — so we can confirm your order on
+          WhatsApp/SMS and keep your bag safe.
+        </p>
+        <div className="mt-8 flex flex-col gap-3">
+          <Link
+            to="/account?next=/checkout"
+            className="rounded-full bg-bb-blue px-6 py-3.5 text-xs font-semibold tracking-[0.16em] text-[#f7f3ec] uppercase"
+          >
+            Sign in
+          </Link>
+          <Link
+            to="/register?next=/checkout"
+            className="rounded-full border border-bb-border px-6 py-3.5 text-xs font-semibold tracking-[0.16em] uppercase"
+          >
+            Create account
+          </Link>
+          <Link
+            to="/cart"
+            className="text-xs tracking-wide text-bb-muted uppercase hover:text-bb-text"
+          >
+            Back to cart
+          </Link>
+        </div>
+        <p className="mt-6 text-xs text-bb-muted">
+          {cart.length} item{cart.length === 1 ? '' : 's'} · {formatMoney(total)}{' '}
+          waiting in your bag
+        </p>
+      </main>
+    )
+  }
+
   const field =
     'mt-1.5 w-full rounded-xl border border-bb-border bg-white px-3.5 py-3 text-sm outline-none focus:border-bb-blue'
 
@@ -96,7 +151,8 @@ export function CheckoutPage() {
     <main className="mx-auto max-w-[1000px] px-4 py-10 lg:px-6">
       <h1 className="font-serif text-4xl text-bb-text">Checkout</h1>
       <p className="mt-2 text-sm text-bb-muted">
-        Complete your order for hub pickup or delivery.
+        Signed in as {user?.name || user?.email} · Complete your order for hub
+        pickup or delivery.
       </p>
 
       <div className="mt-8 grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">

@@ -12,7 +12,7 @@ type Props = {
 }
 
 export function CartDrawer({ open, items, onClose, onQty, onRemove }: Props) {
-  const { locationLabel, store } = useStore()
+  const { locationLabel, store, isLoggedIn } = useStore()
   const total = items.reduce((s, i) => s + i.price * i.qty, 0)
   const count = items.reduce((s, i) => s + i.qty, 0)
 
@@ -123,11 +123,11 @@ export function CartDrawer({ open, items, onClose, onQty, onRemove }: Props) {
               <span>{formatMoney(total)}</span>
             </div>
             <Link
-              to="/checkout"
+              to={isLoggedIn ? '/checkout' : '/account?next=/checkout'}
               onClick={onClose}
               className="flex w-full items-center justify-center rounded-full bg-bb-blue py-3 text-xs font-semibold tracking-[0.16em] text-[#f7f3ec] uppercase hover:bg-bb-blue-dark"
             >
-              Checkout
+              {isLoggedIn ? 'Checkout' : 'Sign in to checkout'}
             </Link>
             <Link
               to="/cart"
