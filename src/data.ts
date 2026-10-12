@@ -26,11 +26,45 @@ export type Product = {
   tab: CategoryId
   /** Apparel & Clothes only */
   subtype?: ApparelSubtype
+  /** Source collection slug (e.g. mens-jeans, silk-sarees) */
+  collection?: string
+  categoryName?: string
+  categorySlug?: string
   image: string
   /** Extra gallery photos — duplicates are stripped at display time */
   images?: string[]
   brand: string
   description?: string
+  sizes?: string[]
+  fit?: string
+  wash?: string
+  fabric?: string
+  sku?: string
+  source?: string
+}
+
+/** Strip supplier brand prefixes from product titles (Dyntra / Denim Forge). */
+export function cleanSupplierName(name: string): string {
+  let s = String(name || '')
+  s = s
+    .replace(/\bthe\s+denim\s+forge\b/gi, '')
+    .replace(/\bdenim\s+forge\b/gi, '')
+    .replace(/\bdenim\s+foege\b/gi, '')
+    .replace(/denim\s*forge/gi, '')
+    .replace(/\bdyntra\b/gi, '')
+    .replace(/dyntra/gi, '')
+    .replace(/\bMa\s+terial\b/gi, 'Material')
+    .replace(/\s{2,}/g, ' ')
+    .replace(/^[\s\-–—:,.]+|[\s\-–—:,.]+$/g, '')
+    .trim()
+  s = s.replace(/([a-z])([A-Z])/g, '$1 $2')
+  return s.replace(/\s{2,}/g, ' ').trim()
+}
+
+function fusoraBrand(raw: unknown, fallback = 'Fusora'): string {
+  const b = String(raw || fallback)
+  if (/dyntra|denim\s*forge/i.test(b)) return 'Fusora'
+  return b || 'Fusora'
 }
 
 /** Keep order, drop exact duplicate URLs (and empty). */
@@ -891,19 +925,29 @@ const baseProducts: Product[] = [
 
 const sareeProducts: Product[] = (
   dyntraSarees as Array<Record<string, unknown>>
-).map((p, i) => ({
-  id: String(p.id),
-  rank: Number(p.rank) || i + 1,
-  name: String(p.name),
-  price: Number(p.price),
-  was: Number(p.was) || Number(p.price),
-  topDeal: Boolean(p.topDeal),
-  tab: 'apparel-accessories' as CategoryId,
-  subtype: 'sarees' as ApparelSubtype,
-  brand: String(p.brand || 'Dyntra'),
-  image: String(p.image),
-  description: p.description ? String(p.description) : undefined,
-}))
+).map((p, i) => {
+  const image = String(p.image || '')
+  return {
+    id: String(p.id),
+    rank: Number(p.rank) || i + 1,
+    name: cleanSupplierName(String(p.name)),
+    price: Number(p.price),
+    was: Number(p.was) || Number(p.price),
+    topDeal: Boolean(p.topDeal),
+    tab: 'apparel-accessories' as CategoryId,
+    subtype: 'sarees' as ApparelSubtype,
+    collection: p.categorySlug ? String(p.categorySlug) : undefined,
+    categoryName: p.categoryName ? String(p.categoryName) : undefined,
+    categorySlug: p.categorySlug ? String(p.categorySlug) : undefined,
+    brand: fusoraBrand(p.brand),
+    image,
+    images: uniqueImages(image),
+    description: p.description
+      ? cleanSupplierName(String(p.description))
+      : undefined,
+    source: 'dyntra',
+  }
+})
 
 const modcartCatalog: Product[] = (
   modcartProducts as Array<Record<string, unknown>>
@@ -932,24 +976,36 @@ const modcartCatalog: Product[] = (
 const denimforgeCatalog: Product[] = (
   denimforgeProducts as Array<Record<string, unknown>>
 ).map((p, i) => {
-  const image = String(p.image)
+  const image = String(p.image || '')
   const images = uniqueImages(
     image,
     Array.isArray(p.images) ? (p.images as string[]) : undefined,
   )
+  const collection = String(p.collection || p.categorySlug || 'mens-jeans')
   return {
     id: String(p.id),
     rank: Number(p.rank) || i + 1,
-    name: String(p.name),
+    name: cleanSupplierName(String(p.name)),
     price: Number(p.price),
     was: Number(p.was) || Number(p.price),
     topDeal: Boolean(p.topDeal),
     tab: 'apparel-accessories' as CategoryId,
     subtype: 'jeans' as ApparelSubtype,
-    brand: String(p.brand || 'The Denim Forge'),
+    collection,
+    categoryName: p.categoryName ? String(p.categoryName) : undefined,
+    categorySlug: collection,
+    brand: fusoraBrand(p.brand),
     image: images[0] || image,
     images,
-    description: p.description ? String(p.description) : undefined,
+    description: p.description
+      ? cleanSupplierName(String(p.description))
+      : undefined,
+    sizes: Array.isArray(p.sizes) ? (p.sizes as string[]).map(String) : undefined,
+    fit: p.fit ? String(p.fit) : undefined,
+    wash: p.wash ? String(p.wash) : undefined,
+    fabric: p.fabric ? String(p.fabric) : undefined,
+    sku: p.sku ? String(p.sku) : undefined,
+    source: 'thedenimforge',
   }
 })
 
@@ -959,13 +1015,47 @@ const baseCatalog: Product[] = baseProducts.filter(
     p.tab !== 'consumer-electronics' && p.tab !== 'home-appliances',
 )
 
-export const products: Product[] = [
+/** Normalize image URL for duplicate detection (ignore query/hash). */
+function imageDedupeKey(url: string): string {
+  const raw = String(url || '').trim()
+  if (!raw) return ''
+  try {
+    const u = new URL(raw)
+    return `${u.host}${u.pathname}`.toLowerCase()
+  } catch {
+    return raw.split('?')[0].toLowerCase()
+  }
+}
+
+function isStockPlaceholderImage(url: string): boolean {
+  return /pexels\.com|unsplash\.com|picsum\.photos/i.test(url)
+}
+
+/** Drop stock placeholders + keep first product per unique photo. */
+function dedupeByImage(list: Product[]): Product[] {
+  const seen = new Set<string>()
+  const out: Product[] = []
+  for (const p of list) {
+    const img = String(p.image || '').trim()
+    // Saree catalogue: skip Pexels/stock placeholders (same model, wrong titles)
+    if (p.subtype === 'sarees' && isStockPlaceholderImage(img)) continue
+    const key = imageDedupeKey(img)
+    if (key) {
+      if (seen.has(key)) continue
+      seen.add(key)
+    }
+    out.push(p)
+  }
+  return out
+}
+
+export const products: Product[] = dedupeByImage([
   ...apparelCoreProducts,
   ...sareeProducts,
   ...modcartCatalog,
   ...denimforgeCatalog,
   ...baseCatalog,
-]
+])
 
 export const promoCards = [
   {

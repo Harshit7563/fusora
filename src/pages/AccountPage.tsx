@@ -18,6 +18,7 @@ import { useEffect, useState, type FormEvent } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { SITE_DOMAIN, SUPPORT_EMAIL, SUPPORT_MAILTO } from '../brand'
 import { FusoraLogo } from '../components/FusoraLogo'
+import { GoogleSignInButton } from '../components/GoogleSignInButton'
 import {
   ORDER_STATUS_LABEL,
   useStore,
@@ -77,7 +78,9 @@ function AccountDashboard() {
             Hello, {user?.name?.split(' ')[0] || 'there'}
           </h1>
           <p className="mt-2 text-sm text-bb-muted">
-            {user?.email} · {user?.phone}
+            {user?.email}
+            {user?.phone ? ` · ${user.phone}` : ''}
+            {user?.provider === 'google' ? ' · Google' : ''}
           </p>
         </div>
         <button
@@ -442,7 +445,9 @@ export function AccountPage() {
     msg.includes('Could not') ||
     msg.includes('Incorrect') ||
     msg.includes('No account') ||
-    msg.includes('already exists')
+    msg.includes('already exists') ||
+    msg.includes('Google') ||
+    msg.includes('Client ID')
 
   return (
     <main className="min-h-[calc(100svh-8rem)] bg-bb-gray/50">
@@ -521,7 +526,20 @@ export function AccountPage() {
                 : 'Verify your mobile with OTP, then join fusora.shop.'}
             </p>
 
-            <form className="mt-6 space-y-4" onSubmit={onSubmit}>
+            <div className="mt-6">
+              <GoogleSignInButton
+                onSuccess={goAfterAuth}
+                onError={(message) => setDone(message)}
+              />
+            </div>
+
+            <div className="mt-5 flex items-center gap-3 text-xs tracking-wide text-bb-muted uppercase">
+              <span className="h-px flex-1 bg-bb-border" />
+              or use email
+              <span className="h-px flex-1 bg-bb-border" />
+            </div>
+
+            <form className="mt-5 space-y-4" onSubmit={onSubmit}>
               {mode === 'register' && (
                 <label className="block text-sm font-semibold text-bb-text">
                   Full name

@@ -1,12 +1,13 @@
 import { Heart } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { formatMoney, products } from '../data'
+import { products } from '../data'
 import { useStore } from '../context/StoreContext'
 import { usePageTitle } from '../hooks/usePageTitle'
+import { ProductCard } from '../components/ProductCard'
 
 export function WishlistPage() {
   usePageTitle('Wishlist')
-  const { wishlist, toggleWish, addToCart } = useStore()
+  const { wishlist } = useStore()
   const list = products.filter((p) => wishlist.has(p.id))
 
   return (
@@ -28,7 +29,7 @@ export function WishlistPage() {
           </p>
           <Link
             to="/deals"
-            className="mt-6 inline-flex rounded-full bg-bb-blue px-6 py-3 text-xs font-semibold tracking-[0.16em] text-[#f7f3ec] uppercase"
+            className="mt-6 inline-flex bg-bb-blue px-6 py-3 text-xs font-semibold tracking-[0.16em] text-white uppercase"
           >
             Browse shop
           </Link>
@@ -36,42 +37,7 @@ export function WishlistPage() {
       ) : (
         <div className="mt-10 grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-6">
           {list.map((p) => (
-            <article key={p.id} className="group">
-              <div className="relative mb-4 overflow-hidden bg-[#efe8dc]">
-                <Link to={`/product/${p.id}`}>
-                  <img
-                    src={p.image}
-                    alt=""
-                    className="aspect-[3/4] w-full object-cover transition duration-500 group-hover:scale-[1.03]"
-                  />
-                </Link>
-                <button
-                  type="button"
-                  onClick={() => toggleWish(p.id)}
-                  className="absolute top-3 right-3 grid size-9 place-items-center rounded-full bg-white/90"
-                  aria-label="Remove from wishlist"
-                >
-                  <Heart className="size-4 fill-bb-save text-bb-save" />
-                </button>
-              </div>
-              <p className="text-[0.65rem] tracking-[0.16em] text-bb-muted uppercase">
-                {p.brand}
-              </p>
-              <Link
-                to={`/product/${p.id}`}
-                className="mt-1 line-clamp-2 block text-sm text-bb-text group-hover:underline"
-              >
-                {p.name}
-              </Link>
-              <p className="mt-2 text-sm font-semibold">{formatMoney(p.price)}</p>
-              <button
-                type="button"
-                onClick={() => addToCart(p)}
-                className="mt-3 w-full rounded-full border border-bb-border py-2.5 text-[0.65rem] font-semibold tracking-[0.16em] uppercase transition hover:bg-bb-blue hover:text-[#f7f3ec]"
-              >
-                Add to bag
-              </button>
-            </article>
+            <ProductCard key={p.id} product={p} />
           ))}
         </div>
       )}

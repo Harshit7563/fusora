@@ -1,0 +1,378 @@
+[
+  {
+    "id": 159,
+    "name": "Red Sarees",
+    "slug": "red-sarees",
+    "groupType": "color",
+    "image": "https://api.dyntra.in/categories/red-sarees.png",
+    "sortOrder": 1
+  },
+  {
+    "id": 160,
+    "name": "Pink Sarees",
+    "slug": "pink-sarees",
+    "groupType": "color",
+    "image": "https://api.dyntra.in/categories/pink-sarees.png",
+    "sortOrder": 2
+  },
+  {
+    "id": 161,
+    "name": "Green Sarees",
+    "slug": "green-sarees",
+    "groupType": "color",
+    "image": "https://api.dyntra.in/categories/green-sarees.png",
+    "sortOrder": 3
+  },
+  {
+    "id": 162,
+    "name": "Blue Sarees",
+    "slug": "blue-sarees",
+    "groupType": "color",
+    "image": "https://api.dyntra.in/categories/blue-sarees.png",
+    "sortOrder": 4
+  },
+  {
+    "id": 163,
+    "name": "Black Sarees",
+    "slug": "black-sarees",
+    "groupType": "color",
+    "image": "https://api.dyntra.in/categories/black-sarees.png",
+    "sortOrder": 5
+  },
+  {
+    "id": 164,
+    "name": "White Sarees",
+    "slug": "white-sarees",
+    "groupType": "color",
+    "image": "https://api.dyntra.in/categories/white-sarees.png",
+    "sortOrder": 6
+  },
+  {
+    "id": 165,
+    "name": "Yellow Sarees",
+    "slug": "yellow-sarees",
+    "groupType": "color",
+    "image": "https://api.dyntra.in/categories/yellow-sarees.png",
+    "sortOrder": 7
+  },
+  {
+    "id": 166,
+    "name": "Purple Sarees",
+    "slug": "purple-sarees",
+    "groupType": "color",
+    "image": "https://api.dyntra.in/categories/purple-sarees.png",
+    "sortOrder": 8
+  },
+  {
+    "id": 141,
+    "name": "Printed Sarees",
+    "slug": "printed-sarees",
+    "groupType": "design",
+    "image": "https://api.dyntra.in/categories/printed-sarees.png",
+    "sortOrder": 1
+  },
+  {
+    "id": 142,
+    "name": "Embroidered Sarees",
+    "slug": "embroidered-sarees",
+    "groupType": "design",
+    "image": "https://api.dyntra.in/categories/embroidered-sarees.png",
+    "sortOrder": 2
+  },
+  {
+    "id": 143,
+    "name": "Handloom Sarees",
+    "slug": "handloom-sarees",
+    "groupType": "design",
+    "image": "https://api.dyntra.in/categories/handloom-sarees.png",
+    "sortOrder": 3
+  },
+  {
+    "id": 144,
+    "name": "Designer Sarees",
+    "slug": "designer-sarees",
+    "groupType": "design",
+    "image": "https://api.dyntra.in/categories/designer-sarees.png",
+    "sortOrder": 4
+  },
+  {
+    "id": 145,
+    "name": "Sequins Sarees",
+    "slug": "sequins-sarees",
+    "groupType": "design",
+    "image": "https://api.dyntra.in/categories/sequins-sarees.png",
+    "sortOrder": 5
+  },
+  {
+    "id": 146,
+    "name": "Zari Work Sarees",
+    "slug": "zari-work-sarees",
+    "groupType": "design",
+    "image": "https://api.dyntra.in/categories/zari-work-sarees.png",
+    "sortOrder": 6
+  },
+  {
+    "id": 147,
+    "name": "Stone Work Sarees",
+    "slug": "stone-work-sarees",
+    "groupType": "design",
+    "image": "https://api.dyntra.in/categories/stone-work-sarees.png",
+    "sortOrder": 7
+  },
+  {
+    "id": 148,
+    "name": "Bandhani Sarees",
+    "slug": "bandhani-sarees",
+    "groupType": "design",
+    "image": "https://api.dyntra.in/categories/bandhani-sarees.png",
+    "sortOrder": 8
+  },
+  {
+    "id": 149,
+    "name": "Leheriya Sarees",
+    "slug": "leheriya-sarees",
+    "groupType": "design",
+    "image": "https://api.dyntra.in/categories/leheriya-sarees.png",
+    "sortOrder": 9
+  },
+  {
+    "id": 120,
+    "name": "Cotton Sarees",
+    "slug": "cotton-sarees",
+    "groupType": "fabric",
+    "image": "https://api.dyntra.in/categories/cotton-sarees.png",
+    "sortOrder": 1
+  },
+  {
+    "id": 121,
+    "name": "Silk Sarees",
+    "slug": "silk-sarees",
+    "groupType": "fabric",
+    "image": "https://api.dyntra.in/categories/silk-sarees.png",
+    "sortOrder": 2
+  },
+  {
+    "id": 122,
+    "name": "Banarasi Sarees",
+    "slug": "banarasi-sarees",
+    "groupType": "fabric",
+    "image": "https://api.dyntra.in/categories/banarasi-sarees.png",
+    "sortOrder": 3
+  },
+  {
+    "id": 123,
+    "name": "Kanjivaram Sarees",
+    "slug": "kanjivaram-sarees",
+    "groupType": "fabric",
+    "image": "https://api.dyntra.in/categories/kanjivaram-sarees.png",
+    "sortOrder": 4
+  },
+  {
+    "id": 124,
+    "name": "Chanderi Sarees",
+    "slug": "chanderi-sarees",
+    "groupType": "fabric",
+    "image": "https://api.dyntra.in/categories/chanderi-sarees.png",
+    "sortOrder": 5
+  },
+  {
+    "id": 125,
+    "name": "Linen Sarees",
+    "slug": "linen-sarees",
+    "groupType": "fabric",
+    "image": "https://api.dyntra.in/categories/linen-sarees.png",
+    "sortOrder": 6
+  },
+  {
+    "id": 126,
+    "name": "Organza Sarees",
+    "slug": "organza-sarees",
+    "groupType": "fabric",
+    "image": "https://api.dyntra.in/categories/organza-sarees.png",
+    "sortOrder": 7
+  },
+  {
+    "id": 127,
+    "name": "Georgette Sarees",
+    "slug": "georgette-sarees",
+    "groupType": "fabric",
+    "image": "https://api.dyntra.in/categories/georgette-sarees.png",
+    "sortOrder": 8
+  },
+  {
+    "id": 128,
+    "name": "Chiffon Sarees",
+    "slug": "chiffon-sarees",
+    "groupType": "fabric",
+    "image": "https://api.dyntra.in/categories/chiffon-sarees.png",
+    "sortOrder": 9
+  },
+  {
+    "id": 129,
+    "name": "Satin Sarees",
+    "slug": "satin-sarees",
+    "groupType": "fabric",
+    "image": "https://api.dyntra.in/categories/satin-sarees.png",
+    "sortOrder": 10
+  },
+  {
+    "id": 130,
+    "name": "Crepe Sarees",
+    "slug": "crepe-sarees",
+    "groupType": "fabric",
+    "image": "https://api.dyntra.in/categories/crepe-sarees.png",
+    "sortOrder": 11
+  },
+  {
+    "id": 131,
+    "name": "Net Sarees",
+    "slug": "net-sarees",
+    "groupType": "fabric",
+    "image": "https://api.dyntra.in/categories/net-sarees.png",
+    "sortOrder": 12
+  },
+  {
+    "id": 132,
+    "name": "Rayon Sarees",
+    "slug": "rayon-sarees",
+    "groupType": "fabric",
+    "image": "https://api.dyntra.in/categories/rayon-sarees.png",
+    "sortOrder": 13
+  },
+  {
+    "id": 133,
+    "name": "Wedding Sarees",
+    "slug": "wedding-sarees",
+    "groupType": "occasion",
+    "image": "https://api.dyntra.in/categories/wedding-sarees.png",
+    "sortOrder": 1
+  },
+  {
+    "id": 134,
+    "name": "Bridal Sarees",
+    "slug": "bridal-sarees",
+    "groupType": "occasion",
+    "image": "https://api.dyntra.in/categories/bridal-sarees.png",
+    "sortOrder": 2
+  },
+  {
+    "id": 135,
+    "name": "Party Wear Sarees",
+    "slug": "party-wear-sarees",
+    "groupType": "occasion",
+    "image": "https://api.dyntra.in/categories/party-wear-sarees.png",
+    "sortOrder": 3
+  },
+  {
+    "id": 136,
+    "name": "Festive Sarees",
+    "slug": "festive-sarees",
+    "groupType": "occasion",
+    "image": "https://api.dyntra.in/categories/festive-sarees.png",
+    "sortOrder": 4
+  },
+  {
+    "id": 137,
+    "name": "Office Wear Sarees",
+    "slug": "office-wear-sarees",
+    "groupType": "occasion",
+    "image": "https://api.dyntra.in/categories/office-wear-sarees.png",
+    "sortOrder": 5
+  },
+  {
+    "id": 138,
+    "name": "Daily Wear Sarees",
+    "slug": "daily-wear-sarees",
+    "groupType": "occasion",
+    "image": "https://api.dyntra.in/categories/daily-wear-sarees.png",
+    "sortOrder": 6
+  },
+  {
+    "id": 139,
+    "name": "Reception Sarees",
+    "slug": "reception-sarees",
+    "groupType": "occasion",
+    "image": "https://api.dyntra.in/categories/reception-sarees.png",
+    "sortOrder": 7
+  },
+  {
+    "id": 140,
+    "name": "Traditional Sarees",
+    "slug": "traditional-sarees",
+    "groupType": "occasion",
+    "image": "https://api.dyntra.in/categories/traditional-sarees.png",
+    "sortOrder": 8
+  },
+  {
+    "id": 150,
+    "name": "Banarasi",
+    "slug": "banarasi",
+    "groupType": "regional",
+    "image": "https://api.dyntra.in/categories/banarasi.png",
+    "sortOrder": 1
+  },
+  {
+    "id": 151,
+    "name": "Kanjivaram",
+    "slug": "kanjivaram",
+    "groupType": "regional",
+    "image": "https://api.dyntra.in/categories/kanjivaram.png",
+    "sortOrder": 2
+  },
+  {
+    "id": 152,
+    "name": "Paithani",
+    "slug": "paithani",
+    "groupType": "regional",
+    "image": "https://api.dyntra.in/categories/paithani.png",
+    "sortOrder": 3
+  },
+  {
+    "id": 153,
+    "name": "Patola",
+    "slug": "patola",
+    "groupType": "regional",
+    "image": "https://api.dyntra.in/categories/patola.png",
+    "sortOrder": 4
+  },
+  {
+    "id": 154,
+    "name": "Bandhani",
+    "slug": "bandhani",
+    "groupType": "regional",
+    "image": "https://api.dyntra.in/categories/bandhani.png",
+    "sortOrder": 5
+  },
+  {
+    "id": 155,
+    "name": "Sambalpuri",
+    "slug": "sambalpuri",
+    "groupType": "regional",
+    "image": "https://api.dyntra.in/categories/sambalpuri.png",
+    "sortOrder": 6
+  },
+  {
+    "id": 156,
+    "name": "Tant",
+    "slug": "tant",
+    "groupType": "regional",
+    "image": "https://api.dyntra.in/categories/tant.png",
+    "sortOrder": 7
+  },
+  {
+    "id": 157,
+    "name": "Muga Silk",
+    "slug": "muga-silk",
+    "groupType": "regional",
+    "image": "https://api.dyntra.in/categories/muga-silk.png",
+    "sortOrder": 8
+  },
+  {
+    "id": 158,
+    "name": "Kota Doria",
+    "slug": "kota-doria",
+    "groupType": "regional",
+    "image": "https://api.dyntra.in/categories/kota-doria.png",
+    "sortOrder": 9
+  }
+]

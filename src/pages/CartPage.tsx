@@ -5,15 +5,14 @@ import { usePageTitle } from '../hooks/usePageTitle'
 
 export function CartPage() {
   usePageTitle('Cart')
-  const { cart, setQty, removeFromCart, openCart, locationLabel, isLoggedIn } =
-    useStore()
+  const { cart, setQty, removeFromCart, openCart, isLoggedIn } = useStore()
   const total = cart.reduce((s, i) => s + i.price * i.qty, 0)
 
   return (
-    <main className="mx-auto max-w-[900px] px-4 py-8 lg:px-6">
-      <h1 className="font-serif text-4xl text-bb-text">Your cart</h1>
+    <main className="mx-auto max-w-[900px] px-3 py-8 sm:px-4 lg:px-6">
+      <h1 className="font-serif text-3xl text-bb-text sm:text-4xl">Your cart</h1>
       <p className="mt-1 text-sm text-bb-muted">
-        Pickup available at {locationLabel}
+        {cart.length} item{cart.length === 1 ? '' : 's'} in your bag
       </p>
 
       {cart.length === 0 ? (
@@ -78,21 +77,21 @@ export function CartPage() {
               </li>
             ))}
           </ul>
-          <div className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl bg-[#efe8dc]/70 p-5">
+          <div className="mt-6 flex flex-col gap-4 rounded-2xl bg-[#efe8dc]/70 p-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:p-5">
             <p className="text-xl font-bold">
               Subtotal: {formatMoney(total)}
             </p>
-            <div className="flex gap-2">
+            <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
               <button
                 type="button"
                 onClick={openCart}
-                className="rounded-full border border-bb-border bg-white px-5 py-2.5 text-xs font-semibold tracking-[0.14em] uppercase"
+                className="rounded-full border border-bb-border bg-white px-5 py-3 text-center text-xs font-semibold tracking-[0.14em] uppercase sm:py-2.5"
               >
                 Quick cart
               </button>
               <Link
                 to={isLoggedIn ? '/checkout' : '/account?next=/checkout'}
-                className="rounded-full bg-bb-blue px-6 py-2.5 text-xs font-semibold tracking-[0.14em] text-[#f7f3ec] uppercase"
+                className="rounded-full bg-bb-blue px-6 py-3 text-center text-xs font-semibold tracking-[0.14em] text-[#f7f3ec] uppercase sm:py-2.5"
               >
                 {isLoggedIn ? 'Checkout' : 'Sign in to checkout'}
               </Link>

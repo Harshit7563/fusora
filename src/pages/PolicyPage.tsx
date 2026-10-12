@@ -90,9 +90,9 @@ export function PolicyPage() {
         {policy.sections.map((section) => (
           <section key={section.heading}>
             <h2 className="text-lg font-bold text-bb-text">{section.heading}</h2>
-            <div className="mt-2 space-y-3 text-sm leading-relaxed text-bb-muted">
-              {section.body.map((para) => (
-                <p key={para.slice(0, 48)}>{para}</p>
+            <div className="mt-2 space-y-3 text-sm leading-relaxed text-bb-muted sm:text-[0.95rem] sm:leading-7">
+              {section.body.map((para, i) => (
+                <p key={`${section.heading}-${i}`}>{para}</p>
               ))}
             </div>
           </section>

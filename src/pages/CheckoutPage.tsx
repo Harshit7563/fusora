@@ -1,31 +1,47 @@
-import { CheckCircle2, Lock, MapPin } from 'lucide-react'
+import { CheckCircle2, Lock } from 'lucide-react'
 import { useEffect, useMemo, useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { formatMoney } from '../data'
+import { COD_MIN_TOTAL, SUPPORT_EMAIL, SUPPORT_MAILTO } from '../brand'
 import { useStore } from '../context/StoreContext'
 import { usePageTitle } from '../hooks/usePageTitle'
-import { SUPPORT_EMAIL, SUPPORT_MAILTO } from '../brand'
+import { saveCheckoutDraft } from '../lib/checkoutDraft'
+import {
+  isValidPincodeFormat,
+  validatePincode,
+} from '../lib/pincode'
+
+type CheckoutPayChoice = 'online' | 'cod'
 
 export function CheckoutPage() {
   usePageTitle('Checkout')
   const navigate = useNavigate()
   const {
     cart,
-    locationLabel,
-    store,
-    openLocationModal,
     user,
     isLoggedIn,
     placeOrder,
   } = useStore()
   const [done, setDone] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [submitting, setSubmitting] = useState(false)
+  const [pinHint, setPinHint] = useState('')
   const [form, setForm] = useState({
     name: '',
     phone: '',
     email: '',
     address: '',
-    payment: 'cod' as 'cod' | 'upi',
+    pincode: '',
+    city: '',
+    state: '',
+    payment: 'online' as CheckoutPayChoice,
   })
+
+  const total = useMemo(
+    () => cart.reduce((s, i) => s + i.price * i.qty, 0),
+    [cart],
+  )
+  const codAllowed = total >= COD_MIN_TOTAL
 
   useEffect(() => {
     if (!user) return
@@ -37,35 +53,114 @@ export function CheckoutPage() {
     }))
   }, [user])
 
-  const total = useMemo(
-    () => cart.reduce((s, i) => s + i.price * i.qty, 0),
-    [cart],
-  )
+  useEffect(() => {
+    if (!codAllowed && form.payment === 'cod') {
+      setForm((f) => ({ ...f, payment: 'online' }))
+    }
+  }, [codAllowed, form.payment])
 
-  const onSubmit = (e: FormEvent) => {
+  const lookupPincode = async (raw: string) => {
+    const pin = raw.trim()
+    if (!pin) {
+      setPinHint('')
+      return
+    }
+    if (!isValidPincodeFormat(pin)) {
+      setPinHint('Enter a valid 6-digit Indian pincode.')
+      return
+    }
+    setPinHint('Checking pincode…')
+    const result = await validatePincode(pin)
+    if (!result.ok) {
+      setPinHint(result.message)
+      return
+    }
+    setForm((f) => ({
+      ...f,
+      pincode: result.pincode,
+      city: result.city || f.city,
+      state: result.state || f.state,
+    }))
+    setPinHint(
+      result.city || result.state
+        ? `Serviceable · ${[result.area, result.city, result.state].filter(Boolean).join(', ')}`
+        : 'Pincode format OK',
+    )
+  }
+
+  const onSubmit = async (e: FormEvent) => {
     e.preventDefault()
+    setError(null)
     if (!isLoggedIn || !user) {
       navigate('/account?next=/checkout')
       return
     }
     if (cart.length === 0) return
+
     const phone = form.phone.replace(/\D/g, '')
     if (phone.length < 10) {
-      setDone('Enter a valid 10-digit mobile number.')
+      setError('Enter a valid 10-digit mobile number.')
       return
     }
-    const order = placeOrder({
-      name: form.name,
+
+    if (!isValidPincodeFormat(form.pincode)) {
+      setError('Enter a valid 6-digit Indian pincode.')
+      return
+    }
+
+    setSubmitting(true)
+    const pinResult = await validatePincode(form.pincode)
+    if (!pinResult.ok) {
+      setSubmitting(false)
+      setError(pinResult.message)
+      setPinHint(pinResult.message)
+      return
+    }
+
+    const city = pinResult.city || form.city
+    const state = pinResult.state || form.state
+    const fullAddress = [form.address.trim(), city, state, pinResult.pincode]
+      .filter(Boolean)
+      .join(', ')
+
+    if (form.payment === 'cod') {
+      if (!codAllowed) {
+        setSubmitting(false)
+        setError(`Cash on delivery is available only for orders of ₹${COD_MIN_TOTAL.toLocaleString('en-IN')} or more.`)
+        return
+      }
+      const order = placeOrder({
+        name: form.name,
+        phone: form.phone,
+        email: form.email,
+        address: fullAddress,
+        payment: 'cod',
+      })
+      setSubmitting(false)
+      if (!order) {
+        setError('Could not place order. Please try again.')
+        return
+      }
+      setDone(order.id)
+      return
+    }
+
+    // Pay online: do NOT place order yet — open custom payment page
+    saveCheckoutDraft({
+      name: form.name.trim(),
       phone: form.phone,
-      email: form.email,
-      address: form.address,
-      payment: form.payment,
+      email: form.email.trim(),
+      address: form.address.trim(),
+      pincode: pinResult.pincode,
+      city,
+      state,
+      payment: 'upi',
+      total,
+      items: cart.map((i) => ({ ...i })),
+      createdAt: Date.now(),
     })
-    if (!order) {
-      setDone('Could not place order. Please try again.')
-      return
-    }
-    setDone(order.id)
+    setSubmitting(false)
+    navigate('/payment?method=upi')
   }
 
   if (done && done.startsWith('FUS')) {
@@ -162,16 +257,37 @@ export function CheckoutPage() {
   const field =
     'mt-1.5 w-full rounded-xl border border-bb-border bg-white px-3.5 py-3 text-sm outline-none focus:border-bb-blue'
 
+  const payOptions: {
+    id: CheckoutPayChoice
+    label: string
+    hint?: string
+    disabled?: boolean
+  }[] = [
+    {
+      id: 'online',
+      label: 'Pay Online',
+      hint: 'UPI QR · Debit / Credit · Net banking',
+    },
+    {
+      id: 'cod',
+      label: 'Cash on delivery',
+      hint: codAllowed
+        ? 'Pay when your order arrives'
+        : `Available on orders ₹${COD_MIN_TOTAL.toLocaleString('en-IN')}+`,
+      disabled: !codAllowed,
+    },
+  ]
+
   return (
-    <main className="mx-auto max-w-[1000px] px-4 py-10 lg:px-6">
-      <h1 className="font-serif text-4xl text-bb-text">Checkout</h1>
+    <main className="mx-auto max-w-[1000px] px-3 py-8 sm:px-4 sm:py-10 lg:px-6">
+      <h1 className="font-serif text-3xl text-bb-text sm:text-4xl">Checkout</h1>
       <p className="mt-2 text-sm text-bb-muted">
-        Signed in as {user?.name || user?.email} · Complete your order for hub
-        pickup or delivery.
+        Signed in as {user?.name || user?.email} · Enter address and choose how
+        you want to pay.
       </p>
 
-      <div className="mt-8 grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-        <form className="space-y-4" onSubmit={onSubmit}>
+      <div className="mt-6 grid gap-6 sm:mt-8 sm:gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+        <form className="order-2 space-y-4 lg:order-1" onSubmit={onSubmit}>
           <label className="block text-sm font-semibold">
             Full name
             <input
@@ -203,12 +319,71 @@ export function CheckoutPage() {
               onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
             />
           </label>
+
+          <label className="block text-sm font-semibold">
+            Pincode
+            <input
+              required
+              inputMode="numeric"
+              maxLength={6}
+              pattern="[1-9][0-9]{5}"
+              className={field}
+              placeholder="6-digit PIN first"
+              value={form.pincode}
+              onChange={(e) => {
+                const pincode = e.target.value.replace(/\D/g, '').slice(0, 6)
+                setForm((f) =>
+                  pincode.length < 6
+                    ? { ...f, pincode, city: '', state: '' }
+                    : { ...f, pincode },
+                )
+                if (pincode.length < 6) setPinHint('')
+                else void lookupPincode(pincode)
+              }}
+              onBlur={() => void lookupPincode(form.pincode)}
+            />
+          </label>
+          {pinHint && (
+            <p
+              className={`-mt-2 text-xs ${
+                pinHint.includes('not') || pinHint.includes('valid')
+                  ? 'text-bb-save'
+                  : 'text-bb-muted'
+              }`}
+            >
+              {pinHint}
+            </p>
+          )}
+          <div className="grid gap-4 sm:grid-cols-2">
+            <label className="block text-sm font-semibold">
+              City
+              <input
+                required
+                className={field}
+                value={form.city}
+                onChange={(e) => setForm((f) => ({ ...f, city: e.target.value }))}
+                placeholder="Fills after pincode"
+              />
+            </label>
+            <label className="block text-sm font-semibold">
+              State
+              <input
+                required
+                className={field}
+                value={form.state}
+                onChange={(e) => setForm((f) => ({ ...f, state: e.target.value }))}
+                placeholder="Fills after pincode"
+              />
+            </label>
+          </div>
+
           <label className="block text-sm font-semibold">
             Address / landmark
             <textarea
               required
               rows={3}
               className={field}
+              placeholder="House no., street, landmark"
               value={form.address}
               onChange={(e) =>
                 setForm((f) => ({ ...f, address: e.target.value }))
@@ -216,55 +391,51 @@ export function CheckoutPage() {
             />
           </label>
 
-          <button
-            type="button"
-            onClick={openLocationModal}
-            className="flex w-full items-start gap-2 rounded-xl border border-bb-border px-3 py-3 text-left text-sm"
-          >
-            <MapPin className="mt-0.5 size-4 text-bb-blue" />
-            <span>
-              <span className="font-semibold">Fulfill near {locationLabel}</span>
-              <span className="mt-0.5 block text-xs text-bb-muted">
-                {store?.name ?? 'Choose hub'} · Change
-              </span>
-            </span>
-          </button>
-
           <fieldset className="space-y-2">
             <legend className="text-sm font-semibold">Payment</legend>
-            {(
-              [
-                ['cod', 'Cash on delivery / hub pay'],
-                ['upi', 'UPI (pay on confirmation)'],
-              ] as const
-            ).map(([id, label]) => (
+            {payOptions.map(({ id, label, hint, disabled }) => (
               <label
                 key={id}
-                className="flex cursor-pointer items-center gap-3 rounded-xl border border-bb-border px-3 py-3 text-sm"
+                className={`flex cursor-pointer items-center gap-3 rounded-xl border px-3 py-3 text-sm ${
+                  disabled
+                    ? 'cursor-not-allowed border-bb-border/60 opacity-55'
+                    : 'border-bb-border'
+                }`}
               >
                 <input
                   type="radio"
                   name="pay"
+                  disabled={disabled}
                   checked={form.payment === id}
                   onChange={() => setForm((f) => ({ ...f, payment: id }))}
                   className="accent-bb-blue"
                 />
-                {label}
+                <span>
+                  {label}
+                  {hint && (
+                    <span className="mt-0.5 block text-xs text-bb-muted">{hint}</span>
+                  )}
+                </span>
               </label>
             ))}
           </fieldset>
 
-          {done && !done.startsWith('FUS') && (
+          {error && (
             <p className="rounded-xl bg-red-50 px-3 py-2 text-sm text-bb-save">
-              {done}
+              {error}
             </p>
           )}
 
           <button
             type="submit"
-            className="w-full rounded-full bg-bb-blue py-3.5 text-xs font-semibold tracking-[0.16em] text-[#f7f3ec] uppercase"
+            disabled={submitting}
+            className="w-full rounded-full bg-bb-blue py-3.5 text-xs font-semibold tracking-[0.16em] text-[#f7f3ec] uppercase disabled:opacity-60"
           >
-            Place order · {formatMoney(total)}
+            {submitting
+              ? 'Please wait…'
+              : form.payment === 'cod'
+                ? `Place order · ${formatMoney(total)}`
+                : `Pay online · ${formatMoney(total)}`}
           </button>
           <button
             type="button"
@@ -275,7 +446,7 @@ export function CheckoutPage() {
           </button>
         </form>
 
-        <aside className="h-fit rounded-2xl border border-bb-border bg-white p-5">
+        <aside className="order-1 h-fit rounded-2xl border border-bb-border bg-white p-4 sm:p-5 lg:order-2 lg:sticky lg:top-28">
           <h2 className="text-sm font-semibold tracking-[0.14em] uppercase">
             Order summary
           </h2>
@@ -300,6 +471,12 @@ export function CheckoutPage() {
             <span>Total</span>
             <span>{formatMoney(total)}</span>
           </div>
+          {!codAllowed && (
+            <p className="mt-3 text-xs text-bb-muted">
+              COD unlocks at ₹{COD_MIN_TOTAL.toLocaleString('en-IN')}+. Use Pay
+              Online (UPI / card / net banking) below that.
+            </p>
+          )}
         </aside>
       </div>
     </main>

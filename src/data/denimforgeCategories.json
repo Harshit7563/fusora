@@ -1,0 +1,20 @@
+[
+  {
+    "slug": "mens-jeans",
+    "name": "Men's Jeans",
+    "blurb": "Wholesale mens denim — fits, washes & everyday staples.",
+    "image": "https://thedenimforge.com/uploads/products/1787059480498-bwca0u.webp"
+  },
+  {
+    "slug": "womens-jeans",
+    "name": "Women's Jeans",
+    "blurb": "Wholesale womens denim — bootcut, skinny, wide leg & more.",
+    "image": "https://thedenimforge.com/uploads/products/1787138973885-2z53b4.jpg"
+  },
+  {
+    "slug": "kids-jeans",
+    "name": "Kids Jeans",
+    "blurb": "Durable kids denim for retailers and distributors.",
+    "image": "https://thedenimforge.com/uploads/products/1787223395349-nbip0a.jpg"
+  }
+]

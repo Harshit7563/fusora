@@ -370,7 +370,13 @@ export function OrderDetailPage() {
               <li>
                 <span className="font-semibold text-bb-text">Payment</span>
                 <span className="mt-0.5 block uppercase">
-                  {order.payment === 'cod' ? 'Cash / hub pay' : 'UPI'}
+                  {order.payment === 'cod'
+                    ? 'Cash on delivery'
+                    : order.payment === 'card'
+                      ? 'Debit / Credit card'
+                      : order.payment === 'netbanking'
+                        ? 'Net banking'
+                        : 'UPI'}
                 </span>
               </li>
             </ul>

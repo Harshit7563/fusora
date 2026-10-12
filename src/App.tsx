@@ -7,6 +7,7 @@ import { AccountPage } from './pages/AccountPage'
 import { CartPage } from './pages/CartPage'
 import { CategoryPage } from './pages/CategoryPage'
 import { CheckoutPage } from './pages/CheckoutPage'
+import { PaymentPage } from './pages/PaymentPage'
 import { DealsPage } from './pages/DealsPage'
 import { HomePage } from './pages/HomePage'
 import { MembershipsPage } from './pages/MembershipsPage'
@@ -29,10 +30,15 @@ export default function App() {
             <Route path="product/:id" element={<ProductPage />} />
             <Route path="category/:tab" element={<CategoryPage />} />
             <Route path="category/:tab/:subtype" element={<CategoryPage />} />
+            <Route
+              path="category/:tab/:subtype/:collection"
+              element={<CategoryPage />}
+            />
             <Route path="deals" element={<DealsPage />} />
             <Route path="search" element={<DealsPage />} />
             <Route path="cart" element={<CartPage />} />
             <Route path="checkout" element={<CheckoutPage />} />
+            <Route path="payment" element={<PaymentPage />} />
             <Route path="wishlist" element={<WishlistPage />} />
             <Route path="account" element={<AccountPage />} />
             <Route path="register" element={<AccountPage />} />

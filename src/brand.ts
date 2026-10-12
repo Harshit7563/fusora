@@ -10,3 +10,9 @@ export const COMPANY_SHORT = 'Fusefold'
 export const POLICY_EFFECTIVE_DATE = '02/12/2025'
 export const GRIEVANCE_OFFICER = 'Ravi Lodha'
 export const GRIEVANCE_EMAIL = SUPPORT_EMAIL
+
+/** Payments */
+export const UPI_VPA = 'fusora@upi'
+export const UPI_PAYEE_NAME = 'Fusora'
+/** COD only when order total is at least this amount (INR) */
+export const COD_MIN_TOTAL = 2000

@@ -2,9 +2,7 @@ import {
   Check,
   ChevronRight,
   Heart,
-  MapPin,
   Minus,
-  Package,
   Plus,
   RotateCcw,
   Ruler,
@@ -21,6 +19,7 @@ import { formatMoney, products } from '../data'
 import { useStore } from '../context/StoreContext'
 import { getProductDetails } from '../productDetails'
 import { usePageTitle } from '../hooks/usePageTitle'
+import { SafeImage } from '../components/SafeImage'
 
 type TabId = 'overview' | 'specs' | 'sizechart' | 'reviews'
 
@@ -50,18 +49,13 @@ export function ProductPage() {
     addToCart,
     wishlist,
     toggleWish,
-    locationLabel,
-    locationSubLabel,
-    openLocationModal,
     openCart,
-    store,
   } = useStore()
 
   const product = products.find((p) => p.id === id)
   const [activeImage, setActiveImage] = useState(0)
   const [qty, setQty] = useState(1)
   const [tab, setTab] = useState<TabId>('overview')
-  const [fulfillment, setFulfillment] = useState<'pickup' | 'delivery'>('pickup')
   const [selectedSize, setSelectedSize] = useState<string | null>(null)
   const [sizeHint, setSizeHint] = useState(false)
 
@@ -160,16 +154,17 @@ export function ProductPage() {
         <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] xl:gap-12">
           {/* Gallery */}
           <section>
-            <div className="relative overflow-hidden bg-[#efe8dc]">
-              <img
+            <div className="relative overflow-hidden bg-bb-gray">
+              <SafeImage
                 key={details.gallery[safeImageIndex]}
                 src={details.gallery[safeImageIndex]}
                 alt={product.name}
                 className="aspect-[4/5] w-full object-cover sm:aspect-square"
+                loading="eager"
               />
               {product.topDeal && (
-                <span className="absolute top-4 left-4 bg-bb-blue px-3 py-1 text-[0.65rem] font-semibold tracking-[0.16em] text-[#f7f3ec] uppercase">
-                  Top deal
+                <span className="absolute top-4 left-4 bg-bb-blue px-3 py-1 text-[0.65rem] font-semibold tracking-[0.16em] text-white uppercase">
+                  New
                 </span>
               )}
               {savePct > 0 && (
@@ -191,7 +186,7 @@ export function ProductPage() {
                         : 'border-transparent opacity-75 hover:opacity-100'
                     }`}
                   >
-                    <img
+                    <SafeImage
                       src={src}
                       alt=""
                       className="h-full w-full object-cover"
@@ -279,7 +274,7 @@ export function ProductPage() {
                         }}
                         className={`min-w-12 rounded-full border px-3.5 py-2 text-sm font-medium transition ${
                           active
-                            ? 'border-bb-blue bg-bb-blue text-[#f7f3ec]'
+                            ? 'border-bb-blue bg-bb-blue text-white'
                             : 'border-bb-border text-bb-text hover:border-bb-blue'
                         }`}
                       >
@@ -297,51 +292,20 @@ export function ProductPage() {
             )}
 
             <div className="mt-6">
-              <p className="mb-2 text-sm font-semibold">Get it</p>
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  type="button"
-                  onClick={() => setFulfillment('pickup')}
-                  className={`rounded-2xl border px-3 py-3 text-left text-sm ${
-                    fulfillment === 'pickup'
-                      ? 'border-bb-blue bg-bb-blue/5'
-                      : 'border-bb-border'
-                  }`}
-                >
-                  <Package className="mb-1 size-4 text-bb-blue" />
-                  <span className="block font-semibold">Pickup</span>
-                  <span className="text-xs text-bb-muted">Ready in ~1 hr</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setFulfillment('delivery')}
-                  className={`rounded-2xl border px-3 py-3 text-left text-sm ${
-                    fulfillment === 'delivery'
-                      ? 'border-bb-blue bg-bb-blue/5'
-                      : 'border-bb-border'
-                  }`}
-                >
-                  <Truck className="mb-1 size-4 text-bb-blue" />
-                  <span className="block font-semibold">Delivery</span>
-                  <span className="text-xs text-bb-muted">Same-day options</span>
-                </button>
+              <p className="mb-2 text-sm font-semibold">Delivery</p>
+              <div className="rounded-2xl border border-bb-border bg-white px-3.5 py-3.5 text-left text-sm">
+                <div className="flex items-start gap-2.5">
+                  <Truck className="mt-0.5 size-4 shrink-0 text-bb-blue" />
+                  <div>
+                    <span className="block font-semibold text-bb-text">
+                      Normal delivery
+                    </span>
+                    <span className="mt-0.5 block text-xs text-bb-muted">
+                      2–5 business days · Standard shipping only
+                    </span>
+                  </div>
+                </div>
               </div>
-              <button
-                type="button"
-                onClick={openLocationModal}
-                className="mt-3 flex w-full items-start gap-2 rounded-2xl border border-bb-border px-3 py-2.5 text-left text-sm hover:bg-white"
-              >
-                <MapPin className="mt-0.5 size-4 shrink-0 text-bb-blue" />
-                <span>
-                  <span className="font-semibold text-bb-text">
-                    {fulfillment === 'pickup' ? 'Pickup near' : 'Deliver to'}{' '}
-                    {locationLabel}
-                  </span>
-                  <span className="mt-0.5 block text-xs text-bb-muted">
-                    {store?.name ?? locationSubLabel} · Change
-                  </span>
-                </span>
-              </button>
             </div>
 
             <div className="mt-6 flex items-center gap-3">
@@ -373,7 +337,7 @@ export function ProductPage() {
                 onClick={() => {
                   if (addQty()) openCart()
                 }}
-                className="flex-1 rounded-full border border-bb-border bg-[#e8dfd0] py-3.5 text-xs font-semibold tracking-[0.16em] text-bb-text uppercase hover:brightness-95"
+                className="flex-1 border border-bb-border bg-white py-3.5 text-xs font-semibold tracking-[0.16em] text-bb-text uppercase transition hover:bg-bb-gray"
               >
                 Add to bag
               </button>
@@ -382,7 +346,7 @@ export function ProductPage() {
                 onClick={() => {
                   if (addQty()) navigate('/cart')
                 }}
-                className="flex-1 rounded-full bg-bb-blue py-3.5 text-xs font-semibold tracking-[0.16em] text-[#f7f3ec] uppercase hover:bg-bb-blue-dark"
+                className="flex-1 bg-bb-blue py-3.5 text-xs font-semibold tracking-[0.16em] text-white uppercase hover:bg-bb-blue-dark"
               >
                 Buy now
               </button>
@@ -402,7 +366,12 @@ export function ProductPage() {
               <button
                 type="button"
                 onClick={() => {
-                  void navigator.clipboard?.writeText(window.location.href)
+                  const url = window.location.href
+                  if (navigator.share) {
+                    void navigator.share({ title: product.name, url }).catch(() => {})
+                  } else {
+                    void navigator.clipboard?.writeText(url)
+                  }
                 }}
                 className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-bb-border bg-white py-2.5 text-sm font-semibold hover:bg-fusora-cream"
               >
@@ -421,7 +390,7 @@ export function ProductPage() {
               <li className="flex gap-2.5">
                 <Truck className="mt-0.5 size-4 shrink-0 text-bb-blue" />
                 <span>
-                  <strong>Hub pickup</strong> usually ready in 1 hour
+                  <strong>Delivery</strong> in 2–5 days
                 </span>
               </li>
               <li className="flex gap-2.5">
@@ -560,7 +529,7 @@ export function ProductPage() {
                 <div className="mt-6 overflow-x-auto border border-bb-border">
                   <table className="w-full min-w-[520px] text-left text-sm">
                     <thead>
-                      <tr className="bg-bb-blue text-[#f7f3ec]">
+                      <tr className="bg-bb-blue text-white">
                         {details.sizeChart.headers.map((h) => (
                           <th
                             key={h}
@@ -579,7 +548,7 @@ export function ProductPage() {
                           <tr
                             key={row.join('-')}
                             className={`border-t border-bb-border ${
-                              isActive ? 'bg-bb-blue/8' : 'odd:bg-white even:bg-[#efe8dc]/35'
+                              isActive ? 'bg-bb-blue/8' : 'odd:bg-white even:bg-bb-gray'
                             }`}
                           >
                             {row.map((cell, idx) => (
@@ -752,7 +721,7 @@ export function ProductPage() {
             onClick={() => {
               if (addQty()) openCart()
             }}
-            className="shrink-0 rounded-full border border-bb-border bg-[#e8dfd0] px-4 py-3 text-[0.65rem] font-semibold tracking-[0.12em] text-bb-text uppercase"
+            className="shrink-0 border border-bb-border bg-white px-4 py-3 text-[0.65rem] font-semibold tracking-[0.12em] text-bb-text uppercase"
           >
             Add
           </button>
@@ -761,7 +730,7 @@ export function ProductPage() {
             onClick={() => {
               if (addQty()) navigate('/cart')
             }}
-            className="shrink-0 rounded-full bg-bb-blue px-4 py-3 text-[0.65rem] font-semibold tracking-[0.12em] text-[#f7f3ec] uppercase"
+            className="shrink-0 bg-bb-blue px-4 py-3 text-[0.65rem] font-semibold tracking-[0.12em] text-white uppercase"
           >
             Buy
           </button>

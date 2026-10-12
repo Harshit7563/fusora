@@ -158,83 +158,258 @@ const byCategory: Partial<Record<CategoryId, CategoryMeta>> = {
   },
 }
 
-const SIZE_CHARTS: Record<string, SizeChart> = {
-  tops: {
-    title: 'Tops & shirts size chart',
-    unit: 'inches',
-    headers: ['Size', 'Chest', 'Shoulder', 'Length', 'Sleeve'],
-    rows: [
-      ['S', '36–38', '15.5', '27', '8'],
-      ['M', '38–40', '16.5', '28', '8.5'],
-      ['L', '40–42', '17.5', '29', '9'],
-      ['XL', '42–44', '18.5', '30', '9.5'],
-      ['XXL', '44–46', '19.5', '31', '10'],
-    ],
-    note: 'Measure chest at the fullest point. If between sizes, size up for a relaxed fit.',
-  },
-  jeans: {
-    title: 'Jeans & trousers size chart',
+type JeansAudience = 'men' | 'women' | 'kids'
+
+function jeansAudience(product: Product): JeansAudience {
+  const blob = [
+    product.collection,
+    product.categorySlug,
+    product.categoryName,
+    product.name,
+  ]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase()
+  if (/kid|boy|girl|child|infant/.test(blob)) return 'kids'
+  if (/women|womens|woman|ladies|girl|female/.test(blob)) return 'women'
+  if (/men|mens|man|male/.test(blob)) return 'men'
+  // Default denim cargo styling often women's in this catalog; prefer women for "cargo" mid sizes
+  return 'women'
+}
+
+function inch(n: number, decimals = 0): string {
+  const f = decimals > 0 ? n.toFixed(decimals) : String(Math.round(n))
+  return f.replace(/\.0$/, '')
+}
+
+function range(a: number, b: number): string {
+  return `${inch(a)}–${inch(b)}`
+}
+
+/** Adult jeans chart row from waist label (e.g. "32") */
+function adultJeansRow(waistLabel: string, audience: 'men' | 'women'): string[] {
+  const w = Number(waistLabel)
+  if (!Number.isFinite(w) || w < 22 || w > 50) {
+    return [waistLabel, '—', '—', '—', '—']
+  }
+  if (audience === 'women') {
+    const hipLo = w + 8
+    const hipHi = w + 10
+    const inseam = w <= 30 ? 30 : w <= 34 ? 31 : 32
+    const thigh = 20 + (w - 26) * 0.45
+    const rise = w <= 30 ? 9.5 : w <= 34 ? 10 : w <= 38 ? 10.5 : 11
+    return [
+      waistLabel,
+      range(hipLo, hipHi),
+      inch(inseam),
+      inch(thigh, 1),
+      inch(rise, 1),
+    ]
+  }
+  // men
+  const hipLo = w + 6
+  const hipHi = w + 8
+  const inseam = w <= 32 ? 30 : w <= 36 ? 31 : 32
+  const thigh = 21 + (w - 28) * 0.5
+  const rise = w <= 30 ? 10 : w <= 34 ? 10.5 : w <= 38 ? 11 : 11.5
+  return [
+    waistLabel,
+    range(hipLo, hipHi),
+    inch(inseam),
+    inch(thigh, 1),
+    inch(rise, 1),
+  ]
+}
+
+/** Kids jean sizes like 4, 6, 8… (US kids waist / age band) */
+function kidsJeansRow(sizeLabel: string): string[] {
+  const n = Number(sizeLabel)
+  if (!Number.isFinite(n)) {
+    return [sizeLabel, '—', '—', '—', '—']
+  }
+  const age =
+    n <= 4 ? '3–4 yrs' : n <= 6 ? '5–6 yrs' : n <= 8 ? '7–8 yrs' : n <= 10 ? '9–10 yrs' : n <= 12 ? '11–12 yrs' : '13–14 yrs'
+  const waist = 20 + (n - 4) * 1.1
+  const hip = waist + 5
+  const heightLo = 98 + (n - 4) * 6
+  const heightHi = heightLo + 6
+  return [
+    sizeLabel,
+    age,
+    `${inch(waist, 1)}"`,
+    `${inch(hip, 1)}"`,
+    `${inch(heightLo)}–${inch(heightHi)} cm`,
+  ]
+}
+
+const TOPS_MASTER: Record<string, string[]> = {
+  XS: ['XS', '32–34', '14.5', '26', '7.5'],
+  S: ['S', '36–38', '15.5', '27', '8'],
+  M: ['M', '38–40', '16.5', '28', '8.5'],
+  L: ['L', '40–42', '17.5', '29', '9'],
+  XL: ['XL', '42–44', '18.5', '30', '9.5'],
+  XXL: ['XXL', '44–46', '19.5', '31', '10'],
+  '3XL': ['3XL', '46–48', '20.5', '32', '10.5'],
+  '4XL': ['4XL', '48–50', '21.5', '33', '11'],
+}
+
+const KIDS_AGE_MASTER: Record<string, string[]> = {
+  '2–3Y': ['2–3Y', '2–3 yrs', '53', '51', '92–98'],
+  '4–5Y': ['4–5Y', '4–5 yrs', '58', '54', '104–110'],
+  '6–7Y': ['6–7Y', '6–7 yrs', '63', '57', '116–122'],
+  '8–9Y': ['8–9Y', '8–9 yrs', '68', '60', '128–134'],
+  '10–12Y': ['10–12Y', '10–12 yrs', '74', '64', '140–152'],
+}
+
+function filterOrBuildRows(
+  sizes: string[],
+  buildRow: (size: string) => string[] | undefined,
+): string[][] {
+  return sizes.map((size) => buildRow(size) ?? [size, '—', '—', '—', '—'])
+}
+
+function chartForJeans(product: Product, sizes: string[]): SizeChart {
+  const audience = jeansAudience(product)
+  const fit = product.fit ? `${product.fit} fit` : 'Regular fit'
+  if (audience === 'kids') {
+    return {
+      title: `${product.categoryName || 'Kids jeans'} size chart`,
+      unit: 'size / inches & cm',
+      headers: ['Size', 'Age', 'Waist', 'Hip', 'Height'],
+      rows: filterOrBuildRows(sizes, kidsJeansRow),
+      note: `Chart for this ${fit.toLowerCase()} kids jean. If between sizes, choose the larger one.`,
+    }
+  }
+  const who = audience === 'women' ? "Women's" : "Men's"
+  const label =
+    product.categoryName?.trim() ||
+    `${who} jeans`
+  return {
+    title: `${label} size chart`,
     unit: 'inches',
     headers: ['Waist', 'Hip', 'Inseam', 'Thigh', 'Rise'],
-    rows: [
-      ['28', '34–35', '30', '21', '10'],
-      ['30', '36–37', '30', '22', '10.5'],
-      ['32', '38–39', '31', '23', '11'],
-      ['34', '40–41', '31', '24', '11'],
-      ['36', '42–43', '32', '25', '11.5'],
-      ['38', '44–45', '32', '26', '12'],
-      ['40', '46–47', '32', '27', '12'],
-    ],
-    note: 'Waist is measured flat across band × 2. Stretch denim may feel snug at first.',
-  },
-  saree: {
-    title: 'Saree & blouse size chart',
-    unit: 'inches / free size',
+    rows: filterOrBuildRows(sizes, (s) => adultJeansRow(s, audience)),
+    note: `Measurements for this product’s available sizes (${sizes.join(', ')}). ${fit}. Waist is flat band × 2. Stretch denim may feel snug at first — if between sizes, size up.`,
+  }
+}
+
+function chartForTops(product: Product, sizes: string[]): SizeChart {
+  const kind = /kurta/.test(product.name.toLowerCase())
+    ? 'Kurta'
+    : /hoodie/.test(product.name.toLowerCase())
+      ? 'Hoodie'
+      : product.subtype === 'shirts'
+        ? 'Shirt'
+        : product.subtype === 'tshirts'
+          ? 'T-shirt'
+          : 'Top'
+  return {
+    title: `${kind} size chart`,
+    unit: 'inches',
+    headers: ['Size', 'Chest', 'Shoulder', 'Length', 'Sleeve'],
+    rows: filterOrBuildRows(sizes, (s) => {
+      const key = s.toUpperCase().replace(/\s+/g, '')
+      return TOPS_MASTER[key] ?? TOPS_MASTER[s]
+    }),
+    note: `Only sizes stocked for this ${kind.toLowerCase()}: ${sizes.join(', ')}. Measure chest at the fullest point.`,
+  }
+}
+
+function chartForSaree(product: Product): SizeChart {
+  const fabricHint =
+    product.fabric ||
+    (/silk/i.test(product.name)
+      ? 'Silk'
+      : /cotton/i.test(product.name)
+        ? 'Cotton'
+        : /chiffon|georgette/i.test(product.name)
+          ? 'Chiffon / georgette'
+          : 'As listed')
+  const short =
+    product.name.length > 48 ? `${product.name.slice(0, 46).trim()}…` : product.name
+  return {
+    title: `${short} — size chart`,
+    unit: 'metres / inches',
     headers: ['Piece', 'Length', 'Width', 'Blouse', 'Fit tip'],
     rows: [
-      ['Saree', '5.5 m', '44–46"', 'Unstitched', 'Standard Indian drape'],
+      ['Saree', '5.5 m', '44–46"', 'Unstitched', 'Free size drape'],
       ['Blouse fabric', '0.8 m', '—', 'S–XL', 'Stitch to your measure'],
       ['Petticoat', 'Free', '—', 'S–XXL', 'Drawstring adjustable'],
     ],
-    note: 'Sarees are free size. Blouse piece is unstitched — share your bust/waist with your tailor.',
-  },
-  kids: {
+    note: `${fabricHint}. Saree is free size. Blouse piece is unstitched — share bust/waist with your tailor.`,
+  }
+}
+
+function chartForKidsWear(sizes: string[]): SizeChart {
+  return {
     title: 'Kids wear size chart',
     unit: 'age / cm',
     headers: ['Size', 'Age', 'Chest', 'Waist', 'Height'],
-    rows: [
-      ['2–3Y', '2–3 yrs', '53', '51', '92–98'],
-      ['4–5Y', '4–5 yrs', '58', '54', '104–110'],
-      ['6–7Y', '6–7 yrs', '63', '57', '116–122'],
-      ['8–9Y', '8–9 yrs', '68', '60', '128–134'],
-      ['10–12Y', '10–12 yrs', '74', '64', '140–152'],
-    ],
-    note: 'Kids grow fast — if between sizes, choose the larger one.',
-  },
-  jewellery: {
+    rows: filterOrBuildRows(sizes, (s) => KIDS_AGE_MASTER[s]),
+    note: `Available sizes for this product: ${sizes.join(', ')}. If between sizes, choose the larger one.`,
+  }
+}
+
+function chartForJewellery(): SizeChart {
+  return {
     title: 'Jewellery size guide',
     unit: 'cm / adjustable',
     headers: ['Type', 'Size', 'Length', 'Width', 'Note'],
     rows: [
-      ['Necklace', 'Standard', '40–45', '—', 'Extender included on many SKUs'],
+      ['Necklace', 'Standard', '40–45', '—', 'Extender on many SKUs'],
       ['Bracelet', 'Adjustable', '16–20', '—', 'Open cuff or chain'],
-      ['Earrings', 'One size', '—', '—', 'Lightweight for daily wear'],
+      ['Earrings', 'One size', '—', '—', 'Lightweight daily wear'],
       ['Ring', 'Adjustable', '—', '—', 'Open band where listed'],
     ],
     note: 'Avoid water and perfume on plated pieces. Wipe with a soft dry cloth.',
-  },
-  luggage: {
-    title: 'Luggage size guide',
+  }
+}
+
+function chartForLuggage(product: Product): SizeChart {
+  const name = product.name.toLowerCase()
+  const rows: string[][] = []
+  if (/cabin|trolley|carry/.test(name)) {
+    rows.push(['Cabin', '55', '35', '25', '35–45 L'])
+  }
+  if (/medium|check.?in|suitcase|luggage/.test(name) || rows.length === 0) {
+    rows.push(['Medium', '65', '42', '28', '55–70 L'])
+  }
+  if (/large|check.?in|xl|hard/.test(name)) {
+    rows.push(['Check-in', '75', '48', '30', '80–100 L'])
+  }
+  if (/duffel|duffle|gym|tote|backpack|pouch|sling/.test(name)) {
+    rows.push(['Bag / duffel', '—', '—', '—', 'As listed on product'])
+  }
+  return {
+    title: `${product.name.split(/[-–|]/)[0]?.trim().slice(0, 40) || 'Bag'} size guide`,
     unit: 'cm / liters',
     headers: ['Type', 'Height', 'Width', 'Depth', 'Capacity'],
-    rows: [
-      ['Cabin', '55', '35', '25', '35–45 L'],
-      ['Medium', '65', '42', '28', '55–70 L'],
-      ['Check-in', '75', '48', '30', '80–100 L'],
-      ['Duffel', '—', '—', '—', 'As listed on product'],
-    ],
+    rows,
     note: 'Airline cabin limits vary — check your carrier before travel.',
-  },
+  }
+}
+
+/** Build a size chart that only includes this product’s available sizes. */
+function buildProductSizeChart(
+  product: Product,
+  sizes: string[],
+  kind:
+    | 'jeans'
+    | 'tops'
+    | 'saree'
+    | 'kids'
+    | 'jewellery'
+    | 'luggage'
+    | 'none',
+): SizeChart | null {
+  if (kind === 'none') return null
+  if (kind === 'jeans') return chartForJeans(product, sizes)
+  if (kind === 'tops') return chartForTops(product, sizes)
+  if (kind === 'saree') return chartForSaree(product)
+  if (kind === 'kids') return chartForKidsWear(sizes)
+  if (kind === 'jewellery') return chartForJewellery()
+  if (kind === 'luggage') return chartForLuggage(product)
+  return null
 }
 
 function hashSeed(id: string): number {
@@ -251,12 +426,21 @@ function pickSizeProfile(product: Product): {
 } {
   const subtype = product.subtype as ApparelSubtype | undefined
   const name = product.name.toLowerCase()
+  const audience = jeansAudience(product)
 
   if (subtype === 'jeans' || /jean|denim|trouser|jogger|cargo pant/.test(name)) {
+    const defaultAdult = ['28', '30', '32', '34', '36', '38', '40', '42']
+    const defaultKids = ['4', '6', '8', '10', '12', '14']
+    const sizes =
+      product.sizes && product.sizes.length > 0
+        ? product.sizes
+        : audience === 'kids'
+          ? defaultKids
+          : defaultAdult
     return {
-      sizes: ['28', '30', '32', '34', '36', '38', '40'],
-      chart: SIZE_CHARTS.jeans,
-      material: 'Cotton denim blend',
+      sizes,
+      chart: buildProductSizeChart(product, sizes, 'jeans'),
+      material: product.fabric || 'Cotton denim blend',
       care: [
         'Machine wash cold, inside out',
         'Do not bleach',
@@ -266,10 +450,11 @@ function pickSizeProfile(product: Product): {
     }
   }
   if (subtype === 'sarees' || /saree|sari|blouse|petticoat/.test(name)) {
+    const sizes = ['Free Size']
     return {
-      sizes: ['Free Size'],
-      chart: SIZE_CHARTS.saree,
-      material: 'Silk / chiffon / georgette as listed',
+      sizes,
+      chart: buildProductSizeChart(product, sizes, 'saree'),
+      material: product.fabric || 'Silk / chiffon / georgette as listed',
       care: [
         'Dry clean preferred for silk',
         'Hand wash gentle for chiffon',
@@ -279,10 +464,14 @@ function pickSizeProfile(product: Product): {
     }
   }
   if (subtype === 'tshirts' || subtype === 'shirts' || /t-shirt|tee|shirt|kurta|hoodie|top/.test(name)) {
+    const sizes =
+      product.sizes && product.sizes.length > 0
+        ? product.sizes
+        : ['S', 'M', 'L', 'XL', 'XXL']
     return {
-      sizes: ['S', 'M', 'L', 'XL', 'XXL'],
-      chart: SIZE_CHARTS.tops,
-      material: 'Cotton / blend as listed',
+      sizes,
+      chart: buildProductSizeChart(product, sizes, 'tops'),
+      material: product.fabric || 'Cotton / blend as listed',
       care: [
         'Machine wash cold',
         'Wash dark colours separately',
@@ -295,29 +484,69 @@ function pickSizeProfile(product: Product): {
     if (/toy|lego|game/.test(name)) {
       return { sizes: [], chart: null, material: 'As pictured', care: ['Use under adult guidance'] }
     }
+    const sizes =
+      product.sizes && product.sizes.length > 0
+        ? product.sizes
+        : ['2–3Y', '4–5Y', '6–7Y', '8–9Y', '10–12Y']
+    // Numeric kids jean-like sizes
+    if (sizes.every((s) => /^\d+$/.test(s))) {
+      return {
+        sizes,
+        chart: buildProductSizeChart(product, sizes, 'jeans'),
+        material: product.fabric || 'Soft cotton / blend',
+        care: ['Gentle machine wash', 'Do not bleach', 'Line dry'],
+      }
+    }
     return {
-      sizes: ['2–3Y', '4–5Y', '6–7Y', '8–9Y', '10–12Y'],
-      chart: SIZE_CHARTS.kids,
-      material: 'Soft cotton / blend',
+      sizes,
+      chart: buildProductSizeChart(product, sizes, 'kids'),
+      material: product.fabric || 'Soft cotton / blend',
       care: ['Gentle machine wash', 'Do not bleach', 'Line dry'],
     }
   }
   if (product.tab === 'jewelry-eyewear-watches' || /jewel|earring|necklace|bracelet|ring/.test(name)) {
+    const sizes = ['One Size']
     return {
-      sizes: ['One Size'],
-      chart: SIZE_CHARTS.jewellery,
+      sizes,
+      chart: buildProductSizeChart(product, sizes, 'jewellery'),
       material: 'Plated metal / stones as pictured',
       care: ['Keep dry', 'Wipe with soft cloth', 'Store in pouch'],
     }
   }
   if (product.tab === 'luggage-bags-cases' || /bag|luggage|duffel|suitcase|pouch/.test(name)) {
+    const sizes = ['Standard']
     return {
-      sizes: ['Standard'],
-      chart: SIZE_CHARTS.luggage,
+      sizes,
+      chart: buildProductSizeChart(product, sizes, 'luggage'),
       material: 'Polyester / hard shell as listed',
       care: ['Wipe clean', 'Do not overload', 'Lock zippers before travel'],
     }
   }
+
+  // Fallback: if product lists sizes, still show a matching chart
+  if (product.sizes && product.sizes.length > 0) {
+    const sizes = product.sizes
+    const alpha = sizes.every((s) => /^(XS|S|M|L|XL|XXL|3XL|4XL)$/i.test(s.trim()))
+    const waist = sizes.every((s) => /^\d{2}$/.test(s.trim()))
+    const kidsNum = sizes.every((s) => /^\d{1,2}$/.test(s.trim()) && Number(s) <= 16)
+    if (alpha) {
+      return {
+        sizes,
+        chart: buildProductSizeChart(product, sizes, 'tops'),
+        material: product.fabric || 'As per product description',
+        care: ['Follow brand care label'],
+      }
+    }
+    if (waist || kidsNum) {
+      return {
+        sizes,
+        chart: buildProductSizeChart(product, sizes, 'jeans'),
+        material: product.fabric || 'As per product description',
+        care: ['Follow brand care label'],
+      }
+    }
+  }
+
   return {
     sizes: [],
     chart: null,

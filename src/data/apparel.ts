@@ -1,4 +1,6 @@
 import type { CategoryId } from '../categories'
+import denimforgeCategories from './denimforgeCategories.json'
+import dyntraCategories from './dyntraCategories.json'
 
 /** Apparel & Clothes subtypes */
 export type ApparelSubtype = 'tshirts' | 'shirts' | 'sarees' | 'jeans'
@@ -39,17 +41,56 @@ export const apparelSubtypes: {
   {
     id: 'sarees',
     label: 'Sarees',
-    blurb: 'Full Dyntra silk & handloom saree catalogue.',
+    blurb: 'Silk, Banarasi, handloom and festive weaves.',
     image:
       'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=900&q=80',
   },
   {
     id: 'jeans',
     label: 'Jeans',
-    blurb: 'The Denim Forge — fits, washes & wholesale denim.',
+    blurb: 'Men, women and kids — fits, washes and everyday denim.',
     image:
       'https://thedenimforge.com/uploads/products/1789985439763-lnhn91.webp',
   },
+]
+
+export const denimCollections = (
+  denimforgeCategories as Array<{
+    slug: string
+    name: string
+    blurb: string
+    image: string
+  }>
+).map((c) => ({
+  id: c.slug,
+  label: c.name,
+  blurb: c.blurb,
+  image: c.image,
+}))
+
+/** Dyntra fabric categories for saree filters */
+export const dyntraFabricCategories = (
+  dyntraCategories as Array<{
+    slug: string
+    name: string
+    groupType: string
+    image?: string | null
+    sortOrder?: number
+  }>
+)
+  .filter((c) => c.groupType === 'fabric')
+  .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))
+  .map((c) => ({
+    id: c.slug,
+    label: c.name,
+    image: c.image || undefined,
+  }))
+
+export const ALL_APPAREL_SUBTYPES: ApparelSubtype[] = [
+  'tshirts',
+  'shirts',
+  'sarees',
+  'jeans',
 ]
 
 export const apparelCoreProducts: ApparelProduct[] = [

@@ -13,29 +13,24 @@ import { useStore } from '../context/StoreContext'
 import { FusoraLogo } from './FusoraLogo'
 
 const primaryNav = [
-  { label: 'Shop', to: '/deals' },
-  { label: 'Apparel & Clothes', to: '/category/apparel-accessories' },
+  { label: 'Sarees', to: '/category/apparel-accessories/sarees' },
+  { label: 'Jeans', to: '/category/apparel-accessories/jeans' },
+  { label: 'Apparel', to: '/category/apparel-accessories' },
+  { label: 'Jewellery', to: '/category/jewelry-eyewear-watches' },
   { label: 'Luggage', to: '/category/luggage-bags-cases' },
-  {
-    label: 'Artificial Jewellery',
-    to: '/category/jewelry-eyewear-watches',
-  },
-  { label: 'Memberships', to: '/memberships' },
+  { label: 'New In', to: '/deals' },
   { label: 'Our Story', to: '/about' },
-  { label: 'Reach Us', to: '/support' },
 ]
 
 export function Header() {
   const navigate = useNavigate()
   const {
-    cart,
     cartCount,
     openCart,
     wishlist,
     locationLabel,
     openLocationModal,
   } = useStore()
-  const cartTotal = cart.reduce((s, i) => s + i.price * i.qty, 0)
   const [q, setQ] = useState('')
   const [menuOpen, setMenuOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
@@ -49,13 +44,19 @@ export function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-50">
-      <div className="bg-bb-blue text-[#f7f3ec]">
-        <div className="mx-auto grid max-w-[1400px] grid-cols-[auto_1fr_auto] items-center gap-1 px-3 py-2.5 sm:gap-2 sm:px-4 sm:py-3.5 lg:px-8">
-          <div className="flex items-center justify-start">
+    <header className="sticky top-0 z-50 bg-fusora-ivory">
+      <div className="bg-bb-blue text-center">
+        <p className="px-3 py-2.5 text-[0.68rem] font-medium tracking-[0.18em] text-[#fbf7f2] uppercase sm:text-[0.72rem]">
+          Festive edit live · Free shipping above ₹2,999 · COD available
+        </p>
+      </div>
+
+      <div className="border-b border-bb-border bg-fusora-ivory">
+        <div className="mx-auto grid max-w-[1440px] grid-cols-[1fr_auto_1fr] items-center gap-2 px-3 py-3.5 sm:px-5 sm:py-4 lg:px-8">
+          <div className="flex items-center justify-start gap-0.5">
             <button
               type="button"
-              className="grid size-9 place-items-center rounded-full hover:bg-white/10 sm:size-10 lg:hidden"
+              className="grid size-10 place-items-center text-bb-text transition hover:text-bb-blue lg:hidden"
               aria-label="Menu"
               onClick={() => {
                 setMenuOpen((v) => !v)
@@ -66,85 +67,82 @@ export function Header() {
             </button>
             <button
               type="button"
-              className="hidden size-10 place-items-center rounded-full hover:bg-white/10 sm:grid lg:grid"
+              className="hidden size-10 place-items-center text-bb-text transition hover:text-bb-blue sm:grid"
               aria-label="Search"
               onClick={() => {
                 setSearchOpen((v) => !v)
                 setMenuOpen(false)
               }}
             >
-              <Search className="size-5" />
+              <Search className="size-[1.15rem]" strokeWidth={1.5} />
             </button>
           </div>
 
           <div className="min-w-0 justify-self-center px-1">
-            <FusoraLogo onDark centered />
+            <FusoraLogo centered />
           </div>
 
-          <div className="flex items-center justify-end gap-0.5 sm:gap-1">
+          <div className="flex items-center justify-end gap-0.5">
             <button
               type="button"
-              className="grid size-9 place-items-center rounded-full hover:bg-white/10 sm:hidden"
+              className="grid size-10 place-items-center text-bb-text transition hover:text-bb-blue sm:hidden"
               aria-label="Search"
               onClick={() => {
                 setSearchOpen((v) => !v)
                 setMenuOpen(false)
               }}
             >
-              <Search className="size-5" />
+              <Search className="size-[1.15rem]" strokeWidth={1.5} />
             </button>
             <button
               type="button"
               onClick={openLocationModal}
-              className="hidden items-center gap-1.5 rounded-full px-2 py-2 text-xs tracking-wide uppercase hover:bg-white/10 md:inline-flex"
+              className="hidden items-center gap-1.5 px-2 py-2 text-[0.7rem] tracking-[0.1em] text-bb-muted uppercase transition hover:text-bb-blue md:inline-flex"
               title={locationLabel}
             >
-              <MapPin className="size-4 opacity-80" />
-              <span className="max-w-[9rem] truncate">{locationLabel}</span>
+              <MapPin className="size-3.5" strokeWidth={1.5} />
+              <span className="max-w-[8rem] truncate">{locationLabel}</span>
             </button>
             <Link
               to="/account"
-              className="hidden size-10 place-items-center rounded-full hover:bg-white/10 sm:grid"
+              className="hidden size-10 place-items-center text-bb-text transition hover:text-bb-blue sm:grid"
               aria-label="Account"
             >
-              <User className="size-5" />
+              <User className="size-[1.15rem]" strokeWidth={1.5} />
             </Link>
             <Link
               to="/wishlist"
-              className="relative grid size-9 place-items-center rounded-full hover:bg-white/10 sm:size-10"
+              className="relative grid size-10 place-items-center text-bb-text transition hover:text-bb-blue"
               aria-label="Wishlist"
             >
-              <Heart className="size-5" />
+              <Heart className="size-[1.15rem]" strokeWidth={1.5} />
               {wishlist.size > 0 && (
-                <span className="absolute top-1.5 right-1.5 size-1.5 rounded-full bg-[#e8dfd0]" />
+                <span className="absolute top-2 right-2 size-1.5 rounded-full bg-bb-blue" />
               )}
             </Link>
             <button
               type="button"
               onClick={openCart}
-              className="relative inline-flex items-center gap-1.5 rounded-full px-1.5 py-2 hover:bg-white/10 sm:px-3"
+              className="relative grid size-10 place-items-center text-bb-text transition hover:text-bb-blue"
               aria-label="Cart"
             >
-              <ShoppingBag className="size-5" />
+              <ShoppingBag className="size-[1.15rem]" strokeWidth={1.5} />
               {cartCount > 0 && (
-                <span className="absolute top-1 right-0.5 grid min-w-4 place-items-center rounded-full bg-[#e8dfd0] px-1 text-[0.6rem] font-bold text-bb-text sm:hidden">
+                <span className="absolute top-1.5 right-1.5 grid min-w-[1rem] place-items-center rounded-full bg-bb-blue px-1 text-[0.55rem] font-semibold text-white">
                   {cartCount}
                 </span>
               )}
-              <span className="hidden text-xs tracking-wide sm:inline">
-                {cartCount} · ₹{Math.round(cartTotal).toLocaleString('en-IN')}
-              </span>
             </button>
           </div>
         </div>
 
-        <nav className="hidden border-t border-white/10 lg:block">
-          <ul className="mx-auto flex max-w-[1400px] items-center justify-center gap-1 px-4 py-2.5 lg:px-8">
+        <nav className="hidden border-t border-bb-border/80 lg:block">
+          <ul className="mx-auto flex max-w-[1440px] items-center justify-center gap-7 px-4 py-3.5 lg:px-8">
             {primaryNav.map((item) => (
               <li key={item.to}>
                 <Link
                   to={item.to}
-                  className="rounded-full px-3.5 py-2 text-[0.72rem] font-medium tracking-[0.14em] text-[#f7f3ec]/90 uppercase transition hover:bg-white/10 hover:text-white"
+                  className="nav-link text-[0.75rem] font-medium tracking-[0.16em] text-bb-text uppercase transition hover:text-bb-blue"
                 >
                   {item.label}
                 </Link>
@@ -155,36 +153,36 @@ export function Header() {
       </div>
 
       {searchOpen && (
-        <div className="border-b border-bb-border bg-fusora-ivory px-3 py-3 sm:px-4 sm:py-4 lg:px-8">
+        <div className="border-b border-bb-border bg-white px-3 py-4 sm:px-5 lg:px-8">
           <form
             onSubmit={onSearch}
-            className="mx-auto flex max-w-xl overflow-hidden rounded-full border border-bb-border bg-white"
+            className="mx-auto flex max-w-xl overflow-hidden border border-bb-border bg-fusora-ivory"
           >
             <input
               value={q}
               onChange={(e) => setQ(e.target.value)}
-              placeholder="Search Fusora…"
-              className="min-w-0 flex-1 bg-transparent px-4 py-3 text-sm outline-none sm:px-5"
+              placeholder="Search sarees, jeans, jewellery…"
+              className="min-w-0 flex-1 bg-transparent px-4 py-3.5 text-sm outline-none sm:px-5"
               autoFocus
             />
             <button
               type="submit"
-              className="bg-bb-blue px-4 text-xs font-semibold tracking-wide text-[#f7f3ec] uppercase sm:px-5 sm:text-sm"
+              className="bg-bb-blue px-5 text-xs font-semibold tracking-[0.14em] text-white uppercase"
             >
-              Go
+              Search
             </button>
           </form>
         </div>
       )}
 
       {menuOpen && (
-        <div className="max-h-[70svh] overflow-y-auto border-b border-bb-border bg-fusora-ivory px-3 py-3 safe-pb lg:hidden">
+        <div className="max-h-[70svh] overflow-y-auto border-b border-bb-border bg-white px-3 py-4 safe-pb lg:hidden">
           <ul className="space-y-0.5">
             <li>
               <Link
                 to="/account"
                 onClick={() => setMenuOpen(false)}
-                className="block rounded-xl px-3 py-3 text-sm font-medium tracking-wide text-bb-text uppercase"
+                className="block px-3 py-3.5 text-sm font-medium tracking-[0.12em] text-bb-text uppercase"
               >
                 Account
               </Link>
@@ -193,7 +191,7 @@ export function Header() {
               <Link
                 to="/orders"
                 onClick={() => setMenuOpen(false)}
-                className="block rounded-xl px-3 py-3 text-sm font-medium tracking-wide text-bb-text uppercase"
+                className="block px-3 py-3.5 text-sm font-medium tracking-[0.12em] text-bb-text uppercase"
               >
                 My orders
               </Link>
@@ -205,7 +203,7 @@ export function Header() {
                   setMenuOpen(false)
                   openLocationModal()
                 }}
-                className="flex w-full items-center gap-2 rounded-xl px-3 py-3 text-left text-sm font-medium tracking-wide text-bb-text uppercase"
+                className="flex w-full items-center gap-2 px-3 py-3.5 text-left text-sm font-medium tracking-[0.12em] text-bb-text uppercase"
               >
                 <MapPin className="size-4" />
                 Location · {locationLabel}
@@ -216,12 +214,21 @@ export function Header() {
                 <Link
                   to={item.to}
                   onClick={() => setMenuOpen(false)}
-                  className="block rounded-xl px-3 py-3 text-sm font-medium tracking-wide text-bb-text uppercase"
+                  className="block px-3 py-3.5 text-sm font-medium tracking-[0.12em] text-bb-text uppercase"
                 >
                   {item.label}
                 </Link>
               </li>
             ))}
+            <li>
+              <Link
+                to="/support"
+                onClick={() => setMenuOpen(false)}
+                className="block px-3 py-3.5 text-sm font-medium tracking-[0.12em] text-bb-text uppercase"
+              >
+                Contact
+              </Link>
+            </li>
           </ul>
         </div>
       )}

@@ -54,6 +54,8 @@ export type AuthUser = {
   name: string
   email: string
   phone: string
+  picture?: string
+  provider?: 'local' | 'google'
 }
 
 export type OrderStatus =
@@ -78,7 +80,7 @@ export type Order = {
   userEmail: string
   createdAt: number
   status: OrderStatus
-  payment: 'cod' | 'upi'
+  payment: 'cod' | 'upi' | 'card' | 'netbanking'
   total: number
   name: string
   phone: string
@@ -91,6 +93,7 @@ export type Order = {
 
 type StoredAccount = AuthUser & {
   password: string
+  googleSub?: string
 }
 
 function haversineKm(a: { lat: number; lng: number }, b: { lat: number; lng: number }) {
@@ -169,6 +172,12 @@ type StoreContextValue = {
     email: string
     password: string
   }) => { ok: true } | { ok: false; message: string }
+  signInWithGoogle: (input: {
+    email: string
+    name: string
+    picture?: string
+    sub?: string
+  }) => { ok: true } | { ok: false; message: string }
   signOut: () => void
   orders: Order[]
   placeOrder: (input: {
@@ -176,7 +185,7 @@ type StoreContextValue = {
     phone: string
     email: string
     address: string
-    payment: 'cod' | 'upi'
+    payment: 'cod' | 'upi' | 'card' | 'netbanking'
   }) => Order | null
   getOrder: (id: string) => Order | undefined
   cart: CartItem[]
@@ -412,20 +421,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     )
   }, [saveUserLocation])
 
-  // On first open: always ask for real GPS location
+  // Restore saved location status only — never auto-prompt GPS on open
   useEffect(() => {
     if (startedRef.current) return
     startedRef.current = true
-
-    if (userLocation) {
-      setLocationStatus('ready')
-      return
-    }
-
-    // Fresh visit — open modal + request GPS immediately
-    setLocationModalOpen(true)
-    detectLocation()
-  }, [userLocation, detectLocation])
+    if (userLocation) setLocationStatus('ready')
+  }, [userLocation])
 
   useEffect(() => {
     if (!toast) return
@@ -472,7 +473,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           message: 'An account with this mobile already exists. Sign in.',
         }
       }
-      const nextAccount: StoredAccount = { name, email, phone, password }
+      const nextAccount: StoredAccount = {
+        name,
+        email,
+        phone,
+        password,
+        provider: 'local',
+      }
       localStorage.setItem(ACCOUNTS_KEY, JSON.stringify([...accounts, nextAccount]))
       const session: AuthUser = { name, email, phone }
       localStorage.setItem(AUTH_KEY, JSON.stringify(session))
@@ -497,6 +504,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           message: 'No account found. Create an account first.',
         }
       }
+      if (match.provider === 'google' && !match.password) {
+        return {
+          ok: false,
+          message: 'This account uses Google Sign-In. Continue with Google.',
+        }
+      }
       if (match.password !== input.password) {
         return { ok: false, message: 'Incorrect password.' }
       }
@@ -504,10 +517,72 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         name: match.name,
         email: match.email,
         phone: match.phone,
+        picture: match.picture,
+        provider: match.provider || 'local',
       }
       localStorage.setItem(AUTH_KEY, JSON.stringify(session))
       setUser(session)
       setToast(`Signed in as ${session.name.split(' ')[0] || 'member'}`)
+      return { ok: true }
+    },
+    [],
+  )
+
+  const signInWithGoogle = useCallback(
+    (input: {
+      email: string
+      name: string
+      picture?: string
+      sub?: string
+    }): { ok: true } | { ok: false; message: string } => {
+      const email = normalizeEmail(input.email)
+      const name = input.name.trim() || email.split('@')[0] || 'Google user'
+      if (!email) {
+        return { ok: false, message: 'Google account email is required.' }
+      }
+
+      const accounts = readAccounts()
+      const existing = accounts.find((a) => normalizeEmail(a.email) === email)
+      let nextAccounts = accounts
+
+      if (existing) {
+        nextAccounts = accounts.map((a) =>
+          normalizeEmail(a.email) === email
+            ? {
+                ...a,
+                name: a.name || name,
+                picture: input.picture || a.picture,
+                provider: a.provider === 'local' ? 'local' : 'google',
+                googleSub: input.sub || a.googleSub,
+              }
+            : a,
+        )
+      } else {
+        nextAccounts = [
+          ...accounts,
+          {
+            name,
+            email,
+            phone: '',
+            password: '',
+            picture: input.picture,
+            provider: 'google',
+            googleSub: input.sub,
+          },
+        ]
+      }
+
+      localStorage.setItem(ACCOUNTS_KEY, JSON.stringify(nextAccounts))
+      const session: AuthUser = {
+        name: existing?.name || name,
+        email,
+        phone: existing?.phone || '',
+        picture: input.picture || existing?.picture,
+        provider: existing?.provider === 'local' ? 'local' : 'google',
+      }
+      localStorage.setItem(AUTH_KEY, JSON.stringify(session))
+      setUser(session)
+      setToast(`Signed in with Google as ${session.name.split(' ')[0] || 'member'}`)
       return { ok: true }
     },
     [],
@@ -534,7 +609,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       phone: string
       email: string
       address: string
-      payment: 'cod' | 'upi'
+      payment: 'cod' | 'upi' | 'card' | 'netbanking'
     }): Order | null => {
       if (!user || cart.length === 0) return null
       const order: Order = {
@@ -592,6 +667,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     isLoggedIn: Boolean(user),
     registerAccount,
     signIn,
+    signInWithGoogle,
     signOut,
     orders,
     placeOrder,

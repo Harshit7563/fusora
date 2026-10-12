@@ -12,7 +12,7 @@ type Props = {
 }
 
 export function CartDrawer({ open, items, onClose, onQty, onRemove }: Props) {
-  const { locationLabel, store, isLoggedIn } = useStore()
+  const { isLoggedIn } = useStore()
   const total = items.reduce((s, i) => s + i.price * i.qty, 0)
   const count = items.reduce((s, i) => s + i.qty, 0)
 
@@ -136,10 +136,6 @@ export function CartDrawer({ open, items, onClose, onQty, onRemove }: Props) {
             >
               View full cart
             </Link>
-            <p className="mt-2 text-center text-xs text-bb-muted">
-              Pickup near {locationLabel}
-              {store ? ` · ${store.name}` : ''}
-            </p>
           </div>
         )}
       </aside>
