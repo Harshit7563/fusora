@@ -166,13 +166,17 @@ type StoreContextValue = {
   registerAccount: (input: {
     name: string
     email: string
-    phone: string
-    password: string
+    phone?: string
+    password?: string
   }) => { ok: true } | { ok: false; message: string }
   signIn: (input: {
     email: string
     password: string
   }) => { ok: true } | { ok: false; message: string }
+  /** Passwordless sign-in after email OTP is verified */
+  signInWithEmail: (email: string) =>
+    | { ok: true }
+    | { ok: false; message: string }
   signInWithGoogle: (input: {
     email: string
     name: string
@@ -461,21 +465,27 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     (input: {
       name: string
       email: string
-      phone: string
-      password: string
+      phone?: string
+      password?: string
     }): { ok: true } | { ok: false; message: string } => {
       const email = normalizeEmail(input.email)
-      const phone = normalizePhone(input.phone)
+      const phone = input.phone ? normalizePhone(input.phone) : ''
       const name = input.name.trim()
-      const password = input.password
-      if (!name || !email || !phone || phone.length !== 10 || password.length < 6) {
-        return { ok: false, message: 'Please fill all fields correctly.' }
+      const password =
+        input.password && input.password.length >= 6
+          ? input.password
+          : `otp-${crypto.randomUUID()}`
+      if (!name || !email) {
+        return { ok: false, message: 'Please enter your name and email.' }
       }
       const accounts = readAccounts()
       if (accounts.some((a) => normalizeEmail(a.email) === email)) {
         return { ok: false, message: 'An account with this email already exists. Sign in.' }
       }
-      if (accounts.some((a) => normalizePhone(a.phone) === phone)) {
+      if (
+        phone.length === 10 &&
+        accounts.some((a) => a.phone && normalizePhone(a.phone) === phone)
+      ) {
         return {
           ok: false,
           message: 'An account with this mobile already exists. Sign in.',
@@ -489,10 +499,39 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         provider: 'local',
       }
       localStorage.setItem(ACCOUNTS_KEY, JSON.stringify([...accounts, nextAccount]))
-      const session: AuthUser = { name, email, phone }
+      const session: AuthUser = { name, email, phone, provider: 'local' }
       localStorage.setItem(AUTH_KEY, JSON.stringify(session))
       setUser(session)
       setToast('Account created — you are signed in')
+      return { ok: true }
+    },
+    [],
+  )
+
+  const signInWithEmail = useCallback(
+    (emailRaw: string): { ok: true } | { ok: false; message: string } => {
+      const email = normalizeEmail(emailRaw)
+      if (!email) {
+        return { ok: false, message: 'Enter your email address.' }
+      }
+      const accounts = readAccounts()
+      const match = accounts.find((a) => normalizeEmail(a.email) === email)
+      if (!match) {
+        return {
+          ok: false,
+          message: 'No account found for this email. Create an account first.',
+        }
+      }
+      const session: AuthUser = {
+        name: match.name,
+        email: match.email,
+        phone: match.phone,
+        picture: match.picture,
+        provider: match.provider || 'local',
+      }
+      localStorage.setItem(AUTH_KEY, JSON.stringify(session))
+      setUser(session)
+      setToast(`Signed in as ${session.name.split(' ')[0] || 'member'}`)
       return { ok: true }
     },
     [],
@@ -676,6 +715,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     isLoggedIn: Boolean(user),
     registerAccount,
     signIn,
+    signInWithEmail,
     signInWithGoogle,
     signOut,
     orders,

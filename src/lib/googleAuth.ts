@@ -1,6 +1,11 @@
-/** Runtime + build-time Google OAuth client ID */
+/** Runtime + build-time Google OAuth / EmailJS config */
 export type FusoraRuntimeConfig = {
   googleClientId?: string
+  emailjs?: {
+    serviceId: string
+    templateId: string
+    publicKey: string
+  }
 }
 
 declare global {

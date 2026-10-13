@@ -1,15 +1,11 @@
 import {
   CheckCircle2,
-  Eye,
-  EyeOff,
   Heart,
   Loader2,
-  Lock,
   LogOut,
   Mail,
   MapPin,
   Package,
-  Phone,
   ShieldCheck,
   Truck,
   User,
@@ -25,6 +21,12 @@ import {
 } from '../context/StoreContext'
 import { formatMoney } from '../data'
 import { usePageTitle } from '../hooks/usePageTitle'
+import {
+  clearEmailOtpSession,
+  isEmailOtpVerified,
+  sendEmailOtp,
+  verifyEmailOtp,
+} from '../lib/emailAuth'
 
 type Mode = 'signin' | 'register'
 
@@ -236,24 +238,18 @@ export function AccountPage() {
     locationLabel,
     openLocationModal,
     registerAccount,
-    signIn,
+    signInWithEmail,
     isLoggedIn,
   } = useStore()
 
   usePageTitle(mode === 'register' ? 'Create account' : 'Sign in')
 
-  const [showPass, setShowPass] = useState(false)
-  const [showConfirm, setShowConfirm] = useState(false)
   const [done, setDone] = useState<string | null>(null)
   const [otpState, setOtpState] = useState<OtpState>(emptyOtp)
 
   const [form, setForm] = useState({
     name: '',
     email: '',
-    phone: '',
-    password: '',
-    confirm: '',
-    remember: true,
     terms: false,
   })
 
@@ -311,99 +307,60 @@ export function AccountPage() {
       error: false,
       verified: false,
     }))
-    try {
-      const res = await fetch('/api/otp/send', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone: form.phone }),
-      })
-      const data = (await res.json()) as {
-        ok?: boolean
-        sessionId?: string
-        message?: string
-      }
-      if (!res.ok || !data.ok || !data.sessionId) {
-        setOtpState((s) => ({
-          ...s,
-          busy: 'idle',
-          sent: false,
-          sessionId: null,
-          message: data.message || 'Could not send OTP',
-          error: true,
-        }))
-        return
-      }
-      setOtpState({
-        sessionId: data.sessionId,
-        sent: true,
-        verified: false,
-        otp: '',
-        busy: 'idle',
-        message: data.message || 'OTP sent',
-        error: false,
-      })
-    } catch {
+    const result = await sendEmailOtp(form.email, form.name || 'Customer')
+    if (!result.ok) {
       setOtpState((s) => ({
         ...s,
         busy: 'idle',
-        message: 'Network error while sending OTP',
+        sent: false,
+        sessionId: null,
+        message: result.message,
         error: true,
       }))
+      return
     }
+    setOtpState({
+      sessionId: 'email',
+      sent: true,
+      verified: false,
+      otp: '',
+      busy: 'idle',
+      message: result.message,
+      error: false,
+    })
   }
 
-  const verifyOtp = async () => {
+  const verifyOtp = () => {
     setDone(null)
     setOtpState((s) => ({ ...s, busy: 'verify', message: null, error: false }))
-    try {
-      const res = await fetch('/api/otp/verify', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          phone: form.phone,
-          otp: otpState.otp,
-          sessionId: otpState.sessionId,
-        }),
-      })
-      const data = (await res.json()) as { ok?: boolean; message?: string }
-      if (!res.ok || !data.ok) {
-        setOtpState((s) => ({
-          ...s,
-          busy: 'idle',
-          verified: false,
-          message: data.message || 'OTP verification failed',
-          error: true,
-        }))
-        return
-      }
+    const result = verifyEmailOtp(form.email, otpState.otp)
+    if (!result.ok) {
       setOtpState((s) => ({
         ...s,
         busy: 'idle',
-        verified: true,
-        message: data.message || 'Mobile verified',
-        error: false,
-      }))
-    } catch {
-      setOtpState((s) => ({
-        ...s,
-        busy: 'idle',
-        message: 'Network error while verifying OTP',
+        verified: false,
+        message: result.message,
         error: true,
       }))
+      return
     }
+    setOtpState((s) => ({
+      ...s,
+      busy: 'idle',
+      verified: true,
+      message: result.message,
+      error: false,
+    }))
   }
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault()
+    if (!otpState.verified && !isEmailOtpVerified(form.email)) {
+      setDone('Please verify your email with OTP first.')
+      return
+    }
+
     if (mode === 'register') {
-      if (!otpState.verified) {
-        setDone('Please verify your mobile number with OTP first.')
-        return
-      }
-      if (form.password !== form.confirm) {
-        setDone('Passwords do not match.')
-        return
-      }
       if (!form.terms) {
         setDone('Please accept Terms & Privacy to continue.')
         return
@@ -411,24 +368,22 @@ export function AccountPage() {
       const result = registerAccount({
         name: form.name,
         email: form.email,
-        phone: form.phone,
-        password: form.password,
       })
       if (!result.ok) {
         setDone(result.message)
         return
       }
+      clearEmailOtpSession()
       goAfterAuth()
       return
     }
-    const result = signIn({
-      email: form.email,
-      password: form.password,
-    })
+
+    const result = signInWithEmail(form.email)
     if (!result.ok) {
       setDone(result.message)
       return
     }
+    clearEmailOtpSession()
     goAfterAuth()
   }
 
@@ -436,7 +391,6 @@ export function AccountPage() {
     'mt-1.5 w-full rounded-xl border border-bb-border bg-white px-3.5 py-3 text-sm font-normal outline-none transition focus:border-bb-blue focus:ring-2 focus:ring-bb-blue/20'
 
   const isErrorBanner = (msg: string) =>
-    msg.includes('match') ||
     msg.includes('accept') ||
     msg.includes('verify') ||
     msg.includes('OTP') ||
@@ -447,7 +401,9 @@ export function AccountPage() {
     msg.includes('No account') ||
     msg.includes('already exists') ||
     msg.includes('Google') ||
-    msg.includes('Client ID')
+    msg.includes('Client ID') ||
+    msg.includes('EmailJS') ||
+    msg.includes('configured')
 
   return (
     <main className="min-h-[calc(100svh-8rem)] bg-bb-gray/50">
@@ -522,8 +478,8 @@ export function AccountPage() {
             </h2>
             <p className="mt-1 text-sm text-bb-muted">
               {mode === 'signin'
-                ? 'Enter your details to continue shopping.'
-                : 'Verify your mobile with OTP, then join fusora.shop.'}
+                ? 'Sign in with an OTP sent to your email.'
+                : 'Verify your email with OTP, then join fusora.shop.'}
             </p>
 
             <div className="mt-6">
@@ -535,7 +491,7 @@ export function AccountPage() {
 
             <div className="mt-5 flex items-center gap-3 text-xs tracking-wide text-bb-muted uppercase">
               <span className="h-px flex-1 bg-bb-border" />
-              or use email
+              or use email OTP
               <span className="h-px flex-1 bg-bb-border" />
             </div>
 
@@ -561,209 +517,96 @@ export function AccountPage() {
 
               <label className="block text-sm font-semibold text-bb-text">
                 Email
-                <div className="relative">
-                  <Mail className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-bb-muted" />
-                  <input
-                    type="email"
-                    required
-                    value={form.email}
-                    onChange={(e) =>
-                      setForm((f) => ({ ...f, email: e.target.value }))
-                    }
-                    className={`${field} pl-10`}
-                    placeholder="you@email.com"
-                    autoComplete="email"
-                  />
-                </div>
-              </label>
-
-              {mode === 'register' && (
-                <div className="space-y-3">
-                  <label className="block text-sm font-semibold text-bb-text">
-                    Mobile number
-                    <div className="mt-1.5 flex gap-2">
-                      <div className="relative min-w-0 flex-1">
-                        <Phone className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-bb-muted" />
-                        <input
-                          type="tel"
-                          required
-                          disabled={otpState.verified}
-                          value={form.phone}
-                          onChange={(e) => {
-                            setForm((f) => ({ ...f, phone: e.target.value }))
-                            setOtpState(emptyOtp)
-                          }}
-                          className={`${field} mt-0 pl-10 disabled:bg-bb-gray/60`}
-                          placeholder="10-digit mobile"
-                          autoComplete="tel"
-                          inputMode="numeric"
-                        />
-                      </div>
-                      {!otpState.verified && (
-                        <button
-                          type="button"
-                          onClick={sendOtp}
-                          disabled={
-                            otpState.busy !== 'idle' || !form.phone.trim()
-                          }
-                          className="shrink-0 rounded-xl bg-bb-blue px-3.5 text-sm font-bold whitespace-nowrap text-white hover:bg-bb-blue-dark disabled:opacity-60"
-                        >
-                          {otpState.busy === 'send' ? (
-                            <Loader2 className="size-4 animate-spin" />
-                          ) : otpState.sent ? (
-                            'Resend'
-                          ) : (
-                            'Send OTP'
-                          )}
-                        </button>
-                      )}
-                      {otpState.verified && (
-                        <span className="inline-flex items-center gap-1 rounded-xl bg-green-50 px-3 text-xs font-semibold text-green-700">
-                          <CheckCircle2 className="size-3.5" />
-                          Verified
-                        </span>
-                      )}
-                    </div>
-                  </label>
-
-                  {otpState.sent && !otpState.verified && (
-                    <label className="block text-sm font-semibold text-bb-text">
-                      Enter OTP
-                      <div className="mt-1.5 flex gap-2">
-                        <input
-                          required
-                          value={otpState.otp}
-                          onChange={(e) =>
-                            setOtpState((s) => ({
-                              ...s,
-                              otp: e.target.value
-                                .replace(/\D/g, '')
-                                .slice(0, 6),
-                            }))
-                          }
-                          className={field}
-                          placeholder="4–6 digit OTP"
-                          inputMode="numeric"
-                        />
-                        <button
-                          type="button"
-                          onClick={verifyOtp}
-                          disabled={
-                            otpState.busy !== 'idle' ||
-                            otpState.otp.length < 4
-                          }
-                          className="shrink-0 rounded-xl border border-bb-blue bg-white px-3.5 text-sm font-bold whitespace-nowrap text-bb-blue hover:bg-bb-blue/5 disabled:opacity-60"
-                        >
-                          {otpState.busy === 'verify' ? (
-                            <Loader2 className="size-4 animate-spin" />
-                          ) : (
-                            'Verify'
-                          )}
-                        </button>
-                      </div>
-                    </label>
-                  )}
-
-                  {otpState.message && (
-                    <p
-                      className={`rounded-xl px-3 py-2 text-sm ${
-                        otpState.error
-                          ? 'bg-red-50 text-bb-save'
-                          : 'bg-green-50 text-green-800'
-                      }`}
-                    >
-                      {otpState.message}
-                    </p>
-                  )}
-                </div>
-              )}
-
-              <label className="block text-sm font-semibold text-bb-text">
-                Password
-                <div className="relative">
-                  <Lock className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-bb-muted" />
-                  <input
-                    type={showPass ? 'text' : 'password'}
-                    required
-                    minLength={6}
-                    value={form.password}
-                    onChange={(e) =>
-                      setForm((f) => ({ ...f, password: e.target.value }))
-                    }
-                    className={`${field} pr-10 pl-10`}
-                    placeholder="At least 6 characters"
-                    autoComplete={
-                      mode === 'signin' ? 'current-password' : 'new-password'
-                    }
-                  />
-                  <button
-                    type="button"
-                    className="absolute top-1/2 right-3 -translate-y-1/2 text-bb-muted"
-                    onClick={() => setShowPass((v) => !v)}
-                    aria-label="Toggle password"
-                  >
-                    {showPass ? (
-                      <EyeOff className="size-4" />
-                    ) : (
-                      <Eye className="size-4" />
-                    )}
-                  </button>
-                </div>
-              </label>
-
-              {mode === 'register' && (
-                <label className="block text-sm font-semibold text-bb-text">
-                  Confirm password
-                  <div className="relative">
-                    <Lock className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-bb-muted" />
+                <div className="mt-1.5 flex gap-2">
+                  <div className="relative min-w-0 flex-1">
+                    <Mail className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-bb-muted" />
                     <input
-                      type={showConfirm ? 'text' : 'password'}
+                      type="email"
                       required
-                      minLength={6}
-                      value={form.confirm}
-                      onChange={(e) =>
-                        setForm((f) => ({ ...f, confirm: e.target.value }))
+                      disabled={otpState.verified}
+                      value={form.email}
+                      onChange={(e) => {
+                        setForm((f) => ({ ...f, email: e.target.value }))
+                        setOtpState(emptyOtp)
+                      }}
+                      className={`${field} mt-0 pl-10 disabled:bg-bb-gray/60`}
+                      placeholder="you@email.com"
+                      autoComplete="email"
+                    />
+                  </div>
+                  {!otpState.verified && (
+                    <button
+                      type="button"
+                      onClick={() => void sendOtp()}
+                      disabled={
+                        otpState.busy !== 'idle' || !form.email.trim()
                       }
-                      className={`${field} pr-10 pl-10`}
-                      placeholder="Repeat password"
-                      autoComplete="new-password"
+                      className="shrink-0 rounded-xl bg-bb-blue px-3.5 text-sm font-bold whitespace-nowrap text-white hover:bg-bb-blue-dark disabled:opacity-60"
+                    >
+                      {otpState.busy === 'send' ? (
+                        <Loader2 className="size-4 animate-spin" />
+                      ) : otpState.sent ? (
+                        'Resend'
+                      ) : (
+                        'Send OTP'
+                      )}
+                    </button>
+                  )}
+                  {otpState.verified && (
+                    <span className="inline-flex items-center gap-1 rounded-xl bg-green-50 px-3 text-xs font-semibold text-green-700">
+                      <CheckCircle2 className="size-3.5" />
+                      Verified
+                    </span>
+                  )}
+                </div>
+              </label>
+
+              {otpState.sent && !otpState.verified && (
+                <label className="block text-sm font-semibold text-bb-text">
+                  Enter email OTP
+                  <div className="mt-1.5 flex gap-2">
+                    <input
+                      required
+                      value={otpState.otp}
+                      onChange={(e) =>
+                        setOtpState((s) => ({
+                          ...s,
+                          otp: e.target.value.replace(/\D/g, '').slice(0, 6),
+                        }))
+                      }
+                      className={field}
+                      placeholder="6-digit OTP"
+                      inputMode="numeric"
+                      autoComplete="one-time-code"
                     />
                     <button
                       type="button"
-                      className="absolute top-1/2 right-3 -translate-y-1/2 text-bb-muted"
-                      onClick={() => setShowConfirm((v) => !v)}
-                      aria-label="Toggle confirm password"
+                      onClick={verifyOtp}
+                      disabled={
+                        otpState.busy !== 'idle' || otpState.otp.length < 4
+                      }
+                      className="shrink-0 rounded-xl border border-bb-blue bg-white px-3.5 text-sm font-bold whitespace-nowrap text-bb-blue hover:bg-bb-blue/5 disabled:opacity-60"
                     >
-                      {showConfirm ? (
-                        <EyeOff className="size-4" />
+                      {otpState.busy === 'verify' ? (
+                        <Loader2 className="size-4 animate-spin" />
                       ) : (
-                        <Eye className="size-4" />
+                        'Verify'
                       )}
                     </button>
                   </div>
                 </label>
               )}
 
-              {mode === 'signin' && (
-                <div className="flex items-center justify-between gap-3 text-sm">
-                  <label className="inline-flex items-center gap-2 text-bb-muted">
-                    <input
-                      type="checkbox"
-                      checked={form.remember}
-                      onChange={(e) =>
-                        setForm((f) => ({ ...f, remember: e.target.checked }))
-                      }
-                      className="size-4 rounded border-bb-border accent-bb-blue"
-                    />
-                    Keep me signed in
-                  </label>
-                  <a
-                    href={SUPPORT_MAILTO}
-                    className="font-semibold text-bb-link hover:underline"
-                  >
-                    Forgot password?
-                  </a>
-                </div>
+              {otpState.message && (
+                <p
+                  className={`rounded-xl px-3 py-2 text-sm ${
+                    otpState.error
+                      ? 'bg-red-50 text-bb-save'
+                      : 'bg-green-50 text-green-800'
+                  }`}
+                >
+                  {otpState.message}
+                </p>
               )}
 
               {mode === 'register' && (
@@ -809,7 +652,8 @@ export function AccountPage() {
 
               <button
                 type="submit"
-                className="w-full rounded-full bg-bb-blue py-3.5 text-sm font-bold text-white hover:bg-bb-blue-dark"
+                disabled={!otpState.verified}
+                className="w-full rounded-full bg-bb-blue py-3.5 text-sm font-bold text-white hover:bg-bb-blue-dark disabled:opacity-60"
               >
                 {mode === 'signin' ? 'Sign in' : 'Create account'}
               </button>

@@ -17,8 +17,8 @@ const faqs = [
     a: 'Order online at fusora.shop, pick a Fusora hub, and collect in as little as 1 hour when inventory is available.',
   },
   {
-    q: 'How do I verify my mobile?',
-    a: 'On Create account, enter your 10-digit number and tap Send OTP. OTP is delivered via Zone Digital SMS. Verify the code before completing registration.',
+    q: 'How do I verify my email?',
+    a: 'On Create account or Sign in, enter your email and tap Send OTP. We email a one-time code via EmailJS. Enter the OTP to verify, then continue.',
   },
   {
     q: 'How do returns work?',
