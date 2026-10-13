@@ -411,6 +411,7 @@ export function PaymentPage() {
                 <div className="min-w-0 flex-1">
                   <p className="line-clamp-2 font-medium">{item.name}</p>
                   <p className="mt-1 text-bb-muted">
+                    {item.selectedSize ? `Size ${item.selectedSize} · ` : ''}
                     Qty {item.qty} · {formatMoney(item.price * item.qty)}
                   </p>
                 </div>
