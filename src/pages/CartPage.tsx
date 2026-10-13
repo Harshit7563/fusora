@@ -30,7 +30,7 @@ export function CartPage() {
           <ul className="mt-6 space-y-4">
             {cart.map((item) => (
               <li
-                key={item.id}
+                key={`${item.id}-${item.selectedSize ?? ''}`}
                 className="flex gap-4 rounded-xl border border-bb-border bg-white p-4"
               >
                 <Link to={`/product/${item.id}`}>
@@ -47,6 +47,11 @@ export function CartPage() {
                   >
                     {item.name}
                   </Link>
+                  {item.selectedSize && (
+                    <p className="mt-0.5 text-xs text-bb-muted">
+                      Size {item.selectedSize}
+                    </p>
+                  )}
                   <p className="mt-1 font-bold">{formatMoney(item.price)}</p>
                   <div className="mt-2 flex items-center gap-3">
                     <label className="text-sm">
@@ -54,7 +59,11 @@ export function CartPage() {
                       <select
                         value={item.qty}
                         onChange={(e) =>
-                          setQty(item.id, Number(e.target.value))
+                          setQty(
+                            item.id,
+                            Number(e.target.value),
+                            item.selectedSize,
+                          )
                         }
                         className="ml-1 rounded border border-bb-border px-2 py-1"
                       >
@@ -67,7 +76,9 @@ export function CartPage() {
                     </label>
                     <button
                       type="button"
-                      onClick={() => removeFromCart(item.id)}
+                      onClick={() =>
+                        removeFromCart(item.id, item.selectedSize)
+                      }
                       className="text-sm font-semibold text-bb-save"
                     >
                       Remove

@@ -338,6 +338,9 @@ export function OrderDetailPage() {
                       {item.name}
                     </Link>
                     <p className="mt-1 text-bb-muted">
+                      {item.selectedSize
+                        ? `Size ${item.selectedSize} · `
+                        : ''}
                       Qty {item.qty} · {formatMoney(item.price * item.qty)}
                     </p>
                   </div>

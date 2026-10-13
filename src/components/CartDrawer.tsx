@@ -7,8 +7,8 @@ type Props = {
   open: boolean
   items: CartItem[]
   onClose: () => void
-  onQty: (id: string, qty: number) => void
-  onRemove: (id: string) => void
+  onQty: (id: string, qty: number, selectedSize?: string) => void
+  onRemove: (id: string, selectedSize?: string) => void
 }
 
 export function CartDrawer({ open, items, onClose, onQty, onRemove }: Props) {
@@ -57,7 +57,10 @@ export function CartDrawer({ open, items, onClose, onQty, onRemove }: Props) {
           ) : (
             <ul className="space-y-4">
               {items.map((item) => (
-                <li key={item.id} className="flex gap-3">
+                <li
+                  key={`${item.id}-${item.selectedSize ?? ''}`}
+                  className="flex gap-3"
+                >
                   <Link to={`/product/${item.id}`} onClick={onClose}>
                     <img
                       src={item.image}
@@ -73,6 +76,11 @@ export function CartDrawer({ open, items, onClose, onQty, onRemove }: Props) {
                     >
                       {item.name}
                     </Link>
+                    {item.selectedSize && (
+                      <p className="mt-0.5 text-xs text-bb-muted">
+                        Size {item.selectedSize}
+                      </p>
+                    )}
                     <p className="mt-1 font-bold">{formatMoney(item.price)}</p>
                     <div className="mt-2 flex items-center gap-2">
                       <div className="inline-flex items-center rounded-full border border-bb-border">
@@ -80,7 +88,11 @@ export function CartDrawer({ open, items, onClose, onQty, onRemove }: Props) {
                           type="button"
                           className="grid size-8 place-items-center"
                           onClick={() =>
-                            onQty(item.id, Math.max(1, item.qty - 1))
+                            onQty(
+                              item.id,
+                              Math.max(1, item.qty - 1),
+                              item.selectedSize,
+                            )
                           }
                           aria-label="Decrease"
                         >
@@ -93,7 +105,11 @@ export function CartDrawer({ open, items, onClose, onQty, onRemove }: Props) {
                           type="button"
                           className="grid size-8 place-items-center"
                           onClick={() =>
-                            onQty(item.id, Math.min(8, item.qty + 1))
+                            onQty(
+                              item.id,
+                              Math.min(8, item.qty + 1),
+                              item.selectedSize,
+                            )
                           }
                           aria-label="Increase"
                         >
@@ -102,7 +118,7 @@ export function CartDrawer({ open, items, onClose, onQty, onRemove }: Props) {
                       </div>
                       <button
                         type="button"
-                        onClick={() => onRemove(item.id)}
+                        onClick={() => onRemove(item.id, item.selectedSize)}
                         className="rounded-lg p-2 text-bb-save hover:bg-bb-gray"
                         aria-label="Remove"
                       >

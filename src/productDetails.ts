@@ -57,7 +57,7 @@ const defaultMeta: CategoryMeta = {
     { label: 'Condition', value: 'New' },
     { label: 'Fulfilment', value: 'Fusora hub / doorstep' },
     { label: 'Returns', value: 'Eligible items' },
-    { label: 'Support', value: 'Support@fusora.shop' },
+    { label: 'Support', value: 'shopsupportfusora@gmail.com' },
     { label: 'Warranty', value: 'Brand warranty where applicable' },
   ],
   overview:

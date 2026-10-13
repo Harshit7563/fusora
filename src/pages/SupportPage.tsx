@@ -22,7 +22,7 @@ const faqs = [
   },
   {
     q: 'How do returns work?',
-    a: 'See our Return & Refund Policy. Most unused items can be returned within the stated window with invoice. Questions? Write to Support@fusora.shop.',
+    a: 'See our Return & Refund Policy. Most unused items can be returned within the stated window with invoice. Questions? Write to shopsupportfusora@gmail.com.',
   },
 ]
 

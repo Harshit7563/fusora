@@ -23,7 +23,7 @@ export function Layout() {
       />
       <LocationModal />
       {toast && (
-        <div className="fixed bottom-[max(1.5rem,env(safe-area-inset-bottom))] left-1/2 z-[70] max-w-[calc(100vw-2rem)] -translate-x-1/2 truncate bg-bb-blue px-5 py-2.5 text-sm font-medium tracking-wide text-white shadow-lg">
+        <div className="fixed bottom-[max(6.5rem,calc(env(safe-area-inset-bottom)+5.5rem))] left-1/2 z-[70] max-w-[calc(100vw-2rem)] -translate-x-1/2 truncate bg-bb-blue px-5 py-2.5 text-sm font-medium tracking-wide text-white shadow-lg lg:bottom-[max(1.5rem,env(safe-area-inset-bottom))]">
           {toast}
         </div>
       )}

@@ -1,7 +1,7 @@
 /** Fusora brand / contact */
 export const SITE_DOMAIN = 'fusora.shop'
 export const SITE_URL = `https://${SITE_DOMAIN}`
-export const SUPPORT_EMAIL = 'Support@fusora.shop'
+export const SUPPORT_EMAIL = 'shopsupportfusora@gmail.com'
 export const SUPPORT_MAILTO = `mailto:${SUPPORT_EMAIL}`
 
 /** Legal entity */

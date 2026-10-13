@@ -36,7 +36,7 @@ const perks = [
   {
     icon: Headphones,
     title: 'Priority support',
-    body: 'Faster replies from Support@fusora.shop and specialist chat.',
+    body: 'Faster replies from shopsupportfusora@gmail.com and specialist chat.',
   },
   {
     icon: Shield,
@@ -57,7 +57,7 @@ const faqs = [
   },
   {
     q: 'Can I cancel?',
-    a: 'Contact Support@fusora.shop within 7 days of purchase for a full refund if you haven’t used member benefits.',
+    a: 'Contact shopsupportfusora@gmail.com within 7 days of purchase for a full refund if you haven’t used member benefits.',
   },
   {
     q: 'Is it linked to my account?',

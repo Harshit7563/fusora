@@ -83,7 +83,7 @@ export function uniqueImages(...groups: Array<string | string[] | undefined>): s
   return out
 }
 
-export type CartItem = Product & { qty: number }
+export type CartItem = Product & { qty: number; selectedSize?: string }
 
 const baseProducts: Product[] = [
   // ——— Laptops ———

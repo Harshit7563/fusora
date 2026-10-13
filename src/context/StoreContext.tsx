@@ -73,6 +73,7 @@ export type OrderItem = {
   image: string
   price: number
   qty: number
+  selectedSize?: string
 }
 
 export type Order = {
@@ -193,9 +194,9 @@ type StoreContextValue = {
   cartOpen: boolean
   openCart: () => void
   closeCart: () => void
-  addToCart: (product: Product) => void
-  setQty: (id: string, qty: number) => void
-  removeFromCart: (id: string) => void
+  addToCart: (product: Product, selectedSize?: string) => void
+  setQty: (id: string, qty: number, selectedSize?: string) => void
+  removeFromCart: (id: string, selectedSize?: string) => void
   clearCart: () => void
   wishlist: Set<string>
   toggleWish: (id: string) => void
@@ -436,17 +437,24 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const cartCount = useMemo(() => cart.reduce((s, i) => s + i.qty, 0), [cart])
 
-  const addToCart = useCallback((product: Product) => {
+  const addToCart = useCallback((product: Product, selectedSize?: string) => {
+    const sizeKey = selectedSize?.trim() || undefined
     setCart((prev) => {
-      const existing = prev.find((i) => i.id === product.id)
+      const existing = prev.find(
+        (i) => i.id === product.id && (i.selectedSize || undefined) === sizeKey,
+      )
       if (existing) {
         return prev.map((i) =>
-          i.id === product.id ? { ...i, qty: i.qty + 1 } : i,
+          i.id === product.id && (i.selectedSize || undefined) === sizeKey
+            ? { ...i, qty: i.qty + 1 }
+            : i,
         )
       }
-      return [...prev, { ...product, qty: 1 }]
+      return [...prev, { ...product, qty: 1, selectedSize: sizeKey }]
     })
-    setToast('Added to cart')
+    setToast(
+      sizeKey ? `Added · size ${sizeKey}` : 'Added to cart',
+    )
   }, [])
 
   const registerAccount = useCallback(
@@ -631,6 +639,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           image: i.image,
           price: i.price,
           qty: i.qty,
+          selectedSize: i.selectedSize,
         })),
       }
       setOrders((prev) => [order, ...prev])
@@ -678,13 +687,26 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     openCart: () => setCartOpen(true),
     closeCart: () => setCartOpen(false),
     addToCart,
-    setQty: (id, qty) =>
+    setQty: (id, qty, selectedSize) =>
       setCart((prev) =>
         prev
-          .map((i) => (i.id === id ? { ...i, qty } : i))
+          .map((i) =>
+            i.id === id && (i.selectedSize || undefined) === (selectedSize || undefined)
+              ? { ...i, qty }
+              : i,
+          )
           .filter((i) => i.qty > 0),
       ),
-    removeFromCart: (id) => setCart((prev) => prev.filter((i) => i.id !== id)),
+    removeFromCart: (id, selectedSize) =>
+      setCart((prev) =>
+        prev.filter(
+          (i) =>
+            !(
+              i.id === id &&
+              (i.selectedSize || undefined) === (selectedSize || undefined)
+            ),
+        ),
+      ),
     clearCart: () => setCart([]),
     wishlist,
     toggleWish: (id) =>

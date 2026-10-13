@@ -12,7 +12,7 @@ import {
   ThumbsUp,
   Truck,
 } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { getCategory } from '../categories'
 import { formatMoney, products } from '../data'
@@ -58,6 +58,7 @@ export function ProductPage() {
   const [tab, setTab] = useState<TabId>('overview')
   const [selectedSize, setSelectedSize] = useState<string | null>(null)
   const [sizeHint, setSizeHint] = useState(false)
+  const sizeSectionRef = useRef<HTMLDivElement>(null)
 
   const details = useMemo(
     () => (product ? getProductDetails(product) : null),
@@ -70,8 +71,14 @@ export function ProductPage() {
     setActiveImage(0)
     setQty(1)
     setTab('overview')
-    setSelectedSize(null)
     setSizeHint(false)
+    if (!product) {
+      setSelectedSize(null)
+      return
+    }
+    const sizes = getProductDetails(product).sizes
+    // One size (e.g. Free Size) — preselect so Buy works on mobile
+    setSelectedSize(sizes.length === 1 ? sizes[0] : null)
   }, [product?.id])
 
   const safeImageIndex = Math.min(
@@ -106,13 +113,21 @@ export function ProductPage() {
   const needsSize = details.sizes.length > 0
   const maxBreakdown = Math.max(...details.ratingBreakdown, 1)
 
+  const requireSizeOrScroll = () => {
+    if (!needsSize || selectedSize) return true
+    setSizeHint(true)
+    sizeSectionRef.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'center',
+    })
+    return false
+  }
+
   const addQty = () => {
-    if (needsSize && !selectedSize) {
-      setSizeHint(true)
-      setTab('sizechart')
-      return false
+    if (!requireSizeOrScroll()) return false
+    for (let i = 0; i < qty; i++) {
+      addToCart(product, selectedSize ?? undefined)
     }
-    for (let i = 0; i < qty; i++) addToCart(product)
     return true
   }
 
@@ -126,7 +141,7 @@ export function ProductPage() {
   ]
 
   return (
-    <main className="bg-fusora-ivory pb-24 lg:pb-0">
+    <main className="bg-fusora-ivory pb-36 lg:pb-0">
       <div className="mx-auto max-w-[1400px] px-3 py-4 sm:px-4 sm:py-6 lg:px-8 lg:py-10">
         <nav className="mb-4 flex flex-wrap items-center gap-1 text-[0.65rem] tracking-[0.12em] text-bb-muted uppercase sm:mb-6 sm:text-xs sm:tracking-[0.14em]">
           <Link to="/" className="hover:text-bb-text">
@@ -240,7 +255,15 @@ export function ProductPage() {
             </div>
 
             {needsSize && (
-              <div className="mt-6">
+              <div
+                ref={sizeSectionRef}
+                id="product-size"
+                className={`mt-6 scroll-mt-28 ${
+                  sizeHint && !selectedSize
+                    ? 'rounded-2xl ring-2 ring-[#8b2e2e]/35 ring-offset-2 ring-offset-fusora-ivory'
+                    : ''
+                }`}
+              >
                 <div className="mb-3 flex items-center justify-between gap-3">
                   <p className="text-sm font-semibold tracking-wide text-bb-text">
                     Select size
@@ -253,7 +276,12 @@ export function ProductPage() {
                   {details.sizeChart && (
                     <button
                       type="button"
-                      onClick={() => setTab('sizechart')}
+                      onClick={() => {
+                        setTab('sizechart')
+                        document
+                          .getElementById('product-tabs')
+                          ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                      }}
                       className="inline-flex items-center gap-1.5 text-xs font-semibold tracking-[0.14em] text-bb-link uppercase hover:underline"
                     >
                       <Ruler className="size-3.5" />
@@ -272,10 +300,10 @@ export function ProductPage() {
                           setSelectedSize(size)
                           setSizeHint(false)
                         }}
-                        className={`min-w-12 rounded-full border px-3.5 py-2 text-sm font-medium transition ${
+                        className={`min-h-11 min-w-12 touch-manipulation rounded-full border px-3.5 py-2.5 text-sm font-medium transition ${
                           active
                             ? 'border-bb-blue bg-bb-blue text-white'
-                            : 'border-bb-border text-bb-text hover:border-bb-blue'
+                            : 'border-bb-border bg-white text-bb-text hover:border-bb-blue'
                         }`}
                       >
                         {size}
@@ -331,13 +359,13 @@ export function ProductPage() {
               </div>
             </div>
 
-            <div className="mt-4 hidden flex-col gap-2 sm:flex sm:flex-row">
+            <div className="mt-4 flex flex-col gap-2 sm:flex-row lg:flex">
               <button
                 type="button"
                 onClick={() => {
                   if (addQty()) openCart()
                 }}
-                className="flex-1 border border-bb-border bg-white py-3.5 text-xs font-semibold tracking-[0.16em] text-bb-text uppercase transition hover:bg-bb-gray"
+                className="hidden flex-1 touch-manipulation border border-bb-border bg-white py-3.5 text-xs font-semibold tracking-[0.16em] text-bb-text uppercase transition hover:bg-bb-gray sm:block"
               >
                 Add to bag
               </button>
@@ -346,7 +374,7 @@ export function ProductPage() {
                 onClick={() => {
                   if (addQty()) navigate('/cart')
                 }}
-                className="flex-1 bg-bb-blue py-3.5 text-xs font-semibold tracking-[0.16em] text-white uppercase hover:bg-bb-blue-dark"
+                className="hidden flex-1 touch-manipulation bg-bb-blue py-3.5 text-xs font-semibold tracking-[0.16em] text-white uppercase hover:bg-bb-blue-dark sm:block"
               >
                 Buy now
               </button>
@@ -419,7 +447,7 @@ export function ProductPage() {
         </section>
 
         {/* Tabs */}
-        <section className="mt-10 border-t border-bb-border pt-2">
+        <section id="product-tabs" className="mt-10 scroll-mt-24 border-t border-bb-border pt-2">
           <div className="flex gap-1 overflow-x-auto border-b border-bb-border">
             {tabs.map((t) => (
               <button
@@ -708,32 +736,65 @@ export function ProductPage() {
       </div>
 
       {/* Mobile sticky buy bar */}
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-bb-border bg-fusora-ivory/95 px-3 pt-3 backdrop-blur safe-pb lg:hidden">
-        <div className="mx-auto flex max-w-[1400px] items-center gap-2">
-          <div className="min-w-0 flex-1">
-            <p className="truncate text-xs text-bb-muted">{product.brand}</p>
-            <p className="font-serif text-lg leading-none text-bb-text">
-              {formatMoney(product.price)}
+      <div className="fixed inset-x-0 bottom-0 z-50 border-t border-bb-border bg-fusora-ivory/98 px-3 pt-2.5 shadow-[0_-8px_24px_rgba(42,28,26,0.08)] backdrop-blur safe-pb lg:hidden">
+        <div className="mx-auto max-w-[1400px]">
+          {needsSize && (
+            <div className="-mx-1 mb-2 flex gap-1.5 overflow-x-auto px-1 pb-0.5">
+              {details.sizes.map((size) => {
+                const active = selectedSize === size
+                return (
+                  <button
+                    key={`sticky-${size}`}
+                    type="button"
+                    onClick={() => {
+                      setSelectedSize(size)
+                      setSizeHint(false)
+                    }}
+                    className={`min-h-9 shrink-0 touch-manipulation rounded-full border px-3 text-xs font-semibold ${
+                      active
+                        ? 'border-bb-blue bg-bb-blue text-white'
+                        : 'border-bb-border bg-white text-bb-text'
+                    }`}
+                  >
+                    {size}
+                  </button>
+                )
+              })}
+            </div>
+          )}
+          {sizeHint && needsSize && !selectedSize && (
+            <p className="mb-2 text-center text-[0.7rem] font-medium text-[#8b2e2e]">
+              Select a size above, then tap Buy
             </p>
+          )}
+          <div className="flex items-center gap-2">
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-xs text-bb-muted">
+                {selectedSize ? `Size ${selectedSize}` : product.brand}
+              </p>
+              <p className="font-serif text-lg leading-none text-bb-text">
+                {formatMoney(product.price)}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                if (addQty()) openCart()
+              }}
+              className="min-h-11 shrink-0 touch-manipulation border border-bb-border bg-white px-4 py-3 text-[0.65rem] font-semibold tracking-[0.12em] text-bb-text uppercase"
+            >
+              Add
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                if (addQty()) navigate('/cart')
+              }}
+              className="min-h-11 shrink-0 touch-manipulation bg-bb-blue px-5 py-3 text-[0.65rem] font-semibold tracking-[0.12em] text-white uppercase"
+            >
+              Buy now
+            </button>
           </div>
-          <button
-            type="button"
-            onClick={() => {
-              if (addQty()) openCart()
-            }}
-            className="shrink-0 border border-bb-border bg-white px-4 py-3 text-[0.65rem] font-semibold tracking-[0.12em] text-bb-text uppercase"
-          >
-            Add
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              if (addQty()) navigate('/cart')
-            }}
-            className="shrink-0 bg-bb-blue px-4 py-3 text-[0.65rem] font-semibold tracking-[0.12em] text-white uppercase"
-          >
-            Buy
-          </button>
         </div>
       </div>
     </main>

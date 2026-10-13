@@ -24,7 +24,7 @@ const faqs = [
   },
   {
     q: 'How can I contact customer support?',
-    a: 'You can reach us via email at Support@fusora.shop or through the Contact / Support page for any assistance.',
+    a: 'You can reach us via email at shopsupportfusora@gmail.com or through the Contact / Support page for any assistance.',
   },
 ]
 

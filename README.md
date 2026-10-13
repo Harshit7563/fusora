@@ -2,7 +2,7 @@
 
 Electronics retail storefront at **[fusora.shop](https://fusora.shop)**
 
-Support: **[Support@fusora.shop](mailto:Support@fusora.shop)**
+Support: **[shopsupportfusora@gmail.com](mailto:shopsupportfusora@gmail.com)**
 
 ## Run locally
 
