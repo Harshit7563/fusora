@@ -172,7 +172,7 @@ export function NewsletterPopup() {
                 )}
                 <button
                   type="submit"
-                  className="w-full bg-bb-blue py-3.5 text-xs font-semibold tracking-[0.2em] text-[#fbf7f2] uppercase transition hover:bg-bb-blue-dark"
+                  className="w-full bg-bb-blue py-3.5 text-xs font-semibold tracking-[0.2em] text-white uppercase transition hover:bg-bb-blue-dark"
                 >
                   Subscribe
                 </button>

@@ -20,7 +20,7 @@ export function CartPage() {
           <p className="font-semibold">Cart is empty</p>
           <Link
             to="/deals"
-            className="mt-4 inline-flex rounded-full bg-bb-blue px-6 py-3 text-xs font-semibold tracking-[0.16em] text-[#f7f3ec] uppercase"
+            className="mt-4 inline-flex bg-bb-blue px-6 py-3 text-xs font-semibold tracking-[0.16em] text-white uppercase"
           >
             Shop deals
           </Link>
@@ -88,7 +88,7 @@ export function CartPage() {
               </li>
             ))}
           </ul>
-          <div className="mt-6 flex flex-col gap-4 rounded-2xl bg-[#efe8dc]/70 p-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:p-5">
+          <div className="mt-6 flex flex-col gap-4 rounded-2xl bg-bb-gray/70 p-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:p-5">
             <p className="text-xl font-bold">
               Subtotal: {formatMoney(total)}
             </p>
@@ -96,13 +96,13 @@ export function CartPage() {
               <button
                 type="button"
                 onClick={openCart}
-                className="rounded-full border border-bb-border bg-white px-5 py-3 text-center text-xs font-semibold tracking-[0.14em] uppercase sm:py-2.5"
+                className="border border-bb-border bg-white px-5 py-3 text-center text-xs font-semibold tracking-[0.14em] uppercase sm:py-2.5"
               >
                 Quick cart
               </button>
               <Link
                 to={isLoggedIn ? '/checkout' : '/account?next=/checkout'}
-                className="rounded-full bg-bb-blue px-6 py-3 text-center text-xs font-semibold tracking-[0.14em] text-[#f7f3ec] uppercase sm:py-2.5"
+                className="bg-bb-blue px-6 py-3 text-center text-xs font-semibold tracking-[0.14em] text-white uppercase sm:py-2.5"
               >
                 {isLoggedIn ? 'Checkout' : 'Sign in to checkout'}
               </Link>

@@ -22,13 +22,13 @@ export function SignInBar() {
         <div className="flex w-full flex-wrap gap-2 sm:w-auto">
           <Link
             to="/account"
-            className="rounded-full bg-bb-blue px-5 py-2.5 text-sm font-bold text-white hover:bg-bb-blue-dark"
+            className="bg-bb-blue px-5 py-2.5 text-sm font-bold text-white hover:bg-bb-blue-dark"
           >
             Sign in
           </Link>
           <Link
             to="/register"
-            className="rounded-full border border-bb-border bg-white px-5 py-2.5 text-sm font-bold text-bb-text hover:bg-bb-gray"
+            className="border border-bb-border bg-white px-5 py-2.5 text-sm font-bold text-bb-text hover:bg-bb-gray"
           >
             Create an account
           </Link>

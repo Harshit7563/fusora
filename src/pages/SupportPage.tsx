@@ -38,7 +38,7 @@ export function SupportPage() {
 
       <div className="mt-6 flex flex-col gap-3 rounded-2xl border border-bb-blue/20 bg-bb-blue/5 p-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-start gap-3">
-          <span className="grid size-10 shrink-0 place-items-center rounded-full bg-bb-blue text-white">
+          <span className="grid size-10 shrink-0 place-items-center bg-bb-blue text-white">
             <Mail className="size-5" />
           </span>
           <div>
@@ -50,7 +50,7 @@ export function SupportPage() {
         </div>
         <a
           href={SUPPORT_MAILTO}
-          className="inline-flex items-center justify-center gap-2 rounded-full bg-bb-blue px-5 py-2.5 text-sm font-bold text-white hover:bg-bb-blue-dark"
+          className="inline-flex items-center justify-center gap-2 bg-bb-blue px-5 py-2.5 text-sm font-bold text-white hover:bg-bb-blue-dark"
         >
           <MessageCircle className="size-4" />
           {SUPPORT_EMAIL}

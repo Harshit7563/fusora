@@ -15,13 +15,13 @@ export function NotFoundPage() {
       <div className="mt-8 flex flex-wrap justify-center gap-3">
         <Link
           to="/"
-          className="rounded-full bg-bb-blue px-6 py-3 text-xs font-semibold tracking-[0.16em] text-[#f7f3ec] uppercase"
+          className="bg-bb-blue px-6 py-3 text-xs font-semibold tracking-[0.16em] text-white uppercase"
         >
           Home
         </Link>
         <Link
           to="/deals"
-          className="rounded-full border border-bb-border px-6 py-3 text-xs font-semibold tracking-[0.16em] uppercase"
+          className="border border-bb-border px-6 py-3 text-xs font-semibold tracking-[0.16em] uppercase"
         >
           Shop
         </Link>

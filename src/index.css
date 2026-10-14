@@ -1,28 +1,28 @@
 @import 'tailwindcss';
 
 @theme {
-  --font-sans: 'Jost', system-ui, sans-serif;
-  --font-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  /* Muhurth-inspired boutique commerce */
+  --font-sans: 'Poppins', Arial, Helvetica, sans-serif;
+  --font-serif: 'Poppins', Arial, Helvetica, sans-serif;
 
-  /* Radhika Textile–inspired ethnic boutique shell */
-  --color-bb-blue: #6b1f2a;
-  --color-bb-blue-dark: #4f1520;
-  --color-bb-blue-deep: #3a0f18;
-  --color-bb-yellow: #f3e8d8;
-  --color-bb-link: #6b1f2a;
-  --color-bb-gray: #f7f1ea;
-  --color-bb-border: #e8ddd0;
-  --color-bb-text: #2a1c1a;
-  --color-bb-muted: #7a6a62;
-  --color-bb-price: #6b1f2a;
+  --color-bb-blue: #323232;
+  --color-bb-blue-dark: #1f1f1f;
+  --color-bb-blue-deep: #141414;
+  --color-bb-yellow: #fae3ca;
+  --color-bb-link: #323232;
+  --color-bb-gray: #f5f5f5;
+  --color-bb-border: #ececec;
+  --color-bb-text: #272727;
+  --color-bb-muted: #787878;
+  --color-bb-price: #272727;
   --color-bb-save: #b4232f;
 
-  --color-fusora-wine: #6b1f2a;
-  --color-fusora-wine-soft: #8a3a45;
-  --color-fusora-cream: #fbf7f2;
-  --color-fusora-ivory: #fbf7f2;
+  --color-fusora-wine: #323232;
+  --color-fusora-wine-soft: #505050;
+  --color-fusora-cream: #ffffff;
+  --color-fusora-ivory: #ffffff;
   --color-fusora-gold: #c4a574;
-  --color-fusora-sand: #f0e6d8;
+  --color-fusora-sand: #f5f5f5;
 }
 
 @layer base {
@@ -39,8 +39,9 @@
     margin: 0;
     min-height: 100svh;
     font-family: var(--font-sans);
+    font-weight: 400;
     color: var(--color-bb-text);
-    background: var(--color-fusora-ivory);
+    background: #ffffff;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
   }
@@ -67,15 +68,16 @@
   h2,
   h3,
   .font-serif {
-    font-family: var(--font-serif);
+    font-family: var(--font-sans);
     font-weight: 500;
   }
 }
 
 @layer utilities {
   .text-display {
-    font-family: var(--font-serif);
-    letter-spacing: -0.01em;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    letter-spacing: 0.02em;
   }
 
   .safe-pb {

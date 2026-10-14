@@ -300,7 +300,7 @@ export function ProductPage() {
                           setSelectedSize(size)
                           setSizeHint(false)
                         }}
-                        className={`min-h-11 min-w-12 touch-manipulation rounded-full border px-3.5 py-2.5 text-sm font-medium transition ${
+                        className={`min-h-11 min-w-12 touch-manipulation border px-3.5 py-2.5 text-sm font-medium transition ${
                           active
                             ? 'border-bb-blue bg-bb-blue text-white'
                             : 'border-bb-border bg-white text-bb-text hover:border-bb-blue'
@@ -338,7 +338,7 @@ export function ProductPage() {
 
             <div className="mt-6 flex items-center gap-3">
               <span className="text-sm font-semibold">Qty</span>
-              <div className="inline-flex items-center rounded-full border border-bb-border bg-white">
+              <div className="inline-flex items-center border border-bb-border bg-white">
                 <button
                   type="button"
                   className="grid size-10 place-items-center"
@@ -384,7 +384,7 @@ export function ProductPage() {
               <button
                 type="button"
                 onClick={() => toggleWish(product.id)}
-                className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-bb-border bg-white py-2.5 text-sm font-semibold hover:bg-fusora-cream"
+                className="inline-flex flex-1 items-center justify-center gap-2 border border-bb-border bg-white py-2.5 text-sm font-semibold hover:bg-bb-gray"
               >
                 <Heart
                   className={`size-4 ${saved ? 'fill-bb-save text-bb-save' : ''}`}
@@ -401,7 +401,7 @@ export function ProductPage() {
                     void navigator.clipboard?.writeText(url)
                   }
                 }}
-                className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-bb-border bg-white py-2.5 text-sm font-semibold hover:bg-fusora-cream"
+                className="inline-flex flex-1 items-center justify-center gap-2 border border-bb-border bg-white py-2.5 text-sm font-semibold hover:bg-bb-gray"
               >
                 <Share2 className="size-4" />
                 Share
@@ -488,7 +488,7 @@ export function ProductPage() {
                     ))}
                   </ul>
                 </div>
-                <div className="bg-[#efe8dc]/60 p-5 sm:p-6">
+                <div className="bg-bb-gray/60 p-5 sm:p-6">
                   <h3 className="text-xs font-semibold tracking-[0.18em] text-bb-text uppercase">
                     Protection
                   </h3>
@@ -515,7 +515,7 @@ export function ProductPage() {
                     {details.specs.map((row, i) => (
                       <tr
                         key={row.label}
-                        className={i % 2 === 0 ? 'bg-[#efe8dc]/45' : ''}
+                        className={i % 2 === 0 ? 'bg-bb-gray/45' : ''}
                       >
                         <th className="w-[40%] px-4 py-3.5 font-semibold text-bb-text">
                           {row.label}
@@ -527,7 +527,7 @@ export function ProductPage() {
                       <th className="px-4 py-3.5 font-semibold">Brand</th>
                       <td className="px-4 py-3.5 text-bb-muted">{product.brand}</td>
                     </tr>
-                    <tr className="bg-[#efe8dc]/45">
+                    <tr className="bg-bb-gray/45">
                       <th className="px-4 py-3.5 font-semibold">SKU</th>
                       <td className="px-4 py-3.5 text-bb-muted">{details.sku}</td>
                     </tr>
@@ -639,7 +639,7 @@ export function ProductPage() {
                       return (
                         <li key={star} className="flex items-center gap-3 text-sm">
                           <span className="w-8 text-bb-muted">{star}★</span>
-                          <div className="h-2 flex-1 overflow-hidden rounded-full bg-[#efe8dc]">
+                          <div className="h-2 flex-1 overflow-hidden rounded-full bg-bb-gray">
                             <div
                               className="h-full rounded-full bg-[#c4a35a]"
                               style={{ width: `${pct}%` }}
@@ -712,7 +712,7 @@ export function ProductPage() {
             <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
               {related.map((p) => (
                 <Link key={p.id} to={`/product/${p.id}`} className="group">
-                  <div className="overflow-hidden bg-[#efe8dc]">
+                  <div className="overflow-hidden bg-bb-gray">
                     <img
                       src={p.image}
                       alt=""
@@ -750,7 +750,7 @@ export function ProductPage() {
                       setSelectedSize(size)
                       setSizeHint(false)
                     }}
-                    className={`min-h-9 shrink-0 touch-manipulation rounded-full border px-3 text-xs font-semibold ${
+                    className={`min-h-9 shrink-0 touch-manipulation border px-3 text-xs font-semibold ${
                       active
                         ? 'border-bb-blue bg-bb-blue text-white'
                         : 'border-bb-border bg-white text-bb-text'

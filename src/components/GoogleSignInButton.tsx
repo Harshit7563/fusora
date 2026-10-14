@@ -59,7 +59,7 @@ export function GoogleSignInButton({ onSuccess, onError }: Props) {
       type="button"
       onClick={onClick}
       disabled={busy}
-      className="flex w-full items-center justify-center gap-3 rounded-full border border-bb-border bg-white py-3 text-sm font-bold text-bb-text transition hover:bg-bb-gray disabled:opacity-60"
+      className="flex w-full items-center justify-center gap-3 border border-bb-border bg-white py-3 text-sm font-bold text-bb-text transition hover:bg-bb-gray disabled:opacity-60"
     >
       {busy ? <Loader2 className="size-5 animate-spin" /> : <GoogleMark />}
       Continue with Google

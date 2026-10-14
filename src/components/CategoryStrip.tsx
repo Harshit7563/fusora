@@ -72,11 +72,11 @@ export function CategoryStrip() {
                   className="h-full w-full object-cover transition duration-700 ease-out group-hover:scale-[1.05]"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-bb-blue-deep/80 via-bb-blue/20 to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 px-3 py-4 text-center text-[#fbf7f2] sm:py-5">
+                <div className="absolute inset-x-0 bottom-0 px-3 py-4 text-center text-white sm:py-5">
                   <span className="block text-[0.85rem] font-medium tracking-[0.16em] uppercase sm:text-[0.9rem]">
                     {item.title}
                   </span>
-                  <span className="mt-1 block text-[0.7rem] text-[#f3e8d8]/85">
+                  <span className="mt-1 block text-[0.7rem] text-white/80">
                     {item.line}
                   </span>
                 </div>

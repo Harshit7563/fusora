@@ -20,24 +20,12 @@ const cols = [
     ],
   },
   {
-    title: 'Orders',
+    title: 'Help',
     links: [
       { label: 'Shipping', to: '/policies/shipping-policy' },
       { label: 'Returns & refunds', to: '/policies/return-refund-policy' },
-      { label: 'Wishlist', to: '/wishlist' },
-      { label: 'Cart', to: '/cart' },
-    ],
-  },
-  {
-    title: 'Policies',
-    links: [
-      { label: 'Terms', to: '/policies/terms-and-conditions' },
-      { label: 'Privacy', to: '/policies/privacy-policy' },
-      { label: 'Disclaimer', to: '/policies/disclaimer' },
-      {
-        label: 'Grievance',
-        to: '/policies/grievance-redressal-policy',
-      },
+      { label: 'Support', to: '/support' },
+      { label: 'My orders', to: '/orders' },
     ],
   },
   {
@@ -45,7 +33,7 @@ const cols = [
     links: [
       { label: 'Our story', to: '/about' },
       { label: 'Memberships', to: '/memberships' },
-      { label: 'Support', to: '/support' },
+      { label: 'Wishlist', to: '/wishlist' },
       { label: 'All policies', to: '/policies' },
     ],
   },
@@ -53,25 +41,25 @@ const cols = [
 
 export function Footer() {
   return (
-    <footer className="border-t border-bb-border bg-bb-blue text-[#fbf7f2]">
-      <div className="mx-auto max-w-[1440px] px-4 py-16 lg:px-8">
+    <footer className="border-t border-bb-border bg-white text-bb-text">
+      <div className="mx-auto max-w-[1400px] px-4 py-14 lg:px-8">
         <div className="flex flex-col items-center text-center">
-          <FusoraLogo onDark />
-          <p className="mt-6 max-w-lg font-serif text-2xl leading-snug text-[#f3e8d8] italic sm:text-3xl">
-            Designer wear for every occasion — chosen, never crowded.
+          <FusoraLogo centered compact />
+          <p className="mt-5 max-w-lg text-sm leading-relaxed text-bb-muted">
+            Designer wear for every occasion — chosen with care, never crowded.
           </p>
           <a
             href={SUPPORT_MAILTO}
-            className="mt-6 text-[0.68rem] tracking-[0.2em] text-[#f3e8d8]/85 uppercase transition hover:text-white"
+            className="mt-4 text-[0.7rem] tracking-[0.14em] text-bb-muted uppercase transition hover:text-bb-text"
           >
             {SUPPORT_EMAIL}
           </a>
         </div>
 
-        <div className="mt-14 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 grid gap-10 sm:grid-cols-3">
           {cols.map((col) => (
-            <div key={col.title}>
-              <h3 className="mb-4 text-[0.65rem] font-semibold tracking-[0.22em] text-fusora-gold uppercase">
+            <div key={col.title} className="text-center sm:text-left">
+              <h3 className="mb-4 text-[0.7rem] font-semibold tracking-[0.18em] text-bb-text uppercase">
                 {col.title}
               </h3>
               <ul className="space-y-2.5">
@@ -79,7 +67,7 @@ export function Footer() {
                   <li key={link.label}>
                     <Link
                       to={link.to}
-                      className="text-sm text-[#fbf7f2]/85 transition hover:text-white"
+                      className="text-sm text-bb-muted transition hover:text-bb-text"
                     >
                       {link.label}
                     </Link>
@@ -91,14 +79,14 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="border-t border-white/10">
-        <div className="mx-auto flex max-w-[1440px] flex-col gap-4 px-4 py-6 text-xs text-[#f3e8d8]/75 lg:px-8">
+      <div className="border-t border-bb-border bg-[#fae3ca]/45">
+        <div className="mx-auto flex max-w-[1400px] flex-col gap-3 px-4 py-5 text-xs text-bb-muted lg:px-8">
           <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 lg:justify-start">
-            {policies.map((p) => (
+            {policies.slice(0, 6).map((p) => (
               <Link
                 key={p.slug}
                 to={`/policies/${p.slug}`}
-                className="hover:text-white"
+                className="hover:text-bb-text"
               >
                 {p.title}
               </Link>
@@ -106,7 +94,7 @@ export function Footer() {
           </div>
           <p>
             © {new Date().getFullYear()} {COMPANY_NAME}. Brand Fusora (
-            <a href={SITE_URL} className="hover:text-white">
+            <a href={SITE_URL} className="hover:text-bb-text">
               {SITE_DOMAIN}
             </a>
             ).

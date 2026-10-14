@@ -94,7 +94,7 @@ export function PaymentPage() {
         <h1 className="font-serif mt-4 text-3xl">Sign in to pay</h1>
         <Link
           to="/account?next=/payment"
-          className="mt-6 inline-flex rounded-full bg-bb-blue px-6 py-3 text-xs font-semibold tracking-[0.16em] text-[#f7f3ec] uppercase"
+          className="mt-6 inline-flex bg-bb-blue px-6 py-3 text-xs font-semibold tracking-[0.16em] text-white uppercase"
         >
           Sign in
         </Link>
@@ -113,13 +113,13 @@ export function PaymentPage() {
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link
             to={`/orders/${doneId}`}
-            className="rounded-full bg-bb-blue px-6 py-3 text-xs font-semibold tracking-[0.16em] text-[#f7f3ec] uppercase"
+            className="bg-bb-blue px-6 py-3 text-xs font-semibold tracking-[0.16em] text-white uppercase"
           >
             Track order
           </Link>
           <Link
             to="/orders"
-            className="rounded-full border border-bb-border px-6 py-3 text-xs font-semibold tracking-[0.16em] uppercase"
+            className="border border-bb-border px-6 py-3 text-xs font-semibold tracking-[0.16em] uppercase"
           >
             My orders
           </Link>
@@ -134,7 +134,7 @@ export function PaymentPage() {
         <p className="text-sm text-bb-muted">No pending payment. Return to checkout.</p>
         <Link
           to="/checkout"
-          className="mt-6 inline-flex rounded-full bg-bb-blue px-6 py-3 text-xs font-semibold tracking-[0.16em] text-[#f7f3ec] uppercase"
+          className="mt-6 inline-flex bg-bb-blue px-6 py-3 text-xs font-semibold tracking-[0.16em] text-white uppercase"
         >
           Checkout
         </Link>
@@ -202,7 +202,7 @@ export function PaymentPage() {
   }
 
   const field =
-    'mt-1.5 w-full rounded-xl border border-bb-border bg-white px-3.5 py-3 text-sm outline-none focus:border-bb-blue'
+    'mt-1.5 w-full border border-bb-border bg-white px-3.5 py-3 text-sm outline-none focus:border-bb-blue'
 
   return (
     <main className="mx-auto max-w-[920px] px-3 py-8 sm:px-4 sm:py-10 lg:px-6">
@@ -220,7 +220,7 @@ export function PaymentPage() {
       <div className="mt-6 grid gap-6 sm:mt-8 sm:gap-8 lg:grid-cols-[1.15fr_0.85fr]">
         <form
           onSubmit={confirmPayment}
-          className="order-2 rounded-2xl border border-bb-border bg-white p-4 sm:p-6 lg:order-1"
+          className="order-2 border border-bb-border bg-white p-4 sm:p-6 lg:order-1"
         >
           <div className="-mx-1 flex gap-2 overflow-x-auto border-b border-bb-border px-1 pb-4">
             {(
@@ -241,9 +241,9 @@ export function PaymentPage() {
                   }
                   navigate(`/payment?method=${id}`, { replace: true })
                 }}
-                className={`inline-flex shrink-0 items-center gap-2 rounded-full px-3.5 py-2.5 text-[0.65rem] font-semibold tracking-wide uppercase transition sm:text-xs ${
+                className={`inline-flex shrink-0 items-center gap-2 px-3.5 py-2.5 text-[0.65rem] font-semibold tracking-wide uppercase transition sm:text-xs ${
                   method === id
-                    ? 'bg-bb-blue text-[#f7f3ec]'
+                    ? 'bg-bb-blue text-white'
                     : 'border border-bb-border text-bb-muted hover:text-bb-text'
                 }`}
               >
@@ -259,7 +259,7 @@ export function PaymentPage() {
                 <QrCode className="size-4 text-bb-blue" />
                 Scan UPI QR
               </div>
-              <div className="mx-auto mt-4 grid size-[min(240px,70vw)] place-items-center rounded-2xl border border-bb-border bg-[#faf8f4] p-3">
+              <div className="mx-auto mt-4 grid size-[min(240px,70vw)] place-items-center border border-bb-border bg-[#f5f5f5] p-3">
                 {qrUrl ? (
                   <img
                     src={qrUrl}
@@ -350,7 +350,7 @@ export function PaymentPage() {
                 {BANKS.map((b) => (
                   <label
                     key={b}
-                    className={`flex cursor-pointer items-center gap-3 rounded-xl border px-3 py-3 text-sm ${
+                    className={`flex cursor-pointer items-center gap-3 border px-3 py-3 text-sm ${
                       bank === b
                         ? 'border-bb-blue bg-bb-blue/5'
                         : 'border-bb-border'
@@ -379,7 +379,7 @@ export function PaymentPage() {
           <button
             type="submit"
             disabled={paying}
-            className="mt-6 w-full rounded-full bg-bb-blue py-3.5 text-xs font-semibold tracking-[0.16em] text-[#f7f3ec] uppercase disabled:opacity-60"
+            className="mt-6 w-full bg-bb-blue py-3.5 text-xs font-semibold tracking-[0.16em] text-white uppercase disabled:opacity-60"
           >
             {paying
               ? 'Confirming…'
@@ -396,7 +396,7 @@ export function PaymentPage() {
           </button>
         </form>
 
-        <aside className="order-1 h-fit rounded-2xl border border-bb-border bg-white p-4 sm:p-5 lg:order-2 lg:sticky lg:top-28">
+        <aside className="order-1 h-fit border border-bb-border bg-[#f5f5f5] p-4 sm:p-5 lg:order-2 lg:sticky lg:top-28">
           <h2 className="text-sm font-semibold tracking-[0.14em] uppercase">
             Order summary
           </h2>

@@ -51,13 +51,13 @@ export function AboutPage() {
       <div className="mt-8 flex flex-wrap gap-3">
         <Link
           to="/deals"
-          className="rounded-full bg-bb-blue px-6 py-3 text-xs font-semibold tracking-[0.16em] text-[#f7f3ec] uppercase"
+          className="bg-bb-blue px-6 py-3 text-xs font-semibold tracking-[0.16em] text-white uppercase"
         >
           Shop the edit
         </Link>
         <Link
           to="/support"
-          className="rounded-full border border-bb-border px-6 py-3 text-xs font-semibold tracking-[0.16em] uppercase"
+          className="border border-bb-border px-6 py-3 text-xs font-semibold tracking-[0.16em] uppercase"
         >
           Reach us
         </Link>

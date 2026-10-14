@@ -115,7 +115,7 @@ export function OrdersPage() {
         </p>
         <Link
           to="/account?next=/orders"
-          className="mt-8 inline-flex rounded-full bg-bb-blue px-6 py-3 text-xs font-semibold tracking-[0.16em] text-[#f7f3ec] uppercase"
+          className="mt-8 inline-flex bg-bb-blue px-6 py-3 text-xs font-semibold tracking-[0.16em] text-white uppercase"
         >
           Sign in
         </Link>
@@ -152,7 +152,7 @@ export function OrdersPage() {
         </div>
         <button
           type="submit"
-          className="shrink-0 rounded-full bg-bb-blue px-4 py-2.5 text-xs font-semibold tracking-[0.14em] text-[#f7f3ec] uppercase"
+          className="shrink-0 bg-bb-blue px-4 py-2.5 text-xs font-semibold tracking-[0.14em] text-white uppercase"
         >
           Track
         </button>
@@ -167,7 +167,7 @@ export function OrdersPage() {
           </p>
           <Link
             to="/deals"
-            className="mt-6 inline-flex rounded-full bg-bb-blue px-6 py-3 text-xs font-semibold tracking-[0.16em] text-[#f7f3ec] uppercase"
+            className="mt-6 inline-flex bg-bb-blue px-6 py-3 text-xs font-semibold tracking-[0.16em] text-white uppercase"
           >
             Start shopping
           </Link>
@@ -232,7 +232,7 @@ export function OrderDetailPage() {
         <p className="mt-3 text-sm text-bb-muted">Sign in to track this order.</p>
         <Link
           to={`/account?next=/orders/${encodeURIComponent(id)}`}
-          className="mt-8 inline-flex rounded-full bg-bb-blue px-6 py-3 text-xs font-semibold tracking-[0.16em] text-[#f7f3ec] uppercase"
+          className="mt-8 inline-flex bg-bb-blue px-6 py-3 text-xs font-semibold tracking-[0.16em] text-white uppercase"
         >
           Sign in
         </Link>
@@ -249,7 +249,7 @@ export function OrderDetailPage() {
         </p>
         <Link
           to="/orders"
-          className="mt-8 inline-flex rounded-full bg-bb-blue px-6 py-3 text-xs font-semibold tracking-[0.16em] text-[#f7f3ec] uppercase"
+          className="mt-8 inline-flex bg-bb-blue px-6 py-3 text-xs font-semibold tracking-[0.16em] text-white uppercase"
         >
           My orders
         </Link>
@@ -269,7 +269,7 @@ export function OrderDetailPage() {
         </p>
         <Link
           to="/orders"
-          className="mt-8 inline-flex rounded-full bg-bb-blue px-6 py-3 text-xs font-semibold tracking-[0.16em] text-[#f7f3ec] uppercase"
+          className="mt-8 inline-flex bg-bb-blue px-6 py-3 text-xs font-semibold tracking-[0.16em] text-white uppercase"
         >
           My orders
         </Link>
@@ -390,13 +390,13 @@ export function OrderDetailPage() {
       <div className="mt-8 flex flex-wrap gap-3">
         <Link
           to="/orders"
-          className="rounded-full border border-bb-border px-5 py-2.5 text-xs font-semibold tracking-[0.14em] uppercase"
+          className="border border-bb-border px-5 py-2.5 text-xs font-semibold tracking-[0.14em] uppercase"
         >
           All orders
         </Link>
         <a
           href={SUPPORT_MAILTO}
-          className="rounded-full bg-bb-blue px-5 py-2.5 text-xs font-semibold tracking-[0.14em] text-[#f7f3ec] uppercase"
+          className="bg-bb-blue px-5 py-2.5 text-xs font-semibold tracking-[0.14em] text-white uppercase"
         >
           Need help?
         </a>

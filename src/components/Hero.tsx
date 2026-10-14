@@ -46,13 +46,13 @@ export function Hero() {
   }, [])
 
   return (
-    <section className="relative min-h-[70svh] overflow-hidden bg-bb-blue-deep sm:min-h-[78svh]">
+    <section className="relative min-h-[62svh] overflow-hidden bg-[#1a1a1a] sm:min-h-[72svh]">
       <AnimatePresence mode="wait">
         <motion.img
           key={slide.id}
           src={slide.image}
           alt=""
-          initial={{ opacity: 0, scale: 1.05 }}
+          initial={{ opacity: 0, scale: 1.04 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 1.05, ease: [0.22, 1, 0.36, 1] }}
@@ -60,38 +60,37 @@ export function Hero() {
         />
       </AnimatePresence>
 
-      <div className="absolute inset-0 bg-gradient-to-r from-bb-blue-deep/88 via-bb-blue-deep/50 to-bb-blue-deep/15" />
-      <div className="absolute inset-0 bg-gradient-to-t from-bb-blue-deep/75 via-transparent to-bb-blue-deep/25" />
+      <div className="absolute inset-0 bg-black/35" />
 
-      <div className="relative mx-auto flex min-h-[70svh] max-w-[1440px] flex-col justify-end px-4 pb-14 sm:min-h-[78svh] sm:px-8 sm:pb-16 lg:justify-center lg:pb-0">
+      <div className="relative mx-auto flex min-h-[62svh] max-w-[1400px] flex-col items-center justify-center px-4 py-16 text-center sm:min-h-[72svh] sm:px-8">
         <AnimatePresence mode="wait">
           <motion.div
             key={slide.id}
-            initial={{ opacity: 0, y: 18 }}
+            initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-            className="max-w-xl"
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            className="max-w-2xl"
           >
-            <p className="mb-3 text-[0.7rem] font-medium tracking-[0.3em] text-fusora-gold uppercase">
+            <p className="mb-3 text-[0.68rem] font-medium tracking-[0.28em] text-white/85 uppercase">
               {slide.eyebrow}
             </p>
-            <h1 className="text-display text-[2.2rem] leading-[1.08] text-[#fbf7f2] sm:text-5xl md:text-[3.5rem]">
+            <h1 className="text-display text-[2rem] leading-[1.15] text-white sm:text-4xl md:text-[2.75rem]">
               {slide.title}
             </h1>
-            <p className="mt-4 max-w-md text-sm leading-relaxed text-[#f3e8d8]/92 sm:text-[0.95rem]">
+            <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-white/85 sm:text-[0.95rem]">
               {slide.line}
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link
                 to={slide.to}
-                className="inline-flex bg-[#fbf7f2] px-8 py-3.5 text-[0.72rem] font-semibold tracking-[0.18em] text-bb-blue uppercase transition hover:bg-white"
+                className="inline-flex bg-white px-8 py-3.5 text-[0.7rem] font-semibold tracking-[0.16em] text-[#323232] uppercase transition hover:bg-[#f5f5f5]"
               >
                 {slide.cta}
               </Link>
               <Link
                 to="/deals"
-                className="inline-flex border border-[#fbf7f2]/55 px-7 py-3.5 text-[0.72rem] font-semibold tracking-[0.18em] text-[#fbf7f2] uppercase transition hover:bg-white/10"
+                className="inline-flex border border-white/70 px-7 py-3.5 text-[0.7rem] font-semibold tracking-[0.16em] text-white uppercase transition hover:bg-white/10"
               >
                 New in
               </Link>
@@ -99,17 +98,15 @@ export function Hero() {
           </motion.div>
         </AnimatePresence>
 
-        <div className="mt-10 flex items-center gap-2 lg:absolute lg:right-8 lg:bottom-10 lg:left-auto">
+        <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 items-center gap-2">
           {slides.map((s, i) => (
             <button
               key={s.id}
               type="button"
               aria-label={`Slide ${i + 1}`}
               onClick={() => setIndex(i)}
-              className={`h-1 rounded-full transition-all duration-500 ${
-                i === index
-                  ? 'w-10 bg-fusora-gold'
-                  : 'w-5 bg-white/35 hover:bg-white/60'
+              className={`h-1 transition-all duration-500 ${
+                i === index ? 'w-8 bg-white' : 'w-4 bg-white/40 hover:bg-white/70'
               }`}
             />
           ))}

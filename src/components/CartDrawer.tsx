@@ -49,7 +49,7 @@ export function CartDrawer({ open, items, onClose, onQty, onRemove }: Props) {
               <button
                 type="button"
                 onClick={onClose}
-                className="mt-4 rounded-full bg-bb-blue px-5 py-2.5 text-xs font-semibold tracking-[0.14em] text-[#f7f3ec] uppercase"
+                className="mt-4 bg-bb-blue px-5 py-2.5 text-xs font-semibold tracking-[0.14em] text-white uppercase"
               >
                 Keep browsing
               </button>
@@ -83,7 +83,7 @@ export function CartDrawer({ open, items, onClose, onQty, onRemove }: Props) {
                     )}
                     <p className="mt-1 font-bold">{formatMoney(item.price)}</p>
                     <div className="mt-2 flex items-center gap-2">
-                      <div className="inline-flex items-center rounded-full border border-bb-border">
+                      <div className="inline-flex items-center border border-bb-border">
                         <button
                           type="button"
                           className="grid size-8 place-items-center"
@@ -141,7 +141,7 @@ export function CartDrawer({ open, items, onClose, onQty, onRemove }: Props) {
             <Link
               to={isLoggedIn ? '/checkout' : '/account?next=/checkout'}
               onClick={onClose}
-              className="flex w-full items-center justify-center rounded-full bg-bb-blue py-3 text-xs font-semibold tracking-[0.16em] text-[#f7f3ec] uppercase hover:bg-bb-blue-dark"
+              className="flex w-full items-center justify-center bg-bb-blue py-3 text-xs font-semibold tracking-[0.16em] text-white uppercase hover:bg-bb-blue-dark"
             >
               {isLoggedIn ? 'Checkout' : 'Sign in to checkout'}
             </Link>

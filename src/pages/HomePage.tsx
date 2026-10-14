@@ -57,19 +57,19 @@ export function HomePage() {
           transition={{ duration: 0.55 }}
           className="relative mx-auto max-w-2xl px-4 py-20 text-center text-[#fbf7f2] sm:px-6 sm:py-24"
         >
-          <p className="text-[0.68rem] font-medium tracking-[0.28em] text-fusora-gold uppercase">
+          <p className="text-[0.68rem] font-medium tracking-[0.28em] text-white/80 uppercase">
             Featured edit
           </p>
           <h2 className="text-display mt-3 text-[2.1rem] leading-tight sm:text-5xl">
             Banarasi & Silk Sarees
           </h2>
-          <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-[#f3e8d8]/9">
+          <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-white/85">
             Beautiful weaves at special prices — for weddings, festivals and
             everyday elegance.
           </p>
           <Link
             to="/category/apparel-accessories/sarees/banarasi-sarees"
-            className="mt-8 inline-flex bg-[#fbf7f2] px-8 py-3.5 text-[0.7rem] font-semibold tracking-[0.16em] text-bb-blue uppercase transition hover:bg-white"
+            className="mt-8 inline-flex bg-white px-8 py-3.5 text-[0.7rem] font-semibold tracking-[0.16em] text-[#323232] uppercase transition hover:bg-[#f5f5f5]"
           >
             Shop Banarasi
           </Link>
@@ -113,7 +113,7 @@ export function HomePage() {
             className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-[1.04]"
           />
           <div className="absolute inset-0 bg-bb-blue-deep/45 transition group-hover:bg-bb-blue-deep/55" />
-          <div className="relative flex h-full min-h-[46svh] flex-col items-center justify-end px-6 py-12 text-center text-[#fbf7f2]">
+          <div className="relative flex h-full min-h-[46svh] flex-col items-center justify-end px-6 py-12 text-center text-white">
             <p className="text-[0.65rem] tracking-[0.28em] uppercase opacity-85">
               Collection
             </p>
@@ -133,7 +133,7 @@ export function HomePage() {
             className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-[1.04]"
           />
           <div className="absolute inset-0 bg-bb-blue-deep/45 transition group-hover:bg-bb-blue-deep/55" />
-          <div className="relative flex h-full min-h-[46svh] flex-col items-center justify-end px-6 py-12 text-center text-[#fbf7f2]">
+          <div className="relative flex h-full min-h-[46svh] flex-col items-center justify-end px-6 py-12 text-center text-white">
             <p className="text-[0.65rem] tracking-[0.28em] uppercase opacity-85">
               Collection
             </p>

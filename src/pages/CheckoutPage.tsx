@@ -180,19 +180,19 @@ export function CheckoutPage() {
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link
             to={`/orders/${done}`}
-            className="rounded-full bg-bb-blue px-6 py-3 text-xs font-semibold tracking-[0.16em] text-[#f7f3ec] uppercase"
+            className="bg-bb-blue px-6 py-3 text-xs font-semibold tracking-[0.16em] text-white uppercase"
           >
             Track order
           </Link>
           <Link
             to="/orders"
-            className="rounded-full border border-bb-border px-6 py-3 text-xs font-semibold tracking-[0.16em] uppercase"
+            className="border border-bb-border px-6 py-3 text-xs font-semibold tracking-[0.16em] uppercase"
           >
             My orders
           </Link>
           <Link
             to="/deals"
-            className="rounded-full border border-bb-border px-6 py-3 text-xs font-semibold tracking-[0.16em] uppercase"
+            className="border border-bb-border px-6 py-3 text-xs font-semibold tracking-[0.16em] uppercase"
           >
             Continue shopping
           </Link>
@@ -207,7 +207,7 @@ export function CheckoutPage() {
         <h1 className="font-serif text-3xl">Cart is empty</h1>
         <Link
           to="/deals"
-          className="mt-6 inline-flex rounded-full bg-bb-blue px-6 py-3 text-xs font-semibold tracking-[0.16em] text-[#f7f3ec] uppercase"
+          className="mt-6 inline-flex bg-bb-blue px-6 py-3 text-xs font-semibold tracking-[0.16em] text-white uppercase"
         >
           Shop deals
         </Link>
@@ -218,7 +218,7 @@ export function CheckoutPage() {
   if (!isLoggedIn) {
     return (
       <main className="mx-auto max-w-[480px] px-4 py-14 text-center sm:py-16">
-        <span className="mx-auto grid size-14 place-items-center rounded-full bg-[#efe8dc] text-bb-blue">
+        <span className="mx-auto grid size-14 place-items-center rounded-full bg-bb-gray text-bb-blue">
           <Lock className="size-6" />
         </span>
         <h1 className="font-serif mt-5 text-3xl text-bb-text">Sign in to order</h1>
@@ -229,13 +229,13 @@ export function CheckoutPage() {
         <div className="mt-8 flex flex-col gap-3">
           <Link
             to="/account?next=/checkout"
-            className="rounded-full bg-bb-blue px-6 py-3.5 text-xs font-semibold tracking-[0.16em] text-[#f7f3ec] uppercase"
+            className="bg-bb-blue px-6 py-3.5 text-xs font-semibold tracking-[0.16em] text-white uppercase"
           >
             Sign in
           </Link>
           <Link
             to="/register?next=/checkout"
-            className="rounded-full border border-bb-border px-6 py-3.5 text-xs font-semibold tracking-[0.16em] uppercase"
+            className="border border-bb-border px-6 py-3.5 text-xs font-semibold tracking-[0.16em] uppercase"
           >
             Create account
           </Link>
@@ -255,7 +255,7 @@ export function CheckoutPage() {
   }
 
   const field =
-    'mt-1.5 w-full rounded-xl border border-bb-border bg-white px-3.5 py-3 text-sm outline-none focus:border-bb-blue'
+    'mt-1.5 w-full border border-bb-border bg-white px-3.5 py-3 text-sm outline-none focus:border-bb-blue'
 
   const payOptions: {
     id: CheckoutPayChoice
@@ -396,10 +396,12 @@ export function CheckoutPage() {
             {payOptions.map(({ id, label, hint, disabled }) => (
               <label
                 key={id}
-                className={`flex cursor-pointer items-center gap-3 rounded-xl border px-3 py-3 text-sm ${
+                className={`flex cursor-pointer items-center gap-3 border px-3 py-3 text-sm ${
                   disabled
                     ? 'cursor-not-allowed border-bb-border/60 opacity-55'
-                    : 'border-bb-border'
+                    : form.payment === id
+                      ? 'border-bb-blue bg-bb-gray'
+                      : 'border-bb-border'
                 }`}
               >
                 <input
@@ -429,7 +431,7 @@ export function CheckoutPage() {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full rounded-full bg-bb-blue py-3.5 text-xs font-semibold tracking-[0.16em] text-[#f7f3ec] uppercase disabled:opacity-60"
+            className="w-full bg-bb-blue py-3.5 text-xs font-semibold tracking-[0.16em] text-white uppercase disabled:opacity-60"
           >
             {submitting
               ? 'Please wait…'
@@ -446,7 +448,7 @@ export function CheckoutPage() {
           </button>
         </form>
 
-        <aside className="order-1 h-fit rounded-2xl border border-bb-border bg-white p-4 sm:p-5 lg:order-2 lg:sticky lg:top-28">
+        <aside className="order-1 h-fit border border-bb-border bg-[#f5f5f5] p-4 sm:p-5 lg:order-2 lg:sticky lg:top-28">
           <h2 className="text-sm font-semibold tracking-[0.14em] uppercase">
             Order summary
           </h2>

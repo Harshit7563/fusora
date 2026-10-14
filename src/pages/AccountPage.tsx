@@ -91,7 +91,7 @@ function AccountDashboard() {
             signOut()
             navigate('/account', { replace: true })
           }}
-          className="inline-flex items-center gap-2 rounded-full border border-bb-border px-4 py-2.5 text-xs font-semibold tracking-[0.14em] uppercase"
+          className="inline-flex items-center gap-2 border border-bb-border px-4 py-2.5 text-xs font-semibold tracking-[0.14em] uppercase"
         >
           <LogOut className="size-3.5" />
           Sign out
@@ -448,11 +448,11 @@ export function AccountPage() {
               <FusoraLogo />
             </div>
 
-            <div className="mb-6 grid grid-cols-2 rounded-full bg-bb-gray p-1">
+            <div className="mb-6 grid grid-cols-2 bg-bb-gray p-1">
               <button
                 type="button"
                 onClick={() => setMode('signin')}
-                className={`rounded-full py-2.5 text-sm font-bold transition ${
+                className={`py-2.5 text-sm font-bold transition ${
                   mode === 'signin'
                     ? 'bg-white text-bb-blue shadow-sm'
                     : 'text-bb-muted hover:text-bb-text'
@@ -463,7 +463,7 @@ export function AccountPage() {
               <button
                 type="button"
                 onClick={() => setMode('register')}
-                className={`rounded-full py-2.5 text-sm font-bold transition ${
+                className={`py-2.5 text-sm font-bold transition ${
                   mode === 'register'
                     ? 'bg-white text-bb-blue shadow-sm'
                     : 'text-bb-muted hover:text-bb-text'
@@ -653,7 +653,7 @@ export function AccountPage() {
               <button
                 type="submit"
                 disabled={!otpState.verified}
-                className="w-full rounded-full bg-bb-blue py-3.5 text-sm font-bold text-white hover:bg-bb-blue-dark disabled:opacity-60"
+                className="w-full bg-bb-blue py-3.5 text-sm font-bold text-white hover:bg-bb-blue-dark disabled:opacity-60"
               >
                 {mode === 'signin' ? 'Sign in' : 'Create account'}
               </button>
@@ -670,7 +670,7 @@ export function AccountPage() {
               onClick={() =>
                 setMode(mode === 'signin' ? 'register' : 'signin')
               }
-              className="mt-4 w-full rounded-full border border-bb-border bg-white py-3 text-sm font-bold text-bb-text hover:bg-bb-gray"
+              className="mt-4 w-full border border-bb-border bg-white py-3 text-sm font-bold text-bb-text hover:bg-bb-gray"
             >
               {mode === 'signin'
                 ? 'New here? Create an account'
