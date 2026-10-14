@@ -9,12 +9,21 @@ type Props = {
   centered?: boolean
 }
 
+/** Cache-bust when logo asset is updated */
+const LOGO_SRC = '/fusora-logo.png?v=3'
+
 export function FusoraLogo({
   className = '',
   compact = false,
   onDark = false,
   centered = false,
 }: Props) {
+  const sizeClass = compact
+    ? 'h-11 w-auto max-w-[min(46vw,11.5rem)] sm:h-12 sm:max-w-[13rem] lg:h-[3.35rem] lg:max-w-[15rem]'
+    : centered
+      ? 'h-14 w-auto max-w-[16rem] sm:h-16 md:h-[4.5rem]'
+      : 'h-12 w-auto max-w-[14rem] sm:h-14'
+
   return (
     <Link
       to="/"
@@ -24,15 +33,11 @@ export function FusoraLogo({
       aria-label="Fusora home"
     >
       <img
-        src="/fusora-logo.png"
+        src={LOGO_SRC}
         alt="Fusora"
-        className={`${
-          compact
-            ? 'h-8 w-auto sm:h-9'
-            : centered
-              ? 'h-10 w-auto sm:h-12 md:h-14'
-              : 'h-9 w-auto sm:h-11'
-        } object-contain ${onDark ? 'brightness-110' : ''}`}
+        className={`${sizeClass} object-contain object-center ${
+          onDark ? 'brightness-110' : ''
+        }`}
         decoding="async"
       />
     </Link>

@@ -61,7 +61,7 @@ export function Header() {
       </div>
 
       <div className="border-b border-bb-border bg-white">
-        <div className="mx-auto grid max-w-[1400px] grid-cols-[1fr_auto_1fr] items-center gap-2 px-3 py-3 sm:px-5 sm:py-3.5 lg:px-8">
+        <div className="mx-auto grid max-w-[1400px] grid-cols-[1fr_auto_1fr] items-center gap-2 px-3 py-3.5 sm:px-5 sm:py-4 lg:px-8">
           <div className="flex items-center justify-start gap-0.5">
             <button
               type="button"
