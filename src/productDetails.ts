@@ -467,7 +467,7 @@ function pickSizeProfile(product: Product): {
     const sizes =
       product.sizes && product.sizes.length > 0
         ? product.sizes
-        : ['S', 'M', 'L', 'XL', 'XXL']
+        : ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL']
     return {
       sizes,
       chart: buildProductSizeChart(product, sizes, 'tops'),

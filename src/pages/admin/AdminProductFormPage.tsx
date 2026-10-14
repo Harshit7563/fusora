@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { apparelSubtypes } from '../../data/apparel'
 import { useCatalog } from '../../hooks/useCatalog'
 import {
+  defaultSizesForSubtype,
   getAdminProduct,
   upsertAdminProduct,
   type AdminProductInput,
@@ -44,15 +45,12 @@ export function AdminProductFormPage() {
     image: existing?.image || '',
     images: existing?.images || [],
     description: existing?.description || '',
-    sizes: existing?.sizes || [],
+    sizes: defaultSizesForSubtype(existing?.subtype),
     fabric: existing?.fabric || '',
     sku: existing?.sku || '',
     topDeal: existing?.topDeal || false,
   }))
   const [gallery, setGallery] = useState<string[]>(initialGallery)
-  const [sizesText, setSizesText] = useState(
-    (existing?.sizes || []).join(', '),
-  )
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -145,10 +143,7 @@ export function AdminProductFormPage() {
               ? 'mens-jeans'
               : 'womens-jeans'
             : form.collection),
-        sizes: sizesText
-          .split(/[,|\n]/)
-          .map((s) => s.trim())
-          .filter(Boolean),
+        sizes: defaultSizesForSubtype(form.subtype),
         categoryName:
           form.categoryName || (form.gender === 'men' ? 'Men' : 'Women'),
       },
@@ -259,6 +254,7 @@ export function AdminProductFormPage() {
                   setForm((f) => ({
                     ...f,
                     subtype,
+                    sizes: defaultSizesForSubtype(subtype),
                     collection:
                       subtype === 'jeans'
                         ? f.gender === 'men'
@@ -303,15 +299,25 @@ export function AdminProductFormPage() {
             </label>
           </div>
 
-          <label className="block text-[0.7rem] font-semibold tracking-[0.12em] uppercase">
-            Sizes (comma separated)
-            <input
-              className={field}
-              placeholder="S, M, L, XL or Free Size"
-              value={sizesText}
-              onChange={(e) => setSizesText(e.target.value)}
-            />
-          </label>
+          <div>
+            <p className="text-[0.7rem] font-semibold tracking-[0.12em] uppercase">
+              Sizes (auto — always in stock)
+            </p>
+            <p className="mt-1 text-xs text-[#787878]">
+              Product type ke hisaab se saari sizes automatically add hoti hain.
+              Koi size out of stock nahi hota.
+            </p>
+            <div className="mt-2.5 flex flex-wrap gap-1.5">
+              {defaultSizesForSubtype(form.subtype).map((size) => (
+                <span
+                  key={size}
+                  className="border border-[#323232] bg-[#fafafa] px-2.5 py-1.5 text-xs font-medium tracking-wide text-[#272727]"
+                >
+                  {size}
+                </span>
+              ))}
+            </div>
+          </div>
 
           <label className="block text-[0.7rem] font-semibold tracking-[0.12em] uppercase">
             Fabric

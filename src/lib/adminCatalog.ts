@@ -35,6 +35,23 @@ export type AdminProductInput = {
   topDeal?: boolean
 }
 
+/** Full size run for admin products — always in stock, never partial. */
+export function defaultSizesForSubtype(
+  subtype?: ApparelSubtype | '' | null,
+): string[] {
+  switch (subtype) {
+    case 'jeans':
+      return ['28', '30', '32', '34', '36', '38', '40', '42']
+    case 'sarees':
+      return ['Free Size']
+    case 'tshirts':
+    case 'shirts':
+      return ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL']
+    default:
+      return ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL']
+  }
+}
+
 function readJson<T>(key: string, fallback: T): T {
   try {
     const raw = localStorage.getItem(key)
@@ -136,7 +153,8 @@ export function upsertAdminProduct(
     image: input.image.trim(),
     images: images.length ? images : undefined,
     description: input.description?.trim() || undefined,
-    sizes: (input.sizes || []).map((s) => s.trim()).filter(Boolean),
+    // Always persist the full size run — never leave a product partially sized / OOS.
+    sizes: defaultSizesForSubtype(input.subtype),
     fabric: input.fabric?.trim() || undefined,
     sku: input.sku?.trim() || undefined,
     source: 'admin',
