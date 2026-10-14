@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react'
 import { getAllShopCategories, type ShopCategory } from '../categories'
 import { getProducts, type Product } from '../data'
-import { loadAdminCategories, type AdminCategory } from '../lib/adminCatalog'
+import {
+  ensureAdminProductsLoaded,
+  loadAdminCategories,
+  type AdminCategory,
+} from '../lib/adminCatalog'
 
 export function useCatalog() {
   const [products, setProducts] = useState<Product[]>(() => getProducts())
@@ -12,12 +16,14 @@ export function useCatalog() {
     loadAdminCategories(),
   )
 
+  const refresh = () => {
+    setProducts(getProducts())
+    setCategories(getAllShopCategories())
+    setAdminCategories(loadAdminCategories())
+  }
+
   useEffect(() => {
-    const refresh = () => {
-      setProducts(getProducts())
-      setCategories(getAllShopCategories())
-      setAdminCategories(loadAdminCategories())
-    }
+    void ensureAdminProductsLoaded().then(() => refresh())
     window.addEventListener('fusora-catalog-change', refresh)
     window.addEventListener('storage', refresh)
     return () => {
@@ -26,9 +32,5 @@ export function useCatalog() {
     }
   }, [])
 
-  return { products, categories, adminCategories, refresh: () => {
-    setProducts(getProducts())
-    setCategories(getAllShopCategories())
-    setAdminCategories(loadAdminCategories())
-  } }
+  return { products, categories, adminCategories, refresh }
 }

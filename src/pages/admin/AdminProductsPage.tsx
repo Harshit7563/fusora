@@ -1,4 +1,5 @@
 import {
+  useEffect,
   useMemo,
   useState,
   type ChangeEvent,
@@ -14,6 +15,7 @@ import { usePageTitle } from '../../hooks/usePageTitle'
 import {
   defaultSizesForSubtype,
   deleteAdminProduct,
+  ensureAdminProductsLoaded,
   loadAdminProducts,
   upsertAdminProduct,
 } from '../../lib/adminCatalog'
@@ -85,7 +87,7 @@ const inputClass =
 export function AdminProductsPage() {
   usePageTitle('Admin products')
   const { refresh } = useCatalog()
-  const [products, setProducts] = useState(() => loadAdminProducts())
+  const [products, setProducts] = useState<Product[]>([])
   const [filterGender, setFilterGender] = useState('')
   const [showForm, setShowForm] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
@@ -96,6 +98,15 @@ export function AdminProductsPage() {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   const [okMsg, setOkMsg] = useState('')
+
+  useEffect(() => {
+    void ensureAdminProductsLoaded().then(() => {
+      setProducts(loadAdminProducts())
+      refresh()
+    })
+    // hydrate once on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const filledPhotos = photoSlots.filter(Boolean).length
   const enabledSizes = defaultSizesForSubtype(form.subtype || undefined)
@@ -221,9 +232,9 @@ export function AdminProductsPage() {
     })
   }
 
-  const remove = (id: string, name: string) => {
+  const remove = async (id: string, name: string) => {
     if (!confirm(`Delete “${name}”?`)) return
-    deleteAdminProduct(id)
+    await deleteAdminProduct(id)
     reload()
   }
 
@@ -275,7 +286,7 @@ export function AdminProductsPage() {
             : 'womens-jeans'
           : undefined
 
-      const product = upsertAdminProduct(
+      const product = await upsertAdminProduct(
         {
           name: form.name.trim(),
           price,
@@ -422,7 +433,7 @@ export function AdminProductsPage() {
                       </Link>
                       <button
                         type="button"
-                        onClick={() => remove(p.id, p.name)}
+                        onClick={() => void remove(p.id, p.name)}
                         className="p-1 text-red-400 hover:text-red-600"
                         title="Delete"
                       >

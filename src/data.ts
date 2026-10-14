@@ -11,6 +11,7 @@ import {
   apparelCoreProducts,
   type ApparelSubtype,
 } from './data/apparel'
+import { loadAdminProducts } from './lib/adminCatalog'
 
 export type { CategoryId, DealTab }
 export { dealTabs, shopCategories }
@@ -1081,27 +1082,9 @@ export const staticProducts: Product[] = dedupeByImage([
   ...baseCatalog,
 ])
 
-const PURGED_ADMIN_PRODUCT_IDS = new Set(['admin-xjxjxj-mv7x6k16'])
-
-/** Built-in catalog + products created in /admin (localStorage). */
+/** Built-in catalog + products created in /admin (IndexedDB cache). */
 export function getProducts(): Product[] {
-  let admin: Product[] = []
-  try {
-    if (typeof localStorage !== 'undefined') {
-      const raw = localStorage.getItem('fusora-admin-products')
-      if (raw) {
-        const parsed = JSON.parse(raw) as Product[]
-        if (Array.isArray(parsed)) {
-          admin = parsed.filter((p) => !PURGED_ADMIN_PRODUCT_IDS.has(p.id))
-          if (admin.length !== parsed.length) {
-            localStorage.setItem('fusora-admin-products', JSON.stringify(admin))
-          }
-        }
-      }
-    }
-  } catch {
-    admin = []
-  }
+  const admin = loadAdminProducts()
   if (!Array.isArray(admin) || admin.length === 0) return staticProducts
   return dedupeByImage([...admin, ...staticProducts])
 }

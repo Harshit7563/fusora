@@ -1,7 +1,12 @@
 import type { CategoryId, Product, ProductGender } from '../data'
 import type { ApparelSubtype } from '../data/apparel'
+import {
+  getCachedAdminProducts,
+  hydrateAdminProducts,
+  persistAdminProducts,
+  setCachedAdminProducts,
+} from './adminProductDb'
 
-const PRODUCTS_KEY = 'fusora-admin-products'
 const CATEGORIES_KEY = 'fusora-admin-categories'
 const AUTH_KEY = 'fusora-admin-auth'
 
@@ -73,20 +78,51 @@ function readJson<T>(key: string, fallback: T): T {
 }
 
 function writeJson(key: string, value: unknown) {
-  localStorage.setItem(key, JSON.stringify(value))
+  try {
+    localStorage.setItem(key, JSON.stringify(value))
+  } catch {
+    throw new Error(
+      'Browser storage full. Categories cover image too large — use a smaller photo.',
+    )
+  }
   window.dispatchEvent(new Event('fusora-catalog-change'))
 }
 
-export function loadAdminProducts(): Product[] {
-  const list = readJson<Product[]>(PRODUCTS_KEY, [])
-  if (!Array.isArray(list)) return []
-  const cleaned = list.filter((p) => !PURGED_ADMIN_PRODUCT_IDS.has(p.id))
-  if (cleaned.length !== list.length) saveAdminProducts(cleaned)
-  return cleaned
+function cleanProducts(list: Product[]): Product[] {
+  return list.filter((p) => !PURGED_ADMIN_PRODUCT_IDS.has(p.id))
 }
 
-export function saveAdminProducts(list: Product[]) {
-  writeJson(PRODUCTS_KEY, list)
+/** Kick off IndexedDB hydrate (safe to call many times). */
+export function ensureAdminProductsLoaded(): Promise<Product[]> {
+  return hydrateAdminProducts().then((list) => {
+    const cleaned = cleanProducts(list)
+    if (cleaned.length !== list.length) {
+      setCachedAdminProducts(cleaned)
+      void persistAdminProducts(cleaned)
+    }
+    return cleaned
+  })
+}
+
+/** Sync read from memory cache (hydrate first via ensureAdminProductsLoaded). */
+export function loadAdminProducts(): Product[] {
+  return cleanProducts(getCachedAdminProducts())
+}
+
+export async function saveAdminProducts(list: Product[]): Promise<void> {
+  const cleaned = cleanProducts(list)
+  setCachedAdminProducts(cleaned)
+  try {
+    await persistAdminProducts(cleaned)
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'Could not save products'
+    if (/quota|exceeded|storage/i.test(msg)) {
+      throw new Error(
+        'Storage full. Delete an old product or use smaller photos, then try again.',
+      )
+    }
+    throw err instanceof Error ? err : new Error(msg)
+  }
 }
 
 export function loadAdminCategories(): AdminCategory[] {
@@ -132,12 +168,14 @@ export function deleteAdminCategory(id: string) {
   saveAdminCategories(loadAdminCategories().filter((c) => c.id !== id))
 }
 
-export function upsertAdminProduct(
+export async function upsertAdminProduct(
   input: AdminProductInput,
   existingId?: string,
-): Product {
+): Promise<Product> {
+  await ensureAdminProductsLoaded()
   const list = loadAdminProducts()
-  const id = existingId || `admin-${slugify(input.name)}-${Date.now().toString(36)}`
+  const id =
+    existingId || `admin-${slugify(input.name)}-${Date.now().toString(36)}`
   const images = (input.images || [])
     .map((u) => u.trim())
     .filter(Boolean)
@@ -169,7 +207,6 @@ export function upsertAdminProduct(
     image: input.image.trim(),
     images: images.length ? images : undefined,
     description: input.description?.trim() || undefined,
-    // Always persist the full size run — never leave a product partially sized / OOS.
     sizes: defaultSizesForSubtype(input.subtype),
     fabric: input.fabric?.trim() || undefined,
     fit: input.fit?.trim() || undefined,
@@ -180,12 +217,13 @@ export function upsertAdminProduct(
   const idx = list.findIndex((p) => p.id === id)
   if (idx >= 0) list[idx] = product
   else list.unshift(product)
-  saveAdminProducts(list)
+  await saveAdminProducts(list)
   return product
 }
 
-export function deleteAdminProduct(id: string) {
-  saveAdminProducts(loadAdminProducts().filter((p) => p.id !== id))
+export async function deleteAdminProduct(id: string): Promise<void> {
+  await ensureAdminProductsLoaded()
+  await saveAdminProducts(loadAdminProducts().filter((p) => p.id !== id))
 }
 
 export function getAdminProduct(id: string) {
@@ -219,4 +257,9 @@ export function adminLogin(password: string) {
 
 export function adminLogout() {
   sessionStorage.removeItem(AUTH_KEY)
+}
+
+// Start hydrate as soon as this module loads in the browser.
+if (typeof window !== 'undefined') {
+  void ensureAdminProductsLoaded()
 }

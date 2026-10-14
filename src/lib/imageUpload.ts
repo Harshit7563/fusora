@@ -1,7 +1,9 @@
-/** Compress browser file uploads to JPEG data URLs for localStorage admin catalog. */
+/** Compress browser file uploads to compact JPEG data URLs for admin catalog. */
 
-const MAX_EDGE = 1200
-const JPEG_QUALITY = 0.78
+const MAX_EDGE = 900
+const JPEG_QUALITY = 0.62
+/** Soft cap per image (~180KB data URL) — re-compress harder if needed. */
+const MAX_DATA_URL_CHARS = 180_000
 
 export function readImageAsDataUrl(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -21,11 +23,15 @@ export function readImageAsDataUrl(file: File): Promise<string> {
   })
 }
 
-export function compressDataUrl(dataUrl: string): Promise<string> {
+export function compressDataUrl(
+  dataUrl: string,
+  edge = MAX_EDGE,
+  quality = JPEG_QUALITY,
+): Promise<string> {
   return new Promise((resolve, reject) => {
     const img = new Image()
     img.onload = () => {
-      const scale = Math.min(1, MAX_EDGE / Math.max(img.width, img.height))
+      const scale = Math.min(1, edge / Math.max(img.width, img.height))
       const w = Math.max(1, Math.round(img.width * scale))
       const h = Math.max(1, Math.round(img.height * scale))
       const canvas = document.createElement('canvas')
@@ -38,7 +44,20 @@ export function compressDataUrl(dataUrl: string): Promise<string> {
       }
       ctx.drawImage(img, 0, 0, w, h)
       try {
-        resolve(canvas.toDataURL('image/jpeg', JPEG_QUALITY))
+        let out = canvas.toDataURL('image/jpeg', quality)
+        // Progressive shrink if still too large for storage comfort.
+        let q = quality
+        let e = edge
+        while (out.length > MAX_DATA_URL_CHARS && (q > 0.4 || e > 480)) {
+          if (q > 0.4) q = Math.max(0.4, q - 0.08)
+          else e = Math.max(480, Math.round(e * 0.85))
+          const s = Math.min(1, e / Math.max(img.width, img.height))
+          canvas.width = Math.max(1, Math.round(img.width * s))
+          canvas.height = Math.max(1, Math.round(img.height * s))
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+          out = canvas.toDataURL('image/jpeg', q)
+        }
+        resolve(out)
       } catch {
         resolve(dataUrl)
       }
