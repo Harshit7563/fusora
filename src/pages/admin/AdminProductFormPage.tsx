@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useRef, useState, type FormEvent } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { apparelSubtypes } from '../../data/apparel'
 import { useCatalog } from '../../hooks/useCatalog'
@@ -7,10 +7,14 @@ import {
   upsertAdminProduct,
   type AdminProductInput,
 } from '../../lib/adminCatalog'
+import { filesToDataUrls } from '../../lib/imageUpload'
 import { usePageTitle } from '../../hooks/usePageTitle'
 
 const field =
   'mt-1.5 w-full border border-[#ececec] bg-white px-3.5 py-3 text-sm outline-none focus:border-[#323232]'
+
+const MAX_IMAGES = 5
+const MIN_IMAGES = 3
 
 export function AdminProductFormPage() {
   const { id } = useParams()
@@ -19,6 +23,13 @@ export function AdminProductFormPage() {
   usePageTitle(isNew ? 'Add product' : 'Edit product')
   const navigate = useNavigate()
   const { refresh } = useCatalog()
+  const fileRef = useRef<HTMLInputElement>(null)
+
+  const initialGallery = (() => {
+    if (!existing?.image) return [] as string[]
+    const rest = (existing.images || []).filter((u) => u && u !== existing.image)
+    return [existing.image, ...rest].slice(0, MAX_IMAGES)
+  })()
 
   const [form, setForm] = useState<AdminProductInput>(() => ({
     name: existing?.name || '',
@@ -38,12 +49,11 @@ export function AdminProductFormPage() {
     sku: existing?.sku || '',
     topDeal: existing?.topDeal || false,
   }))
+  const [gallery, setGallery] = useState<string[]>(initialGallery)
   const [sizesText, setSizesText] = useState(
     (existing?.sizes || []).join(', '),
   )
-  const [extraImages, setExtraImages] = useState(
-    (existing?.images || []).join('\n'),
-  )
+  const [uploading, setUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   if (!isNew && !existing) {
@@ -57,11 +67,53 @@ export function AdminProductFormPage() {
     )
   }
 
+  const onPickFiles = async (files: FileList | null) => {
+    if (!files?.length) return
+    setError(null)
+    const room = MAX_IMAGES - gallery.length
+    if (room <= 0) {
+      setError(`Maximum ${MAX_IMAGES} images.`)
+      return
+    }
+    setUploading(true)
+    try {
+      const added = await filesToDataUrls(files, room)
+      setGallery((g) => [...g, ...added].slice(0, MAX_IMAGES))
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Upload failed.')
+    } finally {
+      setUploading(false)
+      if (fileRef.current) fileRef.current.value = ''
+    }
+  }
+
+  const removeAt = (index: number) => {
+    setGallery((g) => g.filter((_, i) => i !== index))
+  }
+
+  const makeMain = (index: number) => {
+    setGallery((g) => {
+      if (index <= 0 || index >= g.length) return g
+      const next = [...g]
+      const [picked] = next.splice(index, 1)
+      next.unshift(picked)
+      return next
+    })
+  }
+
   const onSubmit = (e: FormEvent) => {
     e.preventDefault()
     setError(null)
-    if (!form.name.trim() || !form.image.trim()) {
-      setError('Name and main image URL are required.')
+    if (!form.name.trim()) {
+      setError('Product name is required.')
+      return
+    }
+    if (gallery.length < MIN_IMAGES) {
+      setError(`Upload at least ${MIN_IMAGES} images (max ${MAX_IMAGES}).`)
+      return
+    }
+    if (gallery.length > MAX_IMAGES) {
+      setError(`Maximum ${MAX_IMAGES} images allowed.`)
       return
     }
     if (!form.price || form.price <= 0) {
@@ -76,11 +128,15 @@ export function AdminProductFormPage() {
       setError('Sarees belong in Women — change gender or subtype.')
       return
     }
+
+    const [main, ...rest] = gallery
     const product = upsertAdminProduct(
       {
         ...form,
         tab: form.gender,
         gender: form.gender,
+        image: main,
+        images: rest,
         was: form.was > 0 ? form.was : form.price,
         collection:
           form.collection ||
@@ -93,13 +149,8 @@ export function AdminProductFormPage() {
           .split(/[,|\n]/)
           .map((s) => s.trim())
           .filter(Boolean),
-        images: extraImages
-          .split(/\n/)
-          .map((s) => s.trim())
-          .filter(Boolean),
         categoryName:
-          form.categoryName ||
-          (form.gender === 'men' ? 'Men' : 'Women'),
+          form.categoryName || (form.gender === 'men' ? 'Men' : 'Women'),
       },
       existing?.id,
     )
@@ -115,7 +166,7 @@ export function AdminProductFormPage() {
             {isNew ? 'Add product' : 'Edit product'}
           </h1>
           <p className="mt-1 text-sm text-[#787878]">
-            Fill details and save — product goes live on the store.
+            Upload {MIN_IMAGES}–{MAX_IMAGES} photos from your device (no URL).
           </p>
         </div>
         <Link
@@ -128,7 +179,7 @@ export function AdminProductFormPage() {
 
       <form
         onSubmit={onSubmit}
-        className="grid gap-6 border border-[#ececec] bg-white p-4 sm:p-6 lg:grid-cols-[1.2fr_0.8fr]"
+        className="grid gap-6 border border-[#ececec] bg-white p-4 sm:p-6 lg:grid-cols-[1.1fr_0.9fr]"
       >
         <div className="space-y-4">
           <label className="block text-[0.7rem] font-semibold tracking-[0.12em] uppercase">
@@ -228,10 +279,6 @@ export function AdminProductFormPage() {
               </select>
             </label>
           </div>
-          <p className="text-xs text-[#787878]">
-            Shop URLs: /category/{form.gender}
-            {form.subtype ? `/${form.subtype}` : ''}
-          </p>
 
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="block text-[0.7rem] font-semibold tracking-[0.12em] uppercase">
@@ -255,18 +302,6 @@ export function AdminProductFormPage() {
               />
             </label>
           </div>
-
-          <label className="block text-[0.7rem] font-semibold tracking-[0.12em] uppercase">
-            Collection slug (optional)
-            <input
-              className={field}
-              placeholder="e.g. banarasi-sarees"
-              value={form.collection || ''}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, collection: e.target.value }))
-              }
-            />
-          </label>
 
           <label className="block text-[0.7rem] font-semibold tracking-[0.12em] uppercase">
             Sizes (comma separated)
@@ -315,34 +350,77 @@ export function AdminProductFormPage() {
         </div>
 
         <div className="space-y-4">
-          <label className="block text-[0.7rem] font-semibold tracking-[0.12em] uppercase">
-            Main image URL *
+          <div>
+            <p className="text-[0.7rem] font-semibold tracking-[0.12em] uppercase">
+              Product photos * ({gallery.length}/{MAX_IMAGES})
+            </p>
+            <p className="mt-1 text-xs text-[#787878]">
+              Minimum {MIN_IMAGES} images, maximum {MAX_IMAGES}. First photo is
+              the main image.
+            </p>
+
             <input
-              required
-              className={field}
-              placeholder="https://..."
-              value={form.image}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, image: e.target.value }))
-              }
+              ref={fileRef}
+              type="file"
+              accept="image/*"
+              multiple
+              className="sr-only"
+              onChange={(e) => void onPickFiles(e.target.files)}
             />
-          </label>
-          {form.image && (
-            <img
-              src={form.image}
-              alt=""
-              className="aspect-[3/4] w-full max-w-xs object-cover bg-[#f5f5f5]"
-            />
+
+            <button
+              type="button"
+              disabled={uploading || gallery.length >= MAX_IMAGES}
+              onClick={() => fileRef.current?.click()}
+              className="mt-3 w-full border border-dashed border-[#323232] bg-[#fafafa] px-4 py-8 text-center text-[0.7rem] font-semibold tracking-[0.14em] uppercase transition hover:bg-[#f5f5f5] disabled:opacity-50"
+            >
+              {uploading
+                ? 'Uploading…'
+                : gallery.length >= MAX_IMAGES
+                  ? 'Limit reached'
+                  : 'Upload from device'}
+            </button>
+          </div>
+
+          {gallery.length > 0 && (
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+              {gallery.map((src, i) => (
+                <div
+                  key={`${i}-${src.slice(0, 24)}`}
+                  className="relative aspect-[3/4] overflow-hidden border border-[#ececec] bg-[#f5f5f5]"
+                >
+                  <img
+                    src={src}
+                    alt=""
+                    className="h-full w-full object-cover"
+                  />
+                  {i === 0 && (
+                    <span className="absolute top-1.5 left-1.5 bg-[#323232] px-1.5 py-0.5 text-[0.55rem] font-semibold tracking-wide text-white uppercase">
+                      Main
+                    </span>
+                  )}
+                  <div className="absolute inset-x-0 bottom-0 flex gap-1 bg-black/55 p-1">
+                    {i > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => makeMain(i)}
+                        className="flex-1 bg-white/90 py-1 text-[0.55rem] font-semibold tracking-wide uppercase"
+                      >
+                        Main
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => removeAt(i)}
+                      className="flex-1 bg-white/90 py-1 text-[0.55rem] font-semibold tracking-wide text-[#b4232f] uppercase"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
           )}
-          <label className="block text-[0.7rem] font-semibold tracking-[0.12em] uppercase">
-            Extra image URLs (one per line)
-            <textarea
-              rows={5}
-              className={field}
-              value={extraImages}
-              onChange={(e) => setExtraImages(e.target.value)}
-            />
-          </label>
 
           {error && (
             <p className="border border-red-200 bg-red-50 px-3 py-2 text-sm text-[#b4232f]">
@@ -352,7 +430,8 @@ export function AdminProductFormPage() {
 
           <button
             type="submit"
-            className="w-full bg-[#323232] py-3.5 text-[0.7rem] font-semibold tracking-[0.16em] text-white uppercase"
+            disabled={uploading}
+            className="w-full bg-[#323232] py-3.5 text-[0.7rem] font-semibold tracking-[0.16em] text-white uppercase disabled:opacity-60"
           >
             {isNew ? 'Create product' : 'Save changes'}
           </button>
