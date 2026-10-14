@@ -88,6 +88,7 @@ export function upsertAdminCategory(
     emoji: input.emoji || '🛍️',
     image: input.image?.trim() || undefined,
     blurb: input.blurb?.trim() || undefined,
+    gender: input.gender,
     createdAt: input.createdAt || new Date().toISOString(),
   }
   const idx = list.findIndex((c) => c.id === id)
