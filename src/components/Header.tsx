@@ -6,8 +6,8 @@ import {
   User,
   X,
 } from 'lucide-react'
-import { useState, type FormEvent } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useEffect, useState, type FormEvent } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useStore } from '../context/StoreContext'
 import { FusoraLogo } from './FusoraLogo'
 
@@ -23,10 +23,26 @@ const primaryNav = [
 
 export function Header() {
   const navigate = useNavigate()
+  const location = useLocation()
   const { cartCount, openCart, wishlist } = useStore()
   const [q, setQ] = useState('')
   const [menuOpen, setMenuOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
+
+  useEffect(() => {
+    setMenuOpen(false)
+    setSearchOpen(false)
+  }, [location.pathname])
+
+  useEffect(() => {
+    const onResize = () => {
+      if (window.matchMedia('(min-width: 1024px)').matches) {
+        setMenuOpen(false)
+      }
+    }
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
 
   const onSearch = (e: FormEvent) => {
     e.preventDefault()
@@ -49,18 +65,23 @@ export function Header() {
           <div className="flex items-center justify-start gap-0.5">
             <button
               type="button"
-              className="grid size-10 place-items-center text-bb-text transition hover:opacity-70"
-              aria-label="Menu"
+              className="grid size-10 place-items-center text-bb-text transition hover:opacity-70 lg:hidden"
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={menuOpen}
               onClick={() => {
                 setMenuOpen((v) => !v)
                 setSearchOpen(false)
               }}
             >
-              {menuOpen ? <X className="size-5" strokeWidth={1.5} /> : <Menu className="size-5" strokeWidth={1.5} />}
+              {menuOpen ? (
+                <X className="size-5" strokeWidth={1.5} />
+              ) : (
+                <Menu className="size-5" strokeWidth={1.5} />
+              )}
             </button>
             <Link
               to="/account"
-              className="hidden size-10 place-items-center text-bb-text transition hover:opacity-70 sm:grid"
+              className="grid size-10 place-items-center text-bb-text transition hover:opacity-70"
               aria-label="Account"
             >
               <User className="size-[1.1rem]" strokeWidth={1.5} />
@@ -138,7 +159,7 @@ export function Header() {
       </div>
 
       {searchOpen && (
-        <div className="border-b border-bb-border bg-white px-3 py-3 sm:px-5 lg:px-8">
+        <div className="border-b border-bb-border bg-white px-3 py-3 sm:px-5 lg:hidden">
           <form
             onSubmit={onSearch}
             className="mx-auto flex max-w-xl border border-bb-border bg-[#f5f5f5]"
@@ -161,8 +182,19 @@ export function Header() {
       )}
 
       {menuOpen && (
-        <div className="max-h-[70svh] overflow-y-auto border-b border-bb-border bg-white px-3 py-3 safe-pb lg:hidden">
-          <ul className="space-y-0.5">
+        <div className="border-b border-bb-border bg-white px-3 py-3 safe-pb lg:hidden">
+          <ul className="max-h-[min(70svh,28rem)] space-y-0.5 overflow-y-auto">
+            {primaryNav.map((item) => (
+              <li key={item.to}>
+                <Link
+                  to={item.to}
+                  onClick={() => setMenuOpen(false)}
+                  className="block px-3 py-3.5 text-sm font-medium tracking-[0.1em] text-bb-text uppercase"
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ))}
             <li>
               <Link
                 to="/account"
@@ -181,17 +213,6 @@ export function Header() {
                 My orders
               </Link>
             </li>
-            {primaryNav.map((item) => (
-              <li key={item.to}>
-                <Link
-                  to={item.to}
-                  onClick={() => setMenuOpen(false)}
-                  className="block px-3 py-3.5 text-sm font-medium tracking-[0.1em] text-bb-text uppercase"
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
             <li>
               <Link
                 to="/support"
