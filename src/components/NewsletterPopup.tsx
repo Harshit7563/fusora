@@ -140,18 +140,17 @@ export function NewsletterPopup() {
             </div>
           ) : (
             <>
-              <p className="text-center text-[0.68rem] font-semibold tracking-[0.28em] text-bb-blue uppercase">
-                Fusora edit
+              <p className="text-center text-[0.68rem] font-semibold tracking-[0.28em] text-[#323232] uppercase">
+                Stay connected
               </p>
               <h2
                 id={titleId}
-                className="font-serif mt-3 text-center text-[1.85rem] leading-tight text-bb-text sm:text-4xl"
+                className="mt-3 text-center text-[1.65rem] font-medium leading-tight tracking-wide text-[#272727] sm:text-[1.85rem]"
               >
-                Join our mailing list
+                Join for curated launches
               </h2>
-              <p className="mt-3 text-center text-sm leading-relaxed text-bb-muted">
-                Sign up for exclusive updates, new arrivals and insider-only
-                discounts.
+              <p className="mt-3 text-center text-sm leading-relaxed text-[#787878]">
+                New edits, drops and festive picks — in your inbox.
               </p>
 
               <form className="mt-8 space-y-3" onSubmit={onSubmit}>
@@ -162,8 +161,8 @@ export function NewsletterPopup() {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Your email address *"
-                    className="w-full border border-bb-border bg-fusora-ivory px-4 py-3.5 text-sm outline-none transition focus:border-bb-blue"
+                    placeholder="Your email"
+                    className="w-full border border-[#ececec] bg-white px-4 py-3.5 text-sm outline-none transition focus:border-[#323232]"
                     autoComplete="email"
                   />
                 </label>
@@ -172,20 +171,16 @@ export function NewsletterPopup() {
                 )}
                 <button
                   type="submit"
-                  className="w-full bg-bb-blue py-3.5 text-xs font-semibold tracking-[0.2em] text-white uppercase transition hover:bg-bb-blue-dark"
+                  className="w-full bg-[#323232] py-3.5 text-xs font-semibold tracking-[0.2em] text-white uppercase transition hover:bg-[#1f1f1f]"
                 >
                   Subscribe
                 </button>
               </form>
 
-              <p className="mt-4 text-center text-xs text-bb-muted">
-                We promise to only send you good things.
-              </p>
-
               <div className="mt-8 flex items-center justify-center gap-4">
                 <a
                   href={SUPPORT_MAILTO}
-                  className="text-bb-muted transition hover:text-bb-blue"
+                  className="text-[#787878] transition hover:text-[#272727]"
                   aria-label={`Email ${SUPPORT_EMAIL}`}
                   title="Email"
                 >
@@ -197,10 +192,19 @@ export function NewsletterPopup() {
                   href="https://www.instagram.com/"
                   target="_blank"
                   rel="noreferrer"
-                  className="text-bb-muted transition hover:text-bb-blue"
+                  className="text-[#787878] transition hover:text-[#272727]"
                   aria-label="Instagram"
                 >
                   <InstagramIcon className="size-4" />
+                </a>
+                <a
+                  href="https://www.facebook.com/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-[0.65rem] font-semibold tracking-[0.16em] text-[#787878] uppercase transition hover:text-[#272727]"
+                  aria-label="Facebook"
+                >
+                  Facebook
                 </a>
               </div>
             </>
