@@ -35,14 +35,13 @@ export function Header() {
   }, [location.pathname])
 
   useEffect(() => {
-    const onResize = () => {
-      if (window.matchMedia('(min-width: 1024px)').matches) {
-        setMenuOpen(false)
-      }
+    if (!menuOpen) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMenuOpen(false)
     }
-    window.addEventListener('resize', onResize)
-    return () => window.removeEventListener('resize', onResize)
-  }, [])
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [menuOpen])
 
   const onSearch = (e: FormEvent) => {
     e.preventDefault()
@@ -65,7 +64,7 @@ export function Header() {
           <div className="flex items-center justify-start gap-0.5">
             <button
               type="button"
-              className="grid size-10 place-items-center text-bb-text transition hover:opacity-70 lg:hidden"
+              className="grid size-10 place-items-center text-bb-text transition hover:opacity-70"
               aria-label={menuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={menuOpen}
               onClick={() => {
@@ -182,14 +181,14 @@ export function Header() {
       )}
 
       {menuOpen && (
-        <div className="border-b border-bb-border bg-white px-3 py-3 safe-pb lg:hidden">
-          <ul className="max-h-[min(70svh,28rem)] space-y-0.5 overflow-y-auto">
+        <div className="border-b border-bb-border bg-white px-3 py-3 safe-pb sm:px-5 lg:px-8">
+          <ul className="mx-auto grid max-h-[min(70svh,32rem)] max-w-[1400px] gap-0 overflow-y-auto sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-8">
             {primaryNav.map((item) => (
               <li key={item.to}>
                 <Link
                   to={item.to}
                   onClick={() => setMenuOpen(false)}
-                  className="block px-3 py-3.5 text-sm font-medium tracking-[0.1em] text-bb-text uppercase"
+                  className="block px-3 py-3.5 text-sm font-medium tracking-[0.1em] text-bb-text uppercase transition hover:bg-[#f5f5f5]"
                 >
                   {item.label}
                 </Link>
@@ -199,7 +198,7 @@ export function Header() {
               <Link
                 to="/account"
                 onClick={() => setMenuOpen(false)}
-                className="block px-3 py-3.5 text-sm font-medium tracking-[0.1em] text-bb-text uppercase"
+                className="block px-3 py-3.5 text-sm font-medium tracking-[0.1em] text-bb-text uppercase transition hover:bg-[#f5f5f5]"
               >
                 Account
               </Link>
@@ -208,7 +207,7 @@ export function Header() {
               <Link
                 to="/orders"
                 onClick={() => setMenuOpen(false)}
-                className="block px-3 py-3.5 text-sm font-medium tracking-[0.1em] text-bb-text uppercase"
+                className="block px-3 py-3.5 text-sm font-medium tracking-[0.1em] text-bb-text uppercase transition hover:bg-[#f5f5f5]"
               >
                 My orders
               </Link>
@@ -217,7 +216,7 @@ export function Header() {
               <Link
                 to="/support"
                 onClick={() => setMenuOpen(false)}
-                className="block px-3 py-3.5 text-sm font-medium tracking-[0.1em] text-bb-text uppercase"
+                className="block px-3 py-3.5 text-sm font-medium tracking-[0.1em] text-bb-text uppercase transition hover:bg-[#f5f5f5]"
               >
                 Contact
               </Link>
