@@ -102,7 +102,7 @@ export function NewsletterPopup() {
   if (!open) return null
 
   return (
-    <div className="fixed inset-0 z-[80] flex items-center justify-center p-3 sm:p-6">
+    <div className="fixed inset-0 z-[80] flex items-end justify-center p-0 sm:items-center sm:p-6">
       <button
         type="button"
         className="absolute inset-0 bg-bb-blue-deep/55 backdrop-blur-[2px]"
@@ -114,18 +114,27 @@ export function NewsletterPopup() {
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="relative z-[1] grid w-full max-w-[820px] overflow-hidden border border-bb-border bg-white shadow-2xl md:grid-cols-2"
+        className="relative z-[1] grid max-h-[min(92svh,40rem)] w-full max-w-[820px] overflow-y-auto border border-bb-border bg-white shadow-2xl safe-pb sm:max-h-[90svh] md:grid-cols-2 md:overflow-hidden"
       >
         <button
           type="button"
           onClick={close}
-          className="absolute top-3 right-3 z-[2] grid size-9 place-items-center bg-white/90 text-bb-text transition hover:bg-white md:bg-transparent md:text-white md:hover:bg-white/15"
+          className="absolute top-3 right-3 z-[2] grid size-10 place-items-center bg-white/95 text-bb-text transition hover:bg-white md:bg-transparent md:text-white md:hover:bg-white/15"
           aria-label="Close"
         >
           <X className="size-5" strokeWidth={1.5} />
         </button>
 
-        <div className="flex flex-col justify-center px-6 py-10 sm:px-10 sm:py-12">
+        <div className="relative min-h-[140px] md:hidden">
+          <img
+            src={POPUP_IMAGE}
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+        </div>
+
+        <div className="flex flex-col justify-center px-5 py-8 sm:px-10 sm:py-12">
           {done ? (
             <div className="text-center">
               <p

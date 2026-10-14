@@ -27,8 +27,10 @@ export function CartDrawer({ open, items, onClose, onQty, onRemove }: Props) {
         onClick={onClose}
       />
       <aside className="absolute inset-y-0 right-0 flex w-full max-w-md flex-col bg-white shadow-2xl safe-pb">
-        <div className="flex items-center justify-between border-b border-bb-border px-4 py-3.5 sm:px-5 sm:py-4">
-          <h2 className="text-lg font-bold text-bb-text">Cart ({count})</h2>
+        <div className="flex items-center justify-between border-b border-bb-border px-3 py-3 sm:px-5 sm:py-4">
+          <h2 className="text-base font-bold text-bb-text sm:text-lg">
+            Cart ({count})
+          </h2>
           <button
             type="button"
             onClick={onClose}

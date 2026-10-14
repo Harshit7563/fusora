@@ -55,12 +55,12 @@ export function HomePage() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.55 }}
-          className="relative mx-auto max-w-2xl px-4 py-20 text-center text-[#fbf7f2] sm:px-6 sm:py-24"
+          className="relative mx-auto max-w-2xl px-4 py-14 text-center text-white sm:px-6 sm:py-24"
         >
-          <p className="text-[0.68rem] font-medium tracking-[0.28em] text-white/80 uppercase">
+          <p className="text-[0.62rem] font-medium tracking-[0.22em] text-white/80 uppercase sm:text-[0.68rem] sm:tracking-[0.28em]">
             Featured edit
           </p>
-          <h2 className="text-display mt-3 text-[2.1rem] leading-tight sm:text-5xl">
+          <h2 className="text-display mt-3 text-[1.65rem] leading-tight sm:text-5xl">
             Banarasi & Silk Sarees
           </h2>
           <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-white/85">
@@ -76,25 +76,25 @@ export function HomePage() {
         </motion.div>
       </section>
 
-      <section className="bg-fusora-ivory px-3 py-12 sm:px-5 sm:py-16 lg:px-8">
+      <section className="bg-fusora-ivory px-3 py-9 sm:px-5 sm:py-16 lg:px-8">
         <div className="mx-auto max-w-[1440px]">
-          <div className="mb-8 flex items-end justify-between gap-4">
-            <div>
-              <p className="text-[0.68rem] font-medium tracking-[0.28em] text-bb-blue uppercase">
+          <div className="mb-6 flex items-end justify-between gap-3 sm:mb-8 sm:gap-4">
+            <div className="min-w-0">
+              <p className="text-[0.62rem] font-medium tracking-[0.22em] text-bb-blue uppercase sm:text-[0.68rem] sm:tracking-[0.28em]">
                 Just in
               </p>
-              <h2 className="text-display mt-2 text-[1.85rem] text-bb-text sm:text-4xl">
+              <h2 className="text-display mt-1.5 text-[1.45rem] text-bb-text sm:mt-2 sm:text-4xl">
                 Saree favourites
               </h2>
             </div>
             <Link
               to="/category/apparel-accessories/sarees"
-              className="nav-link text-[0.7rem] font-semibold tracking-[0.14em] text-bb-text uppercase"
+              className="nav-link shrink-0 text-[0.65rem] font-semibold tracking-[0.12em] text-bb-text uppercase sm:text-[0.7rem] sm:tracking-[0.14em]"
             >
               View all
             </Link>
           </div>
-          <div className="grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-5 md:grid-cols-4">
+          <div className="grid grid-cols-2 gap-x-2.5 gap-y-6 sm:gap-x-5 sm:gap-y-8 md:grid-cols-4">
             {featuredSarees.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}
@@ -145,25 +145,25 @@ export function HomePage() {
         </Link>
       </section>
 
-      <section className="bg-white px-3 py-12 sm:px-5 sm:py-16 lg:px-8">
+      <section className="bg-white px-3 py-9 sm:px-5 sm:py-16 lg:px-8">
         <div className="mx-auto max-w-[1440px]">
-          <div className="mb-8 flex items-end justify-between gap-4">
-            <div>
-              <p className="text-[0.68rem] font-medium tracking-[0.28em] text-bb-blue uppercase">
+          <div className="mb-6 flex items-end justify-between gap-3 sm:mb-8 sm:gap-4">
+            <div className="min-w-0">
+              <p className="text-[0.62rem] font-medium tracking-[0.22em] text-bb-blue uppercase sm:text-[0.68rem] sm:tracking-[0.28em]">
                 Denim
               </p>
-              <h2 className="text-display mt-2 text-[1.85rem] text-bb-text sm:text-4xl">
+              <h2 className="text-display mt-1.5 text-[1.45rem] text-bb-text sm:mt-2 sm:text-4xl">
                 Everyday jeans
               </h2>
             </div>
             <Link
               to="/category/apparel-accessories/jeans"
-              className="nav-link text-[0.7rem] font-semibold tracking-[0.14em] text-bb-text uppercase"
+              className="nav-link shrink-0 text-[0.65rem] font-semibold tracking-[0.12em] text-bb-text uppercase sm:text-[0.7rem] sm:tracking-[0.14em]"
             >
               View all
             </Link>
           </div>
-          <div className="grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-5 md:grid-cols-4">
+          <div className="grid grid-cols-2 gap-x-2.5 gap-y-6 sm:gap-x-5 sm:gap-y-8 md:grid-cols-4">
             {jeansRow.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}

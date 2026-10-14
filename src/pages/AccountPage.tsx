@@ -398,16 +398,16 @@ export function AccountPage() {
 
   return (
     <main className="min-h-[calc(100svh-8rem)] bg-white">
-      <div className="mx-auto flex max-w-[440px] flex-col px-4 py-12 sm:px-6 sm:py-16">
-        <div className="mb-8 flex justify-center">
+      <div className="mx-auto flex w-full max-w-[440px] flex-col px-4 py-8 sm:px-6 sm:py-16">
+        <div className="mb-6 flex justify-center sm:mb-8">
           <FusoraLogo centered compact />
         </div>
 
-        <div className="mb-8 flex items-center justify-center gap-6 border-b border-[#ececec]">
+        <div className="mb-6 flex items-center justify-center gap-6 border-b border-[#ececec] sm:mb-8">
           <button
             type="button"
             onClick={() => setMode('signin')}
-            className={`pb-3 text-[0.72rem] font-semibold tracking-[0.16em] uppercase transition ${
+            className={`pb-3 text-[0.68rem] font-semibold tracking-[0.14em] uppercase transition sm:text-[0.72rem] sm:tracking-[0.16em] ${
               mode === 'signin'
                 ? 'border-b-2 border-[#323232] text-[#272727]'
                 : 'text-[#787878] hover:text-[#272727]'
@@ -418,7 +418,7 @@ export function AccountPage() {
           <button
             type="button"
             onClick={() => setMode('register')}
-            className={`pb-3 text-[0.72rem] font-semibold tracking-[0.16em] uppercase transition ${
+            className={`pb-3 text-[0.68rem] font-semibold tracking-[0.14em] uppercase transition sm:text-[0.72rem] sm:tracking-[0.16em] ${
               mode === 'register'
                 ? 'border-b-2 border-[#323232] text-[#272727]'
                 : 'text-[#787878] hover:text-[#272727]'
@@ -428,7 +428,7 @@ export function AccountPage() {
           </button>
         </div>
 
-        <h1 className="text-center text-[1.65rem] font-medium tracking-wide text-[#272727]">
+        <h1 className="text-center text-[1.4rem] font-medium tracking-wide text-[#272727] sm:text-[1.65rem]">
           {mode === 'signin' ? 'Login' : 'Create account'}
         </h1>
         <p className="mt-2 text-center text-sm text-[#787878]">

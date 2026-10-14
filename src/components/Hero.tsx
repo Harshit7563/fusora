@@ -46,7 +46,7 @@ export function Hero() {
   }, [])
 
   return (
-    <section className="relative min-h-[62svh] overflow-hidden bg-[#1a1a1a] sm:min-h-[72svh]">
+    <section className="relative min-h-[56svh] overflow-hidden bg-[#1a1a1a] sm:min-h-[68svh] md:min-h-[72svh]">
       <AnimatePresence mode="wait">
         <motion.img
           key={slide.id}
@@ -60,9 +60,9 @@ export function Hero() {
         />
       </AnimatePresence>
 
-      <div className="absolute inset-0 bg-black/35" />
+      <div className="absolute inset-0 bg-black/40 sm:bg-black/35" />
 
-      <div className="relative mx-auto flex min-h-[62svh] max-w-[1400px] flex-col items-center justify-center px-4 py-16 text-center sm:min-h-[72svh] sm:px-8">
+      <div className="relative mx-auto flex min-h-[56svh] max-w-[1400px] flex-col items-center justify-center px-4 py-14 text-center sm:min-h-[68svh] sm:px-8 sm:py-16 md:min-h-[72svh]">
         <AnimatePresence mode="wait">
           <motion.div
             key={slide.id}
@@ -70,27 +70,27 @@ export function Hero() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="max-w-2xl"
+            className="w-full max-w-2xl"
           >
-            <p className="mb-3 text-[0.68rem] font-medium tracking-[0.28em] text-white/85 uppercase">
+            <p className="mb-2 text-[0.62rem] font-medium tracking-[0.22em] text-white/85 uppercase sm:mb-3 sm:text-[0.68rem] sm:tracking-[0.28em]">
               {slide.eyebrow}
             </p>
-            <h1 className="text-display text-[2rem] leading-[1.15] text-white sm:text-4xl md:text-[2.75rem]">
+            <h1 className="text-display text-[1.55rem] leading-[1.2] text-white sm:text-4xl md:text-[2.75rem]">
               {slide.title}
             </h1>
-            <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-white/85 sm:text-[0.95rem]">
+            <p className="mx-auto mt-3 max-w-md text-[0.8125rem] leading-relaxed text-white/85 sm:mt-4 sm:text-[0.95rem]">
               {slide.line}
             </p>
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <div className="mt-6 flex w-full flex-col items-stretch gap-2.5 sm:mt-8 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-3">
               <Link
                 to={slide.to}
-                className="inline-flex bg-white px-8 py-3.5 text-[0.7rem] font-semibold tracking-[0.16em] text-[#323232] uppercase transition hover:bg-[#f5f5f5]"
+                className="inline-flex items-center justify-center bg-white px-6 py-3.5 text-[0.68rem] font-semibold tracking-[0.16em] text-[#323232] uppercase transition hover:bg-[#f5f5f5] sm:px-8 sm:text-[0.7rem]"
               >
                 {slide.cta}
               </Link>
               <Link
                 to="/deals"
-                className="inline-flex border border-white/70 px-7 py-3.5 text-[0.7rem] font-semibold tracking-[0.16em] text-white uppercase transition hover:bg-white/10"
+                className="inline-flex items-center justify-center border border-white/70 px-6 py-3.5 text-[0.68rem] font-semibold tracking-[0.16em] text-white uppercase transition hover:bg-white/10 sm:px-7 sm:text-[0.7rem]"
               >
                 New in
               </Link>
@@ -98,7 +98,7 @@ export function Hero() {
           </motion.div>
         </AnimatePresence>
 
-        <div className="absolute bottom-8 left-1/2 flex -translate-x-1/2 items-center gap-2">
+        <div className="absolute bottom-5 left-1/2 flex -translate-x-1/2 items-center gap-2 sm:bottom-8">
           {slides.map((s, i) => (
             <button
               key={s.id}

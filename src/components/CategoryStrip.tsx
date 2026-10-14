@@ -39,16 +39,16 @@ const featured = [
 
 export function CategoryStrip() {
   return (
-    <section className="bg-fusora-ivory px-3 py-12 sm:px-5 sm:py-16 lg:px-8">
+    <section className="bg-fusora-ivory px-3 py-9 sm:px-5 sm:py-16 lg:px-8">
       <div className="mx-auto max-w-[1440px]">
-        <div className="mx-auto mb-8 max-w-2xl text-center sm:mb-10">
-          <p className="text-[0.68rem] font-medium tracking-[0.28em] text-bb-blue uppercase">
+        <div className="mx-auto mb-6 max-w-2xl text-center sm:mb-10">
+          <p className="text-[0.62rem] font-medium tracking-[0.22em] text-bb-blue uppercase sm:text-[0.68rem] sm:tracking-[0.28em]">
             Shop by category
           </p>
-          <h2 className="text-display mt-2 text-[2rem] leading-none text-bb-text sm:text-4xl">
+          <h2 className="text-display mt-2 text-[1.55rem] leading-tight text-bb-text sm:text-4xl">
             The Heritage Collection
           </h2>
-          <p className="mt-3 text-sm text-bb-muted">
+          <p className="mt-2 text-sm text-bb-muted sm:mt-3">
             Classic designs that never go out of style.
           </p>
         </div>
@@ -72,11 +72,11 @@ export function CategoryStrip() {
                   className="h-full w-full object-cover transition duration-700 ease-out group-hover:scale-[1.05]"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-bb-blue-deep/80 via-bb-blue/20 to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 px-3 py-4 text-center text-white sm:py-5">
-                  <span className="block text-[0.85rem] font-medium tracking-[0.16em] uppercase sm:text-[0.9rem]">
+                <div className="absolute inset-x-0 bottom-0 px-2 py-3 text-center text-white sm:px-3 sm:py-5">
+                  <span className="block text-[0.75rem] font-medium tracking-[0.12em] uppercase sm:text-[0.9rem] sm:tracking-[0.16em]">
                     {item.title}
                   </span>
-                  <span className="mt-1 block text-[0.7rem] text-white/80">
+                  <span className="mt-1 hidden text-[0.7rem] text-white/80 sm:block">
                     {item.line}
                   </span>
                 </div>
