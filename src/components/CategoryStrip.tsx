@@ -16,7 +16,7 @@ const featured = [
     line: 'Women only — sarees & apparel.',
     to: '/category/women',
     image:
-      'https://images.unsplash.com/photo-1756483492198-8ca91227489b?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=85',
   },
   {
     id: 'sarees',
@@ -24,7 +24,7 @@ const featured = [
     line: 'Silk, Banarasi & handloom.',
     to: '/category/women/sarees',
     image:
-      'https://images.unsplash.com/photo-1756483492198-8ca91227489b?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1200&q=85',
   },
   {
     id: 'jewelry-eyewear-watches',
