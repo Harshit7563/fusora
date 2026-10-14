@@ -3,16 +3,13 @@ import {
   Heart,
   Loader2,
   LogOut,
-  Mail,
   MapPin,
   Package,
-  ShieldCheck,
   Truck,
-  User,
 } from 'lucide-react'
 import { useEffect, useState, type FormEvent } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { SITE_DOMAIN, SUPPORT_EMAIL, SUPPORT_MAILTO } from '../brand'
+import { SUPPORT_EMAIL, SUPPORT_MAILTO } from '../brand'
 import { FusoraLogo } from '../components/FusoraLogo'
 import { GoogleSignInButton } from '../components/GoogleSignInButton'
 import {
@@ -234,13 +231,7 @@ export function AccountPage() {
     nextRaw && nextRaw.startsWith('/') && !nextRaw.startsWith('//')
       ? nextRaw
       : '/account'
-  const {
-    locationLabel,
-    openLocationModal,
-    registerAccount,
-    signInWithEmail,
-    isLoggedIn,
-  } = useStore()
+  const { registerAccount, signInWithEmail, isLoggedIn } = useStore()
 
   usePageTitle(mode === 'register' ? 'Create account' : 'Sign in')
 
@@ -388,7 +379,7 @@ export function AccountPage() {
   }
 
   const field =
-    'mt-1.5 w-full rounded-xl border border-bb-border bg-white px-3.5 py-3 text-sm font-normal outline-none transition focus:border-bb-blue focus:ring-2 focus:ring-bb-blue/20'
+    'mt-1.5 w-full border border-[#ececec] bg-white px-3.5 py-3 text-sm font-normal text-[#272727] outline-none transition focus:border-[#323232] disabled:bg-[#f5f5f5]'
 
   const isErrorBanner = (msg: string) =>
     msg.includes('accept') ||
@@ -406,295 +397,247 @@ export function AccountPage() {
     msg.includes('configured')
 
   return (
-    <main className="min-h-[calc(100svh-8rem)] bg-bb-gray/50">
-      <div className="mx-auto grid max-w-[1100px] lg:grid-cols-2">
-        <section className="relative hidden overflow-hidden bg-bb-blue px-10 py-14 text-white lg:flex lg:flex-col lg:justify-between">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_20%,rgba(255,242,0,0.2),transparent_55%)]" />
-          <div className="relative">
-            <FusoraLogo onDark />
-            <h1 className="mt-10 max-w-sm text-3xl font-bold tracking-tight xl:text-4xl">
-              {mode === 'signin'
-                ? 'Welcome back to Fusora'
-                : 'Create your Fusora account'}
-            </h1>
-            <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/75">
-              Track orders, save wishlists, unlock member deals, and get priority
-              pickup at your local hub — all on {SITE_DOMAIN}.
-            </p>
-          </div>
-          <ul className="relative mt-10 space-y-3 text-sm text-white/85">
-            {[
-              'Order tracking & easy returns',
-              'Wishlist across devices',
-              'Fusora Membership benefits',
-            ].map((item) => (
-              <li key={item} className="flex items-center gap-2">
-                <ShieldCheck className="size-4 shrink-0 text-bb-yellow" />
-                {item}
-              </li>
-            ))}
-          </ul>
-          <p className="relative mt-12 text-xs text-white/55">
-            Need help?{' '}
-            <a href={SUPPORT_MAILTO} className="underline underline-offset-2">
-              {SUPPORT_EMAIL}
-            </a>
-          </p>
-        </section>
+    <main className="min-h-[calc(100svh-8rem)] bg-white">
+      <div className="mx-auto flex max-w-[440px] flex-col px-4 py-12 sm:px-6 sm:py-16">
+        <div className="mb-8 flex justify-center">
+          <FusoraLogo centered compact />
+        </div>
 
-        <section className="flex items-center px-4 py-10 sm:px-8 lg:py-14">
-          <div className="mx-auto w-full max-w-[420px]">
-            <div className="mb-6 lg:hidden">
-              <FusoraLogo />
+        <div className="mb-8 flex items-center justify-center gap-6 border-b border-[#ececec]">
+          <button
+            type="button"
+            onClick={() => setMode('signin')}
+            className={`pb-3 text-[0.72rem] font-semibold tracking-[0.16em] uppercase transition ${
+              mode === 'signin'
+                ? 'border-b-2 border-[#323232] text-[#272727]'
+                : 'text-[#787878] hover:text-[#272727]'
+            }`}
+          >
+            Login
+          </button>
+          <button
+            type="button"
+            onClick={() => setMode('register')}
+            className={`pb-3 text-[0.72rem] font-semibold tracking-[0.16em] uppercase transition ${
+              mode === 'register'
+                ? 'border-b-2 border-[#323232] text-[#272727]'
+                : 'text-[#787878] hover:text-[#272727]'
+            }`}
+          >
+            Register
+          </button>
+        </div>
+
+        <h1 className="text-center text-[1.65rem] font-medium tracking-wide text-[#272727]">
+          {mode === 'signin' ? 'Login' : 'Create account'}
+        </h1>
+        <p className="mt-2 text-center text-sm text-[#787878]">
+          {mode === 'signin'
+            ? 'If you are already registered, please log in with email OTP.'
+            : 'Create your account with email OTP verification.'}
+        </p>
+
+        <div className="mt-8">
+          <GoogleSignInButton
+            onSuccess={goAfterAuth}
+            onError={(message) => setDone(message)}
+          />
+        </div>
+
+        <div className="mt-6 flex items-center gap-3 text-[0.65rem] tracking-[0.14em] text-[#787878] uppercase">
+          <span className="h-px flex-1 bg-[#ececec]" />
+          or email OTP
+          <span className="h-px flex-1 bg-[#ececec]" />
+        </div>
+
+        <form className="mt-6 space-y-4" onSubmit={onSubmit}>
+          {mode === 'register' && (
+            <label className="block text-[0.7rem] font-semibold tracking-[0.12em] text-[#272727] uppercase">
+              Full name
+              <input
+                required
+                value={form.name}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, name: e.target.value }))
+                }
+                className={field}
+                placeholder="Your name"
+                autoComplete="name"
+              />
+            </label>
+          )}
+
+          <label className="block text-[0.7rem] font-semibold tracking-[0.12em] text-[#272727] uppercase">
+            Email
+            <div className="mt-1.5 flex gap-2">
+              <input
+                type="email"
+                required
+                disabled={otpState.verified}
+                value={form.email}
+                onChange={(e) => {
+                  setForm((f) => ({ ...f, email: e.target.value }))
+                  setOtpState(emptyOtp)
+                }}
+                className={`${field} mt-0 min-w-0 flex-1`}
+                placeholder="you@email.com"
+                autoComplete="email"
+              />
+              {!otpState.verified && (
+                <button
+                  type="button"
+                  onClick={() => void sendOtp()}
+                  disabled={otpState.busy !== 'idle' || !form.email.trim()}
+                  className="shrink-0 bg-[#323232] px-4 text-[0.65rem] font-semibold tracking-[0.12em] text-white uppercase disabled:opacity-60"
+                >
+                  {otpState.busy === 'send' ? (
+                    <Loader2 className="size-4 animate-spin" />
+                  ) : otpState.sent ? (
+                    'Resend'
+                  ) : (
+                    'Send OTP'
+                  )}
+                </button>
+              )}
+              {otpState.verified && (
+                <span className="inline-flex items-center gap-1 border border-[#ececec] bg-[#f5f5f5] px-3 text-[0.65rem] font-semibold tracking-wide text-[#272727] uppercase">
+                  <CheckCircle2 className="size-3.5 text-green-700" />
+                  Verified
+                </span>
+              )}
             </div>
+          </label>
 
-            <div className="mb-6 grid grid-cols-2 bg-bb-gray p-1">
-              <button
-                type="button"
-                onClick={() => setMode('signin')}
-                className={`py-2.5 text-sm font-bold transition ${
-                  mode === 'signin'
-                    ? 'bg-white text-bb-blue shadow-sm'
-                    : 'text-bb-muted hover:text-bb-text'
-                }`}
-              >
-                Sign in
-              </button>
+          {otpState.sent && !otpState.verified && (
+            <label className="block text-[0.7rem] font-semibold tracking-[0.12em] text-[#272727] uppercase">
+              Email OTP
+              <div className="mt-1.5 flex gap-2">
+                <input
+                  required
+                  value={otpState.otp}
+                  onChange={(e) =>
+                    setOtpState((s) => ({
+                      ...s,
+                      otp: e.target.value.replace(/\D/g, '').slice(0, 6),
+                    }))
+                  }
+                  className={`${field} mt-0 min-w-0 flex-1`}
+                  placeholder="6-digit OTP"
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                />
+                <button
+                  type="button"
+                  onClick={verifyOtp}
+                  disabled={
+                    otpState.busy !== 'idle' || otpState.otp.length < 4
+                  }
+                  className="shrink-0 border border-[#323232] bg-white px-4 text-[0.65rem] font-semibold tracking-[0.12em] text-[#323232] uppercase disabled:opacity-60"
+                >
+                  {otpState.busy === 'verify' ? (
+                    <Loader2 className="size-4 animate-spin" />
+                  ) : (
+                    'Verify'
+                  )}
+                </button>
+              </div>
+            </label>
+          )}
+
+          {otpState.message && (
+            <p
+              className={`border px-3 py-2 text-sm ${
+                otpState.error
+                  ? 'border-red-200 bg-red-50 text-bb-save'
+                  : 'border-[#ececec] bg-[#f5f5f5] text-[#272727]'
+              }`}
+            >
+              {otpState.message}
+            </p>
+          )}
+
+          {mode === 'register' && (
+            <label className="flex items-start gap-2 text-sm text-[#787878]">
+              <input
+                type="checkbox"
+                checked={form.terms}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, terms: e.target.checked }))
+                }
+                className="mt-0.5 size-4 border-[#ececec] accent-[#323232]"
+              />
+              <span>
+                I agree to Fusora{' '}
+                <Link
+                  to="/policies/terms-and-conditions"
+                  className="text-[#272727] underline underline-offset-2"
+                >
+                  Terms
+                </Link>{' '}
+                &{' '}
+                <Link
+                  to="/policies/privacy-policy"
+                  className="text-[#272727] underline underline-offset-2"
+                >
+                  Privacy Policy
+                </Link>
+              </span>
+            </label>
+          )}
+
+          {done && (
+            <p
+              className={`border px-3 py-2 text-sm ${
+                isErrorBanner(done)
+                  ? 'border-red-200 bg-red-50 text-bb-save'
+                  : 'border-[#ececec] bg-[#f5f5f5] text-[#272727]'
+              }`}
+            >
+              {done}
+            </p>
+          )}
+
+          <button
+            type="submit"
+            disabled={!otpState.verified}
+            className="w-full bg-[#323232] py-3.5 text-[0.72rem] font-semibold tracking-[0.16em] text-white uppercase transition hover:bg-[#1f1f1f] disabled:opacity-60"
+          >
+            {mode === 'signin' ? 'Sign in' : 'Create account'}
+          </button>
+        </form>
+
+        <p className="mt-8 text-center text-sm text-[#787878]">
+          {mode === 'signin' ? (
+            <>
+              New customer?{' '}
               <button
                 type="button"
                 onClick={() => setMode('register')}
-                className={`py-2.5 text-sm font-bold transition ${
-                  mode === 'register'
-                    ? 'bg-white text-bb-blue shadow-sm'
-                    : 'text-bb-muted hover:text-bb-text'
-                }`}
+                className="font-medium text-[#272727] underline underline-offset-4"
               >
-                Create account
+                Create an account
               </button>
-            </div>
-
-            <h2 className="text-2xl font-bold tracking-tight text-bb-text">
-              {mode === 'signin' ? 'Sign in' : 'Create an account'}
-            </h2>
-            <p className="mt-1 text-sm text-bb-muted">
-              {mode === 'signin'
-                ? 'Sign in with an OTP sent to your email.'
-                : 'Verify your email with OTP, then join fusora.shop.'}
-            </p>
-
-            <div className="mt-6">
-              <GoogleSignInButton
-                onSuccess={goAfterAuth}
-                onError={(message) => setDone(message)}
-              />
-            </div>
-
-            <div className="mt-5 flex items-center gap-3 text-xs tracking-wide text-bb-muted uppercase">
-              <span className="h-px flex-1 bg-bb-border" />
-              or use email OTP
-              <span className="h-px flex-1 bg-bb-border" />
-            </div>
-
-            <form className="mt-5 space-y-4" onSubmit={onSubmit}>
-              {mode === 'register' && (
-                <label className="block text-sm font-semibold text-bb-text">
-                  Full name
-                  <div className="relative">
-                    <User className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-bb-muted" />
-                    <input
-                      required
-                      value={form.name}
-                      onChange={(e) =>
-                        setForm((f) => ({ ...f, name: e.target.value }))
-                      }
-                      className={`${field} pl-10`}
-                      placeholder="Your name"
-                      autoComplete="name"
-                    />
-                  </div>
-                </label>
-              )}
-
-              <label className="block text-sm font-semibold text-bb-text">
-                Email
-                <div className="mt-1.5 flex gap-2">
-                  <div className="relative min-w-0 flex-1">
-                    <Mail className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-bb-muted" />
-                    <input
-                      type="email"
-                      required
-                      disabled={otpState.verified}
-                      value={form.email}
-                      onChange={(e) => {
-                        setForm((f) => ({ ...f, email: e.target.value }))
-                        setOtpState(emptyOtp)
-                      }}
-                      className={`${field} mt-0 pl-10 disabled:bg-bb-gray/60`}
-                      placeholder="you@email.com"
-                      autoComplete="email"
-                    />
-                  </div>
-                  {!otpState.verified && (
-                    <button
-                      type="button"
-                      onClick={() => void sendOtp()}
-                      disabled={
-                        otpState.busy !== 'idle' || !form.email.trim()
-                      }
-                      className="shrink-0 rounded-xl bg-bb-blue px-3.5 text-sm font-bold whitespace-nowrap text-white hover:bg-bb-blue-dark disabled:opacity-60"
-                    >
-                      {otpState.busy === 'send' ? (
-                        <Loader2 className="size-4 animate-spin" />
-                      ) : otpState.sent ? (
-                        'Resend'
-                      ) : (
-                        'Send OTP'
-                      )}
-                    </button>
-                  )}
-                  {otpState.verified && (
-                    <span className="inline-flex items-center gap-1 rounded-xl bg-green-50 px-3 text-xs font-semibold text-green-700">
-                      <CheckCircle2 className="size-3.5" />
-                      Verified
-                    </span>
-                  )}
-                </div>
-              </label>
-
-              {otpState.sent && !otpState.verified && (
-                <label className="block text-sm font-semibold text-bb-text">
-                  Enter email OTP
-                  <div className="mt-1.5 flex gap-2">
-                    <input
-                      required
-                      value={otpState.otp}
-                      onChange={(e) =>
-                        setOtpState((s) => ({
-                          ...s,
-                          otp: e.target.value.replace(/\D/g, '').slice(0, 6),
-                        }))
-                      }
-                      className={field}
-                      placeholder="6-digit OTP"
-                      inputMode="numeric"
-                      autoComplete="one-time-code"
-                    />
-                    <button
-                      type="button"
-                      onClick={verifyOtp}
-                      disabled={
-                        otpState.busy !== 'idle' || otpState.otp.length < 4
-                      }
-                      className="shrink-0 rounded-xl border border-bb-blue bg-white px-3.5 text-sm font-bold whitespace-nowrap text-bb-blue hover:bg-bb-blue/5 disabled:opacity-60"
-                    >
-                      {otpState.busy === 'verify' ? (
-                        <Loader2 className="size-4 animate-spin" />
-                      ) : (
-                        'Verify'
-                      )}
-                    </button>
-                  </div>
-                </label>
-              )}
-
-              {otpState.message && (
-                <p
-                  className={`rounded-xl px-3 py-2 text-sm ${
-                    otpState.error
-                      ? 'bg-red-50 text-bb-save'
-                      : 'bg-green-50 text-green-800'
-                  }`}
-                >
-                  {otpState.message}
-                </p>
-              )}
-
-              {mode === 'register' && (
-                <label className="flex items-start gap-2 text-sm text-bb-muted">
-                  <input
-                    type="checkbox"
-                    checked={form.terms}
-                    onChange={(e) =>
-                      setForm((f) => ({ ...f, terms: e.target.checked }))
-                    }
-                    className="mt-0.5 size-4 rounded border-bb-border accent-bb-blue"
-                  />
-                  <span>
-                    I agree to Fusora{' '}
-                    <Link
-                      to="/policies/terms-and-conditions"
-                      className="font-semibold text-bb-link"
-                    >
-                      Terms
-                    </Link>{' '}
-                    &{' '}
-                    <Link
-                      to="/policies/privacy-policy"
-                      className="font-semibold text-bb-link"
-                    >
-                      Privacy Policy
-                    </Link>
-                  </span>
-                </label>
-              )}
-
-              {done && (
-                <p
-                  className={`rounded-xl px-3 py-2 text-sm ${
-                    isErrorBanner(done)
-                      ? 'bg-red-50 text-bb-save'
-                      : 'bg-green-50 text-green-800'
-                  }`}
-                >
-                  {done}
-                </p>
-              )}
-
-              <button
-                type="submit"
-                disabled={!otpState.verified}
-                className="w-full bg-bb-blue py-3.5 text-sm font-bold text-white hover:bg-bb-blue-dark disabled:opacity-60"
-              >
-                {mode === 'signin' ? 'Sign in' : 'Create account'}
-              </button>
-            </form>
-
-            <div className="mt-6 flex items-center gap-3 text-xs tracking-wide text-bb-muted uppercase">
-              <span className="h-px flex-1 bg-bb-border" />
-              or
-              <span className="h-px flex-1 bg-bb-border" />
-            </div>
-
-            <button
-              type="button"
-              onClick={() =>
-                setMode(mode === 'signin' ? 'register' : 'signin')
-              }
-              className="mt-4 w-full border border-bb-border bg-white py-3 text-sm font-bold text-bb-text hover:bg-bb-gray"
-            >
-              {mode === 'signin'
-                ? 'New here? Create an account'
-                : 'Already have an account? Sign in'}
-            </button>
-
-            <div className="mt-6 space-y-3 rounded-2xl border border-bb-border bg-white p-4 text-sm">
+            </>
+          ) : (
+            <>
+              Already have an account?{' '}
               <button
                 type="button"
-                onClick={openLocationModal}
-                className="flex w-full items-center gap-2 text-left"
+                onClick={() => setMode('signin')}
+                className="font-medium text-[#272727] underline underline-offset-4"
               >
-                <MapPin className="size-4 text-bb-blue" />
-                Preferred store: {locationLabel}
+                Login
               </button>
-              <Link to="/memberships" className="block text-bb-muted">
-                Explore Fusora Membership — ₹1,095/year
-              </Link>
-              <a href={SUPPORT_MAILTO} className="block text-bb-muted">
-                Need help? Contact {SUPPORT_EMAIL}
-              </a>
-            </div>
-          </div>
-        </section>
+            </>
+          )}
+        </p>
+
+        <p className="mt-6 text-center text-xs text-[#787878]">
+          Need help?{' '}
+          <a href={SUPPORT_MAILTO} className="text-[#272727] underline">
+            {SUPPORT_EMAIL}
+          </a>
+        </p>
       </div>
     </main>
   )
