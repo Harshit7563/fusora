@@ -16,5 +16,5 @@ window.__FUSORA__ = window.__FUSORA__ || {
   },
   // Admin panel — https://fusora.shop/admin
   // Change this password on the server after first login.
-  adminPassword: 'fusora-admin',
+  adminPassword: 'Govind@7563',
 }
