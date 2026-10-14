@@ -1,19 +1,44 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { formatMoney } from '../../data'
 import { useCatalog } from '../../hooks/useCatalog'
 import { deleteAdminProduct, loadAdminProducts } from '../../lib/adminCatalog'
 import { usePageTitle } from '../../hooks/usePageTitle'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+
+type LocationState = {
+  addedName?: string
+  savedName?: string
+}
 
 export function AdminProductsPage() {
   usePageTitle('Admin products')
   const { refresh } = useCatalog()
+  const location = useLocation()
+  const navigate = useNavigate()
   const [list, setList] = useState(() => loadAdminProducts())
+  const [notice, setNotice] = useState<string | null>(null)
 
   const reload = () => {
     setList(loadAdminProducts())
     refresh()
   }
+
+  useEffect(() => {
+    const state = (location.state || {}) as LocationState
+    if (state.addedName) {
+      setNotice(`Joyti Beti — “${state.addedName}” Add ho gya product`)
+      navigate(location.pathname, { replace: true, state: {} })
+    } else if (state.savedName) {
+      setNotice(`Joyti Beti — “${state.savedName}” update ho gaya`)
+      navigate(location.pathname, { replace: true, state: {} })
+    }
+  }, [location.pathname, location.state, navigate])
+
+  useEffect(() => {
+    if (!notice) return
+    const t = window.setTimeout(() => setNotice(null), 4500)
+    return () => window.clearTimeout(t)
+  }, [notice])
 
   return (
     <div>
@@ -31,6 +56,12 @@ export function AdminProductsPage() {
           + Add product
         </Link>
       </div>
+
+      {notice && (
+        <div className="mt-5 border border-green-200 bg-green-50 px-4 py-3 text-sm font-medium text-green-900">
+          {notice}
+        </div>
+      )}
 
       {list.length === 0 ? (
         <div className="mt-8 border border-[#ececec] bg-white p-8 text-center">
@@ -105,6 +136,21 @@ export function AdminProductsPage() {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      <div className="mt-6">
+        <Link
+          to="/admin/products/new"
+          className="flex w-full items-center justify-center bg-[#323232] px-4 py-4 text-[0.75rem] font-semibold tracking-[0.16em] text-white uppercase"
+        >
+          + Add product
+        </Link>
+      </div>
+
+      {notice && (
+        <div className="pointer-events-none fixed bottom-[max(1.5rem,env(safe-area-inset-bottom))] left-1/2 z-[70] max-w-[calc(100vw-2rem)] -translate-x-1/2 bg-[#323232] px-5 py-3 text-center text-sm font-medium tracking-wide text-white shadow-lg">
+          {notice}
         </div>
       )}
     </div>

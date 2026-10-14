@@ -150,7 +150,12 @@ export function AdminProductFormPage() {
       existing?.id,
     )
     refresh()
-    navigate(`/admin/products/${product.id}`)
+    navigate('/admin/products', {
+      state: isNew
+        ? { addedName: product.name }
+        : { savedName: product.name },
+      replace: true,
+    })
   }
 
   return (
@@ -449,6 +454,12 @@ export function AdminProductFormPage() {
               View on store
             </Link>
           )}
+          <Link
+            to="/admin/products/new"
+            className="block w-full border border-[#323232] py-3.5 text-center text-[0.7rem] font-semibold tracking-[0.16em] uppercase"
+          >
+            + Add product
+          </Link>
         </div>
       </form>
     </div>
