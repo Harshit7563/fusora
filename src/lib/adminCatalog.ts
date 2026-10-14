@@ -5,6 +5,9 @@ const PRODUCTS_KEY = 'fusora-admin-products'
 const CATEGORIES_KEY = 'fusora-admin-categories'
 const AUTH_KEY = 'fusora-admin-auth'
 
+/** One-off removals — purged from every browser on next catalog load. */
+const PURGED_ADMIN_PRODUCT_IDS = new Set(['admin-xjxjxj-mv7x6k16'])
+
 export type AdminCategory = {
   id: string
   label: string
@@ -69,7 +72,10 @@ function writeJson(key: string, value: unknown) {
 
 export function loadAdminProducts(): Product[] {
   const list = readJson<Product[]>(PRODUCTS_KEY, [])
-  return Array.isArray(list) ? list : []
+  if (!Array.isArray(list)) return []
+  const cleaned = list.filter((p) => !PURGED_ADMIN_PRODUCT_IDS.has(p.id))
+  if (cleaned.length !== list.length) saveAdminProducts(cleaned)
+  return cleaned
 }
 
 export function saveAdminProducts(list: Product[]) {

@@ -1081,13 +1081,23 @@ export const staticProducts: Product[] = dedupeByImage([
   ...baseCatalog,
 ])
 
+const PURGED_ADMIN_PRODUCT_IDS = new Set(['admin-xjxjxj-mv7x6k16'])
+
 /** Built-in catalog + products created in /admin (localStorage). */
 export function getProducts(): Product[] {
   let admin: Product[] = []
   try {
     if (typeof localStorage !== 'undefined') {
       const raw = localStorage.getItem('fusora-admin-products')
-      if (raw) admin = JSON.parse(raw) as Product[]
+      if (raw) {
+        const parsed = JSON.parse(raw) as Product[]
+        if (Array.isArray(parsed)) {
+          admin = parsed.filter((p) => !PURGED_ADMIN_PRODUCT_IDS.has(p.id))
+          if (admin.length !== parsed.length) {
+            localStorage.setItem('fusora-admin-products', JSON.stringify(admin))
+          }
+        }
+      }
     }
   } catch {
     admin = []
