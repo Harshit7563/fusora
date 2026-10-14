@@ -22,7 +22,6 @@ import { PoliciesIndexPage, PolicyPage } from './pages/PolicyPage'
 import { AdminLoginPage } from './pages/admin/AdminLoginPage'
 import { AdminDashboardPage } from './pages/admin/AdminDashboardPage'
 import { AdminProductsPage } from './pages/admin/AdminProductsPage'
-import { AdminProductFormPage } from './pages/admin/AdminProductFormPage'
 import { AdminCategoriesPage } from './pages/admin/AdminCategoriesPage'
 
 export default function App() {
@@ -35,8 +34,14 @@ export default function App() {
           <Route path="admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboardPage />} />
             <Route path="products" element={<AdminProductsPage />} />
-            <Route path="products/new" element={<AdminProductFormPage />} />
-            <Route path="products/:id" element={<AdminProductFormPage />} />
+            <Route
+              path="products/new"
+              element={<Navigate to="/admin/products" replace />}
+            />
+            <Route
+              path="products/:id"
+              element={<Navigate to="/admin/products" replace />}
+            />
             <Route path="categories" element={<AdminCategoriesPage />} />
           </Route>
           <Route path="admin/*" element={<Navigate to="/admin" replace />} />

@@ -34,8 +34,15 @@ export type AdminProductInput = {
   description?: string
   sizes?: string[]
   fabric?: string
+  fit?: string
+  wash?: string
   sku?: string
   topDeal?: boolean
+}
+
+export function nextAdminSku() {
+  const n = Math.floor(100000 + Math.random() * 900000)
+  return `FS-${n}`
 }
 
 /** Full size run for admin products — always in stock, never partial. */
@@ -143,6 +150,9 @@ export function upsertAdminProduct(
         ? gender
         : input.tab
 
+  const existing = existingId
+    ? list.find((p) => p.id === existingId)
+    : undefined
   const product: Product = {
     id,
     rank: 1,
@@ -162,7 +172,9 @@ export function upsertAdminProduct(
     // Always persist the full size run — never leave a product partially sized / OOS.
     sizes: defaultSizesForSubtype(input.subtype),
     fabric: input.fabric?.trim() || undefined,
-    sku: input.sku?.trim() || undefined,
+    fit: input.fit?.trim() || undefined,
+    wash: input.wash?.trim() || undefined,
+    sku: input.sku?.trim() || existing?.sku || nextAdminSku(),
     source: 'admin',
   }
   const idx = list.findIndex((p) => p.id === id)

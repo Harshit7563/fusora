@@ -2,67 +2,86 @@ import { Link } from 'react-router-dom'
 import { useCatalog } from '../../hooks/useCatalog'
 import { loadAdminProducts } from '../../lib/adminCatalog'
 import { usePageTitle } from '../../hooks/usePageTitle'
+import { Package, Tags, ShoppingBag, Plus } from 'lucide-react'
 
 export function AdminDashboardPage() {
   usePageTitle('Admin')
   const { products, adminCategories } = useCatalog()
   const adminProducts = loadAdminProducts()
 
+  const cards = [
+    {
+      label: 'Admin products',
+      value: adminProducts.length,
+      icon: Package,
+      color: 'bg-blue-50 text-blue-600',
+    },
+    {
+      label: 'Categories',
+      value: adminCategories.length,
+      icon: Tags,
+      color: 'bg-orange-50 text-orange-600',
+    },
+    {
+      label: 'Total catalog',
+      value: products.length,
+      icon: ShoppingBag,
+      color: 'bg-green-50 text-green-600',
+    },
+  ]
+
   return (
     <div>
-      <h1 className="text-2xl font-medium tracking-wide">Dashboard</h1>
-      <p className="mt-1 text-sm text-[#787878]">
-        Manage store catalog. Changes show on the live site after refresh.
-      </p>
-
-      <div className="mt-8 grid gap-4 sm:grid-cols-3">
-        <div className="border border-[#ececec] bg-white p-5">
-          <p className="text-[0.65rem] font-semibold tracking-[0.14em] text-[#787878] uppercase">
-            Admin products
-          </p>
-          <p className="mt-2 text-3xl font-medium">{adminProducts.length}</p>
-        </div>
-        <div className="border border-[#ececec] bg-white p-5">
-          <p className="text-[0.65rem] font-semibold tracking-[0.14em] text-[#787878] uppercase">
-            Custom categories
-          </p>
-          <p className="mt-2 text-3xl font-medium">{adminCategories.length}</p>
-        </div>
-        <div className="border border-[#ececec] bg-white p-5">
-          <p className="text-[0.65rem] font-semibold tracking-[0.14em] text-[#787878] uppercase">
-            Total catalog
-          </p>
-          <p className="mt-2 text-3xl font-medium">{products.length}</p>
-        </div>
+      <h1 className="mb-6 text-xl font-bold sm:text-2xl">Dashboard</h1>
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
+        {cards.map(({ label, value, icon: Icon, color }) => (
+          <div
+            key={label}
+            className="rounded-xl border border-[#e8e8e8] bg-white p-4 sm:p-5"
+          >
+            <div
+              className={`mb-3 flex size-10 items-center justify-center rounded-lg ${color}`}
+            >
+              <Icon size={20} />
+            </div>
+            <p className="text-2xl font-bold">{value}</p>
+            <p className="text-sm text-gray-500">{label}</p>
+          </div>
+        ))}
       </div>
 
-      <div className="mt-8 flex flex-wrap gap-3">
+      <div className="mt-6 flex flex-wrap gap-3">
         <Link
-          to="/admin/products/new"
-          className="bg-[#323232] px-5 py-3 text-[0.7rem] font-semibold tracking-[0.14em] text-white uppercase"
+          to="/admin/products"
+          className="inline-flex items-center gap-2 rounded-lg bg-[#1a1a1a] px-5 py-2.5 text-sm font-medium text-white hover:bg-[#333]"
         >
-          Add product
+          <Plus size={16} /> Add Product
         </Link>
         <Link
           to="/admin/categories"
-          className="border border-[#ececec] bg-white px-5 py-3 text-[0.7rem] font-semibold tracking-[0.14em] uppercase"
+          className="rounded-lg border border-[#e8e8e8] bg-white px-5 py-2.5 text-sm font-medium hover:bg-[#fafafa]"
         >
           Manage categories
         </Link>
-        <Link
-          to="/admin/products"
-          className="border border-[#ececec] bg-white px-5 py-3 text-[0.7rem] font-semibold tracking-[0.14em] uppercase"
-        >
-          All products
-        </Link>
       </div>
 
-      <p className="mt-10 text-xs text-[#787878]">
-        Admin URL:{' '}
-        <code className="bg-white px-1.5 py-0.5 text-[#272727]">
-          https://fusora.shop/admin
-        </code>
-      </p>
+      <div className="mt-6 rounded-xl border border-[#e8e8e8] bg-white p-5">
+        <h2 className="mb-2 font-semibold">Live Site</h2>
+        <p className="text-sm text-gray-600">
+          Website:{' '}
+          <a
+            href="https://fusora.shop"
+            className="text-blue-600 hover:underline"
+            target="_blank"
+            rel="noreferrer"
+          >
+            fusora.shop
+          </a>
+        </p>
+        <p className="mt-1 text-sm text-gray-600">
+          Admin: <code className="text-[#272727]">fusora.shop/admin</code>
+        </p>
+      </div>
     </div>
   )
 }
