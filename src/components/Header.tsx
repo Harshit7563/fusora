@@ -24,7 +24,7 @@ const primaryNav = [
 export function Header() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { cartCount, openCart, wishlist } = useStore()
+  const { cartCount, openCart, wishlist, isLoggedIn, signOut } = useStore()
   const [q, setQ] = useState('')
   const [menuOpen, setMenuOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
@@ -182,46 +182,77 @@ export function Header() {
 
       {menuOpen && (
         <div className="border-b border-bb-border bg-white px-3 py-3 safe-pb sm:px-5 lg:px-8">
-          <ul className="mx-auto grid max-h-[min(70svh,32rem)] max-w-[1400px] gap-0 overflow-y-auto sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-8">
-            {primaryNav.map((item) => (
-              <li key={item.to}>
+          <div className="mx-auto max-w-[1400px]">
+            <div className="mb-2 flex flex-wrap gap-2 border-b border-bb-border pb-3">
+              {isLoggedIn ? (
+                <>
+                  <Link
+                    to="/account"
+                    onClick={() => setMenuOpen(false)}
+                    className="bg-[#323232] px-4 py-2.5 text-[0.65rem] font-semibold tracking-[0.14em] text-white uppercase"
+                  >
+                    My account
+                  </Link>
+                  <Link
+                    to="/orders"
+                    onClick={() => setMenuOpen(false)}
+                    className="border border-bb-border px-4 py-2.5 text-[0.65rem] font-semibold tracking-[0.14em] text-bb-text uppercase"
+                  >
+                    My orders
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      signOut()
+                      setMenuOpen(false)
+                    }}
+                    className="border border-bb-border px-4 py-2.5 text-[0.65rem] font-semibold tracking-[0.14em] text-bb-text uppercase"
+                  >
+                    Log out
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    to="/account"
+                    onClick={() => setMenuOpen(false)}
+                    className="bg-[#323232] px-4 py-2.5 text-[0.65rem] font-semibold tracking-[0.14em] text-white uppercase"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/register"
+                    onClick={() => setMenuOpen(false)}
+                    className="border border-bb-border px-4 py-2.5 text-[0.65rem] font-semibold tracking-[0.14em] text-bb-text uppercase"
+                  >
+                    Register
+                  </Link>
+                </>
+              )}
+            </div>
+            <ul className="grid max-h-[min(70svh,32rem)] gap-0 overflow-y-auto sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-8">
+              {primaryNav.map((item) => (
+                <li key={item.to}>
+                  <Link
+                    to={item.to}
+                    onClick={() => setMenuOpen(false)}
+                    className="block px-3 py-3.5 text-sm font-medium tracking-[0.1em] text-bb-text uppercase transition hover:bg-[#f5f5f5]"
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+              <li>
                 <Link
-                  to={item.to}
+                  to="/support"
                   onClick={() => setMenuOpen(false)}
                   className="block px-3 py-3.5 text-sm font-medium tracking-[0.1em] text-bb-text uppercase transition hover:bg-[#f5f5f5]"
                 >
-                  {item.label}
+                  Contact
                 </Link>
               </li>
-            ))}
-            <li>
-              <Link
-                to="/account"
-                onClick={() => setMenuOpen(false)}
-                className="block px-3 py-3.5 text-sm font-medium tracking-[0.1em] text-bb-text uppercase transition hover:bg-[#f5f5f5]"
-              >
-                Account
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/orders"
-                onClick={() => setMenuOpen(false)}
-                className="block px-3 py-3.5 text-sm font-medium tracking-[0.1em] text-bb-text uppercase transition hover:bg-[#f5f5f5]"
-              >
-                My orders
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/support"
-                onClick={() => setMenuOpen(false)}
-                className="block px-3 py-3.5 text-sm font-medium tracking-[0.1em] text-bb-text uppercase transition hover:bg-[#f5f5f5]"
-              >
-                Contact
-              </Link>
-            </li>
-          </ul>
+            </ul>
+          </div>
         </div>
       )}
     </header>
