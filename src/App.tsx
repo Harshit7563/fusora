@@ -1,4 +1,5 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { AdminLayout } from './components/AdminLayout'
 import { Layout } from './components/Layout'
 import { ScrollToTop } from './components/ScrollToTop'
 import { StoreProvider } from './context/StoreContext'
@@ -18,6 +19,11 @@ import { StoresPage } from './pages/StoresPage'
 import { SupportPage } from './pages/SupportPage'
 import { WishlistPage } from './pages/WishlistPage'
 import { PoliciesIndexPage, PolicyPage } from './pages/PolicyPage'
+import { AdminLoginPage } from './pages/admin/AdminLoginPage'
+import { AdminDashboardPage } from './pages/admin/AdminDashboardPage'
+import { AdminProductsPage } from './pages/admin/AdminProductsPage'
+import { AdminProductFormPage } from './pages/admin/AdminProductFormPage'
+import { AdminCategoriesPage } from './pages/admin/AdminCategoriesPage'
 
 export default function App() {
   return (
@@ -25,6 +31,16 @@ export default function App() {
       <StoreProvider>
         <ScrollToTop />
         <Routes>
+          <Route path="admin/login" element={<AdminLoginPage />} />
+          <Route path="admin" element={<AdminLayout />}>
+            <Route index element={<AdminDashboardPage />} />
+            <Route path="products" element={<AdminProductsPage />} />
+            <Route path="products/new" element={<AdminProductFormPage />} />
+            <Route path="products/:id" element={<AdminProductFormPage />} />
+            <Route path="categories" element={<AdminCategoriesPage />} />
+          </Route>
+          <Route path="admin/*" element={<Navigate to="/admin" replace />} />
+
           <Route element={<Layout />}>
             <Route index element={<HomePage />} />
             <Route path="product/:id" element={<ProductPage />} />

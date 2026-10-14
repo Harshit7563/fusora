@@ -147,5 +147,48 @@ export const dealTabs = shopCategories.map((c) => ({
 export type DealTab = CategoryId
 
 export function getCategory(id: string | undefined) {
-  return shopCategories.find((c) => c.id === id) ?? shopCategories[0]
+  const builtIn = shopCategories.find((c) => c.id === id)
+  if (builtIn) return builtIn
+  try {
+    if (typeof localStorage !== 'undefined' && id) {
+      const raw = localStorage.getItem('fusora-admin-categories')
+      const list = raw
+        ? (JSON.parse(raw) as Array<{ id: string; label: string; emoji?: string }>)
+        : []
+      const custom = list.find((c) => c.id === id)
+      if (custom) {
+        return {
+          id: custom.id as CategoryId,
+          label: custom.label,
+          emoji: custom.emoji || '🛍️',
+        }
+      }
+    }
+  } catch {
+    /* ignore */
+  }
+  return shopCategories[0]
+}
+
+export function getAllShopCategories(): ShopCategory[] {
+  const custom: ShopCategory[] = []
+  try {
+    if (typeof localStorage !== 'undefined') {
+      const raw = localStorage.getItem('fusora-admin-categories')
+      const list = raw
+        ? (JSON.parse(raw) as Array<{ id: string; label: string; emoji?: string }>)
+        : []
+      for (const c of list) {
+        if (shopCategories.some((s) => s.id === c.id)) continue
+        custom.push({
+          id: c.id as CategoryId,
+          label: c.label,
+          emoji: c.emoji || '🛍️',
+        })
+      }
+    }
+  } catch {
+    /* ignore */
+  }
+  return [...custom, ...shopCategories]
 }

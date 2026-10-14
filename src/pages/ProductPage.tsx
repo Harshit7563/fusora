@@ -15,10 +15,11 @@ import {
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { getCategory } from '../categories'
-import { formatMoney, products } from '../data'
+import { formatMoney } from '../data'
 import { useStore } from '../context/StoreContext'
 import { getProductDetails } from '../productDetails'
 import { usePageTitle } from '../hooks/usePageTitle'
+import { useCatalog } from '../hooks/useCatalog'
 import { SafeImage } from '../components/SafeImage'
 
 type TabId = 'overview' | 'specs' | 'sizechart' | 'reviews'
@@ -52,6 +53,7 @@ export function ProductPage() {
     openCart,
   } = useStore()
 
+  const { products } = useCatalog()
   const product = products.find((p) => p.id === id)
   const [activeImage, setActiveImage] = useState(0)
   const [qty, setQty] = useState(1)

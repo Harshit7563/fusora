@@ -1049,13 +1049,31 @@ function dedupeByImage(list: Product[]): Product[] {
   return out
 }
 
-export const products: Product[] = dedupeByImage([
+export const staticProducts: Product[] = dedupeByImage([
   ...apparelCoreProducts,
   ...sareeProducts,
   ...modcartCatalog,
   ...denimforgeCatalog,
   ...baseCatalog,
 ])
+
+/** Built-in catalog + products created in /admin (localStorage). */
+export function getProducts(): Product[] {
+  let admin: Product[] = []
+  try {
+    if (typeof localStorage !== 'undefined') {
+      const raw = localStorage.getItem('fusora-admin-products')
+      if (raw) admin = JSON.parse(raw) as Product[]
+    }
+  } catch {
+    admin = []
+  }
+  if (!Array.isArray(admin) || admin.length === 0) return staticProducts
+  return dedupeByImage([...admin, ...staticProducts])
+}
+
+/** @deprecated Prefer getProducts() so admin-added items are included */
+export const products: Product[] = staticProducts
 
 export const promoCards = [
   {

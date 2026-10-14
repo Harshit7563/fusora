@@ -1,13 +1,14 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { CategoryId } from '../categories'
-import { products } from '../data'
+import type { Product } from '../data'
+import { useCatalog } from '../hooks/useCatalog'
 import { ProductCard } from './ProductCard'
 
 const homeTabs: {
   id: CategoryId | 'sarees' | 'jeans'
   label: string
-  filter: (p: (typeof products)[number]) => boolean
+  filter: (p: Product) => boolean
 }[] = [
   {
     id: 'sarees',
@@ -32,16 +33,17 @@ const homeTabs: {
 ]
 
 export function TrendingDeals() {
+  const { products } = useCatalog()
   const available = useMemo(
     () => homeTabs.filter((t) => products.some(t.filter)),
-    [],
+    [products],
   )
   const [tab, setTab] = useState(available[0]?.id ?? 'sarees')
   const active = available.find((t) => t.id === tab) ?? available[0]
 
   const list = useMemo(
     () => (active ? products.filter(active.filter).slice(0, 8) : []),
-    [active],
+    [active, products],
   )
 
   const viewAllTo =

@@ -1,9 +1,10 @@
 import { Link, useSearchParams } from 'react-router-dom'
-import { products } from '../data'
 import { ProductCard } from '../components/ProductCard'
+import { useCatalog } from '../hooks/useCatalog'
 
 export function DealsPage() {
   const [params] = useSearchParams()
+  const { products } = useCatalog()
   const q = (params.get('q') || '').trim().toLowerCase()
 
   const list = q

@@ -8,13 +8,15 @@ import {
   dyntraFabricCategories,
   type ApparelSubtype,
 } from '../data/apparel'
-import { products, type CategoryId } from '../data'
+import { type CategoryId } from '../data'
 import { ProductCard } from '../components/ProductCard'
 import { SafeImage } from '../components/SafeImage'
+import { useCatalog } from '../hooks/useCatalog'
 
 export function CategoryPage() {
   const { tab, subtype: subtypeParam, collection: collectionParam } =
     useParams()
+  const { products } = useCatalog()
   const active = (tab as CategoryId) || 'apparel-accessories'
   const meta = getCategory(active)
   const isApparel = active === 'apparel-accessories'

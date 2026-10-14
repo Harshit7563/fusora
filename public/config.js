@@ -14,4 +14,7 @@ window.__FUSORA__ = window.__FUSORA__ || {
     templateId: 'template_2lgjx1a',
     publicKey: '9z1t6eVNbk2GSc2KS',
   },
+  // Admin panel — https://fusora.shop/admin
+  // Change this password on the server after first login.
+  adminPassword: 'fusora-admin',
 }

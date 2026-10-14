@@ -8,10 +8,11 @@ import { ProductCard } from '../components/ProductCard'
 import { ReviewsSection } from '../components/ReviewsSection'
 import { TrendingDeals } from '../components/TrendingDeals'
 import { TrustBar } from '../components/TrustBar'
-import { products } from '../data'
+import { useCatalog } from '../hooks/useCatalog'
 
 export function HomePage() {
   usePageTitle()
+  const { products } = useCatalog()
   const banarasi = products
     .filter(
       (p) =>

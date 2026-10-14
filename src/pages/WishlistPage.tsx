@@ -1,13 +1,14 @@
 import { Heart } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { products } from '../data'
 import { useStore } from '../context/StoreContext'
 import { usePageTitle } from '../hooks/usePageTitle'
+import { useCatalog } from '../hooks/useCatalog'
 import { ProductCard } from '../components/ProductCard'
 
 export function WishlistPage() {
   usePageTitle('Wishlist')
   const { wishlist } = useStore()
+  const { products } = useCatalog()
   const list = products.filter((p) => wishlist.has(p.id))
 
   return (
