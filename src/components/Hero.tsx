@@ -4,31 +4,45 @@ import { Link } from 'react-router-dom'
 
 const slides = [
   {
-    id: 1,
+    id: 'sarees',
     image:
-      'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=2200&q=80',
-    eyebrow: 'Festive edit',
+      'https://images.unsplash.com/photo-1756483492198-8ca91227489b?auto=format&fit=crop&w=2400&q=85',
+    position: 'object-[center_20%]',
+    eyebrow: 'Sarees',
     title: 'Designer Sarees for Every Occasion',
     line: 'Silk, Banarasi, handloom and festive weaves — chosen for how you celebrate.',
     cta: 'Shop sarees',
     to: '/category/apparel-accessories/sarees',
   },
   {
-    id: 2,
+    id: 'jeans',
     image: '/heroes/hero-denim.jpg',
-    eyebrow: 'Denim edit',
+    position: 'object-center',
+    eyebrow: 'Jeans',
     title: 'Jeans for Every Fit',
-    line: 'Men, women and kids — washes, cuts and everyday staples.',
+    line: 'Men, women and kids — washes, cuts and everyday denim staples.',
     cta: 'Shop jeans',
     to: '/category/apparel-accessories/jeans',
   },
   {
-    id: 3,
+    id: 'apparel',
     image:
-      'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=2200&q=80',
-    eyebrow: 'Finishing touches',
+      'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=2400&q=85',
+    position: 'object-[center_25%]',
+    eyebrow: 'Apparel',
+    title: 'Apparel Made to Wear Daily',
+    line: 'Kurtis, shirts, tees and festive ready-to-wear — clean fits, easy style.',
+    cta: 'Shop apparel',
+    to: '/category/apparel-accessories',
+  },
+  {
+    id: 'jewellery',
+    image:
+      'https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?auto=format&fit=crop&w=2400&q=85',
+    position: 'object-center',
+    eyebrow: 'Jewellery',
     title: 'Jewellery That Completes the Look',
-    line: 'Pieces for evenings, festivals and everyday grace.',
+    line: 'Gold-tone, festive sets and everyday pieces for evenings and celebrations.',
     cta: 'Shop jewellery',
     to: '/category/jewelry-eyewear-watches',
   },
@@ -51,16 +65,16 @@ export function Hero() {
         <motion.img
           key={slide.id}
           src={slide.image}
-          alt=""
+          alt={slide.eyebrow}
           initial={{ opacity: 0, scale: 1.04 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 1.05, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute inset-0 h-full w-full object-cover"
+          className={`absolute inset-0 h-full w-full object-cover ${slide.position}`}
         />
       </AnimatePresence>
 
-      <div className="absolute inset-0 bg-black/40 sm:bg-black/35" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/30 to-black/25" />
 
       <div className="relative mx-auto flex min-h-[56svh] max-w-[1400px] flex-col items-center justify-center px-4 py-14 text-center sm:min-h-[68svh] sm:px-8 sm:py-16 md:min-h-[72svh]">
         <AnimatePresence mode="wait">
@@ -98,18 +112,36 @@ export function Hero() {
           </motion.div>
         </AnimatePresence>
 
-        <div className="absolute bottom-5 left-1/2 flex -translate-x-1/2 items-center gap-2 sm:bottom-8">
-          {slides.map((s, i) => (
-            <button
-              key={s.id}
-              type="button"
-              aria-label={`Slide ${i + 1}`}
-              onClick={() => setIndex(i)}
-              className={`h-1 transition-all duration-500 ${
-                i === index ? 'w-8 bg-white' : 'w-4 bg-white/40 hover:bg-white/70'
-              }`}
-            />
-          ))}
+        <div className="absolute bottom-5 left-1/2 flex w-[calc(100%-2rem)] max-w-md -translate-x-1/2 flex-col items-center gap-3 sm:bottom-8">
+          <div className="hidden w-full justify-center gap-4 text-[0.6rem] font-semibold tracking-[0.14em] text-white/75 uppercase sm:flex">
+            {slides.map((s, i) => (
+              <button
+                key={`label-${s.id}`}
+                type="button"
+                onClick={() => setIndex(i)}
+                className={`transition ${
+                  i === index ? 'text-white' : 'hover:text-white'
+                }`}
+              >
+                {s.eyebrow}
+              </button>
+            ))}
+          </div>
+          <div className="flex items-center gap-2">
+            {slides.map((s, i) => (
+              <button
+                key={s.id}
+                type="button"
+                aria-label={s.eyebrow}
+                onClick={() => setIndex(i)}
+                className={`h-1 transition-all duration-500 ${
+                  i === index
+                    ? 'w-8 bg-white'
+                    : 'w-4 bg-white/40 hover:bg-white/70'
+                }`}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>

@@ -9,15 +9,22 @@ const featured = [
     line: 'Silk, Banarasi & handloom.',
     to: '/category/apparel-accessories/sarees',
     image:
-      'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1756483492198-8ca91227489b?auto=format&fit=crop&w=1200&q=85',
   },
   {
     id: 'jeans',
     title: 'Jeans',
     line: 'Men · Women · Kids denim.',
     to: '/category/apparel-accessories/jeans',
+    image: '/heroes/hero-denim.jpg',
+  },
+  {
+    id: 'apparel',
+    title: 'Apparel',
+    line: 'Everyday & festive ready-to-wear.',
+    to: '/category/apparel-accessories',
     image:
-      'https://thedenimforge.com/uploads/products/1789985439763-lnhn91.webp',
+      'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=85',
   },
   {
     id: 'jewelry-eyewear-watches',
@@ -25,15 +32,7 @@ const featured = [
     line: 'Finishing pieces for every look.',
     to: '/category/jewelry-eyewear-watches',
     image:
-      'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=1200&q=80',
-  },
-  {
-    id: 'luggage-bags-cases',
-    title: 'Luggage',
-    line: 'Travel-ready essentials.',
-    to: '/category/luggage-bags-cases',
-    image:
-      'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=1200&q=80',
+      'https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?auto=format&fit=crop&w=1200&q=85',
   },
 ]
 
