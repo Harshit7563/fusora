@@ -12,11 +12,11 @@ import { useStore } from '../context/StoreContext'
 import { FusoraLogo } from './FusoraLogo'
 
 const primaryNav = [
-  { label: 'Sarees', to: '/category/apparel-accessories/sarees' },
-  { label: 'Jeans', to: '/category/apparel-accessories/jeans' },
-  { label: 'Apparel', to: '/category/apparel-accessories' },
+  { label: 'Men', to: '/category/men' },
+  { label: 'Women', to: '/category/women' },
+  { label: 'Sarees', to: '/category/women/sarees' },
+  { label: 'Jeans', to: '/category/men/jeans' },
   { label: 'Jewellery', to: '/category/jewelry-eyewear-watches' },
-  { label: 'Luggage', to: '/category/luggage-bags-cases' },
   { label: 'New In', to: '/deals' },
   { label: 'Our Story', to: '/about' },
 ]

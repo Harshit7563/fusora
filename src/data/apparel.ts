@@ -14,6 +14,7 @@ type ApparelProduct = {
   topDeal?: boolean
   tab: CategoryId
   subtype: ApparelSubtype
+  gender?: 'men' | 'women' | 'unisex'
   brand: string
   image: string
 }
@@ -104,6 +105,7 @@ export const apparelCoreProducts: ApparelProduct[] = [
     topDeal: true,
     tab: 'apparel-accessories',
     subtype: 'tshirts',
+    gender: 'men',
     brand: 'Fusora',
     image:
       'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=80',
@@ -117,6 +119,7 @@ export const apparelCoreProducts: ApparelProduct[] = [
     topDeal: true,
     tab: 'apparel-accessories',
     subtype: 'tshirts',
+    gender: 'men',
     brand: 'Fusora',
     image:
       'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=800&q=80',
@@ -129,6 +132,7 @@ export const apparelCoreProducts: ApparelProduct[] = [
     was: 1499,
     tab: 'apparel-accessories',
     subtype: 'tshirts',
+    gender: 'men',
     brand: 'Fusora',
     image:
       'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?auto=format&fit=crop&w=800&q=80',
@@ -141,6 +145,7 @@ export const apparelCoreProducts: ApparelProduct[] = [
     was: 899,
     tab: 'apparel-accessories',
     subtype: 'tshirts',
+    gender: 'men',
     brand: 'Fusora',
     image:
       'https://images.unsplash.com/photo-1622445275463-afa2ab738c34?auto=format&fit=crop&w=800&q=80',
@@ -154,6 +159,7 @@ export const apparelCoreProducts: ApparelProduct[] = [
     topDeal: true,
     tab: 'apparel-accessories',
     subtype: 'tshirts',
+    gender: 'men',
     brand: 'Fusora',
     image:
       'https://images.unsplash.com/photo-1562157873-818bc0726f68?auto=format&fit=crop&w=800&q=80',
@@ -166,6 +172,7 @@ export const apparelCoreProducts: ApparelProduct[] = [
     was: 999,
     tab: 'apparel-accessories',
     subtype: 'tshirts',
+    gender: 'men',
     brand: 'Fusora',
     image:
       'https://images.unsplash.com/photo-1576566588028-4147f3842fbf?auto=format&fit=crop&w=800&q=80',
@@ -180,6 +187,7 @@ export const apparelCoreProducts: ApparelProduct[] = [
     topDeal: true,
     tab: 'apparel-accessories',
     subtype: 'shirts',
+    gender: 'men',
     brand: 'Fusora',
     image:
       'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=800&q=80',
@@ -193,6 +201,7 @@ export const apparelCoreProducts: ApparelProduct[] = [
     topDeal: true,
     tab: 'apparel-accessories',
     subtype: 'shirts',
+    gender: 'men',
     brand: 'Fusora',
     image:
       'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=800&q=80',
@@ -205,6 +214,7 @@ export const apparelCoreProducts: ApparelProduct[] = [
     was: 1899,
     tab: 'apparel-accessories',
     subtype: 'shirts',
+    gender: 'men',
     brand: 'Fusora',
     image:
       'https://images.unsplash.com/photo-1598033129183-c4f50c736f10?auto=format&fit=crop&w=800&q=80',
@@ -217,6 +227,7 @@ export const apparelCoreProducts: ApparelProduct[] = [
     was: 2299,
     tab: 'apparel-accessories',
     subtype: 'shirts',
+    gender: 'men',
     brand: 'Fusora',
     image:
       'https://images.unsplash.com/photo-1603252109303-2751441dd157?auto=format&fit=crop&w=800&q=80',
@@ -230,6 +241,7 @@ export const apparelCoreProducts: ApparelProduct[] = [
     topDeal: true,
     tab: 'apparel-accessories',
     subtype: 'shirts',
+    gender: 'men',
     brand: 'Fusora',
     image:
       'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=800&q=80',
@@ -242,6 +254,7 @@ export const apparelCoreProducts: ApparelProduct[] = [
     was: 2599,
     tab: 'apparel-accessories',
     subtype: 'shirts',
+    gender: 'men',
     brand: 'Fusora',
     image:
       'https://images.unsplash.com/photo-1467043232984-4adf1429cd94?auto=format&fit=crop&w=800&q=80',

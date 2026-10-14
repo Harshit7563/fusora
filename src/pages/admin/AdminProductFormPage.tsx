@@ -1,6 +1,5 @@
-import { useMemo, useState, type FormEvent } from 'react'
+import { useState, type FormEvent } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { shopCategories } from '../../categories'
 import { apparelSubtypes } from '../../data/apparel'
 import { useCatalog } from '../../hooks/useCatalog'
 import {
@@ -19,25 +18,14 @@ export function AdminProductFormPage() {
   const existing = !isNew ? getAdminProduct(id) : undefined
   usePageTitle(isNew ? 'Add product' : 'Edit product')
   const navigate = useNavigate()
-  const { adminCategories, refresh } = useCatalog()
-
-  const categoryOptions = useMemo(() => {
-    const custom = adminCategories.map((c) => ({
-      id: c.id,
-      label: `${c.emoji} ${c.label}`,
-    }))
-    const builtIn = shopCategories.map((c) => ({
-      id: c.id,
-      label: `${c.emoji} ${c.label}`,
-    }))
-    return [...custom, ...builtIn]
-  }, [adminCategories])
+  const { refresh } = useCatalog()
 
   const [form, setForm] = useState<AdminProductInput>(() => ({
     name: existing?.name || '',
     price: existing?.price || 0,
     was: existing?.was || 0,
-    tab: existing?.tab || 'apparel-accessories',
+    tab: existing?.tab || existing?.gender || 'men',
+    gender: existing?.gender === 'women' ? 'women' : 'men',
     subtype: existing?.subtype || '',
     collection: existing?.collection || '',
     categoryName: existing?.categoryName || '',
@@ -80,10 +68,27 @@ export function AdminProductFormPage() {
       setError('Enter a valid price.')
       return
     }
+    if (form.gender !== 'men' && form.gender !== 'women') {
+      setError('Choose Men or Women category.')
+      return
+    }
+    if (form.gender === 'men' && form.subtype === 'sarees') {
+      setError('Sarees belong in Women — change gender or subtype.')
+      return
+    }
     const product = upsertAdminProduct(
       {
         ...form,
+        tab: form.gender,
+        gender: form.gender,
         was: form.was > 0 ? form.was : form.price,
+        collection:
+          form.collection ||
+          (form.subtype === 'jeans'
+            ? form.gender === 'men'
+              ? 'mens-jeans'
+              : 'womens-jeans'
+            : form.collection),
         sizes: sizesText
           .split(/[,|\n]/)
           .map((s) => s.trim())
@@ -94,8 +99,7 @@ export function AdminProductFormPage() {
           .filter(Boolean),
         categoryName:
           form.categoryName ||
-          categoryOptions.find((c) => c.id === form.tab)?.label.replace(/^.\s/, '') ||
-          form.tab,
+          (form.gender === 'men' ? 'Men' : 'Women'),
       },
       existing?.id,
     )
@@ -167,42 +171,67 @@ export function AdminProductFormPage() {
 
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="block text-[0.7rem] font-semibold tracking-[0.12em] uppercase">
-              Category *
+              Gender category *
               <select
                 className={field}
-                value={form.tab}
-                onChange={(e) =>
-                  setForm((f) => ({ ...f, tab: e.target.value }))
-                }
+                value={form.gender}
+                onChange={(e) => {
+                  const gender = e.target.value as 'men' | 'women'
+                  setForm((f) => ({
+                    ...f,
+                    gender,
+                    tab: gender,
+                    subtype:
+                      gender === 'men' && f.subtype === 'sarees'
+                        ? ''
+                        : f.subtype,
+                    collection:
+                      f.subtype === 'jeans'
+                        ? gender === 'men'
+                          ? 'mens-jeans'
+                          : 'womens-jeans'
+                        : f.collection,
+                  }))
+                }}
               >
-                {categoryOptions.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.label}
-                  </option>
-                ))}
+                <option value="men">Men — men products only</option>
+                <option value="women">Women — women products only</option>
               </select>
             </label>
             <label className="block text-[0.7rem] font-semibold tracking-[0.12em] uppercase">
-              Apparel subtype
+              Product type
               <select
                 className={field}
                 value={form.subtype || ''}
-                onChange={(e) =>
+                onChange={(e) => {
+                  const subtype = e.target.value as AdminProductInput['subtype']
                   setForm((f) => ({
                     ...f,
-                    subtype: e.target.value as AdminProductInput['subtype'],
+                    subtype,
+                    collection:
+                      subtype === 'jeans'
+                        ? f.gender === 'men'
+                          ? 'mens-jeans'
+                          : 'womens-jeans'
+                        : f.collection,
                   }))
-                }
+                }}
               >
-                <option value="">— None —</option>
-                {apparelSubtypes.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.label}
-                  </option>
-                ))}
+                <option value="">— Select —</option>
+                {apparelSubtypes
+                  .filter((s) => form.gender !== 'men' || s.id !== 'sarees')
+                  .map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.label}
+                    </option>
+                  ))}
               </select>
             </label>
           </div>
+          <p className="text-xs text-[#787878]">
+            Shop URLs: /category/{form.gender}
+            {form.subtype ? `/${form.subtype}` : ''}
+          </p>
 
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="block text-[0.7rem] font-semibold tracking-[0.12em] uppercase">

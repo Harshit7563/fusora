@@ -4,27 +4,27 @@ import { SafeImage } from './SafeImage'
 
 const featured = [
   {
-    id: 'sarees',
-    title: 'Sarees',
-    line: 'Silk, Banarasi & handloom.',
-    to: '/category/apparel-accessories/sarees',
+    id: 'men',
+    title: 'Men',
+    line: 'Men only — jeans, shirts & tees.',
+    to: '/category/men',
+    image: '/heroes/hero-denim.jpg',
+  },
+  {
+    id: 'women',
+    title: 'Women',
+    line: 'Women only — sarees & apparel.',
+    to: '/category/women',
     image:
       'https://images.unsplash.com/photo-1756483492198-8ca91227489b?auto=format&fit=crop&w=1200&q=85',
   },
   {
-    id: 'jeans',
-    title: 'Jeans',
-    line: 'Men · Women · Kids denim.',
-    to: '/category/apparel-accessories/jeans',
-    image: '/heroes/hero-denim.jpg',
-  },
-  {
-    id: 'apparel',
-    title: 'Apparel',
-    line: 'Everyday & festive ready-to-wear.',
-    to: '/category/apparel-accessories',
+    id: 'sarees',
+    title: 'Sarees',
+    line: 'Silk, Banarasi & handloom.',
+    to: '/category/women/sarees',
     image:
-      'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=85',
+      'https://images.unsplash.com/photo-1756483492198-8ca91227489b?auto=format&fit=crop&w=1200&q=85',
   },
   {
     id: 'jewelry-eyewear-watches',

@@ -70,7 +70,7 @@ export function AdminProductsPage() {
                     </div>
                   </td>
                   <td className="px-3 py-3 text-[#787878]">
-                    {p.categoryName || p.tab}
+                    {(p.gender || p.tab || '').toString().toUpperCase()}
                     {p.subtype ? ` / ${p.subtype}` : ''}
                   </td>
                   <td className="px-3 py-3 font-medium">{formatMoney(p.price)}</td>

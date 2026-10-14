@@ -1,5 +1,7 @@
 /** Marketplace categories (Categories for you) */
 export type CategoryId =
+  | 'men'
+  | 'women'
   | 'apparel-accessories'
   | 'consumer-electronics'
   | 'sports-entertainment'
@@ -46,6 +48,8 @@ export type ShopCategory = {
 }
 
 export const shopCategories: ShopCategory[] = [
+  { id: 'men', label: 'Men', emoji: '👔' },
+  { id: 'women', label: 'Women', emoji: '👗' },
   { id: 'apparel-accessories', label: 'Apparel & Clothes', emoji: '👕' },
   { id: 'consumer-electronics', label: 'Consumer Electronics', emoji: '📱' },
   { id: 'sports-entertainment', label: 'Sports & Entertainment', emoji: '🎯' },

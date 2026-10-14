@@ -1,4 +1,4 @@
-import type { CategoryId, Product } from '../data'
+import type { CategoryId, Product, ProductGender } from '../data'
 import type { ApparelSubtype } from '../data/apparel'
 
 const PRODUCTS_KEY = 'fusora-admin-products'
@@ -11,6 +11,8 @@ export type AdminCategory = {
   emoji: string
   image?: string
   blurb?: string
+  /** Parent shop gender for Men/Women browsing */
+  gender?: ProductGender
   createdAt: string
 }
 
@@ -19,6 +21,7 @@ export type AdminProductInput = {
   price: number
   was: number
   tab: string
+  gender: ProductGender
   subtype?: ApparelSubtype | ''
   collection?: string
   categoryName?: string
@@ -107,6 +110,15 @@ export function upsertAdminProduct(
   const images = (input.images || [])
     .map((u) => u.trim())
     .filter(Boolean)
+  const gender: ProductGender =
+    input.gender === 'men' || input.gender === 'women' ? input.gender : 'unisex'
+  const tab =
+    input.tab === 'men' || input.tab === 'women'
+      ? input.tab
+      : gender === 'men' || gender === 'women'
+        ? gender
+        : input.tab
+
   const product: Product = {
     id,
     rank: 1,
@@ -114,7 +126,8 @@ export function upsertAdminProduct(
     price: Number(input.price) || 0,
     was: Number(input.was) || Number(input.price) || 0,
     topDeal: Boolean(input.topDeal),
-    tab: input.tab as CategoryId,
+    tab: tab as CategoryId,
+    gender,
     subtype: input.subtype || undefined,
     collection: input.collection?.trim() || undefined,
     categoryName: input.categoryName?.trim() || undefined,

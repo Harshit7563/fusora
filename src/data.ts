@@ -16,6 +16,8 @@ export type { CategoryId, DealTab }
 export { dealTabs, shopCategories }
 export type { ApparelSubtype }
 
+export type ProductGender = 'men' | 'women' | 'unisex'
+
 export type Product = {
   id: string
   rank: number
@@ -26,6 +28,8 @@ export type Product = {
   tab: CategoryId
   /** Apparel & Clothes only */
   subtype?: ApparelSubtype
+  /** men | women | unisex — used for Men/Women category pages */
+  gender?: ProductGender
   /** Source collection slug (e.g. mens-jeans, silk-sarees) */
   collection?: string
   categoryName?: string
@@ -936,6 +940,7 @@ const sareeProducts: Product[] = (
     topDeal: Boolean(p.topDeal),
     tab: 'apparel-accessories' as CategoryId,
     subtype: 'sarees' as ApparelSubtype,
+    gender: 'women',
     collection: p.categorySlug ? String(p.categorySlug) : undefined,
     categoryName: p.categoryName ? String(p.categoryName) : undefined,
     categorySlug: p.categorySlug ? String(p.categorySlug) : undefined,
@@ -957,15 +962,28 @@ const modcartCatalog: Product[] = (
     image,
     Array.isArray(p.images) ? (p.images as string[]) : undefined,
   )
+  const name = String(p.name)
+  const cats = Array.isArray(p.categories)
+    ? (p.categories as string[]).join(' ')
+    : ''
+  const genderBlob = `${name} ${cats}`.toLowerCase()
+  const gender: ProductGender = /women|ladies|kurti|saree|dupatta|lehenga/.test(
+    genderBlob,
+  )
+    ? 'women'
+    : /men|boy/.test(genderBlob)
+      ? 'men'
+      : 'unisex'
   return {
     id: String(p.id),
     rank: Number(p.rank) || i + 1,
-    name: String(p.name),
+    name,
     price: Number(p.price),
     was: Number(p.was) || Number(p.price),
     topDeal: Boolean(p.topDeal),
     tab: (String(p.tab) || 'apparel-accessories') as CategoryId,
     subtype: (p.subtype as ApparelSubtype | undefined) || undefined,
+    gender,
     brand: String(p.brand || 'Modcart'),
     image: images[0] || image,
     images,
@@ -982,6 +1000,11 @@ const denimforgeCatalog: Product[] = (
     Array.isArray(p.images) ? (p.images as string[]) : undefined,
   )
   const collection = String(p.collection || p.categorySlug || 'mens-jeans')
+  const gender: ProductGender = collection.startsWith('womens')
+    ? 'women'
+    : collection.startsWith('mens')
+      ? 'men'
+      : 'unisex'
   return {
     id: String(p.id),
     rank: Number(p.rank) || i + 1,
@@ -991,6 +1014,7 @@ const denimforgeCatalog: Product[] = (
     topDeal: Boolean(p.topDeal),
     tab: 'apparel-accessories' as CategoryId,
     subtype: 'jeans' as ApparelSubtype,
+    gender,
     collection,
     categoryName: p.categoryName ? String(p.categoryName) : undefined,
     categorySlug: collection,
