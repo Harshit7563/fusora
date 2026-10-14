@@ -1,6 +1,23 @@
-import { Instagram, X } from 'lucide-react'
+import { X } from 'lucide-react'
 import { useEffect, useId, useState, type FormEvent } from 'react'
 import { SUPPORT_EMAIL, SUPPORT_MAILTO } from '../brand'
+
+function InstagramIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      className={className}
+      aria-hidden
+    >
+      <rect x="3" y="3" width="18" height="18" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+    </svg>
+  )
+}
 
 const STORAGE_KEY = 'fusora-newsletter-popup'
 const DELAY_MS = 20_000
@@ -183,7 +200,7 @@ export function NewsletterPopup() {
                   className="text-bb-muted transition hover:text-bb-blue"
                   aria-label="Instagram"
                 >
-                  <Instagram className="size-4" strokeWidth={1.5} />
+                  <InstagramIcon className="size-4" />
                 </a>
               </div>
             </>
