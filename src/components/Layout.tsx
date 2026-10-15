@@ -10,12 +10,17 @@ export function Layout() {
   const { pathname } = useLocation()
   const { cart, cartOpen, closeCart, setQty, removeFromCart, toast } =
     useStore()
+  // announcement (~32px) + header bar (~56–60px)
   const needsHeaderOffset = pathname !== '/'
 
   return (
     <div id="top" className="min-h-svh bg-white">
       <Header />
-      <div className={needsHeaderOffset ? 'pt-[4.25rem] sm:pt-[4.75rem]' : ''}>
+      <div
+        className={
+          needsHeaderOffset ? 'pt-[5.5rem] sm:pt-[5.75rem]' : undefined
+        }
+      >
         <Outlet />
       </div>
       <Footer />
@@ -29,7 +34,7 @@ export function Layout() {
       <LocationModal />
       <NewsletterPopup />
       {toast && (
-        <div className="fixed bottom-[max(6.5rem,calc(env(safe-area-inset-bottom)+5.5rem))] left-1/2 z-[70] max-w-[calc(100vw-2rem)] -translate-x-1/2 truncate bg-bb-blue px-5 py-2.5 text-sm font-medium tracking-wide text-white shadow-lg lg:bottom-[max(1.5rem,env(safe-area-inset-bottom))]">
+        <div className="fixed bottom-[max(6.5rem,calc(env(safe-area-inset-bottom)+5.5rem))] left-1/2 z-[70] max-w-[calc(100vw-2rem)] -translate-x-1/2 truncate bg-[#6b161d] px-5 py-2.5 text-sm font-medium tracking-wide text-white shadow-lg lg:bottom-[max(1.5rem,env(safe-area-inset-bottom))]">
           {toast}
         </div>
       )}

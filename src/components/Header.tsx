@@ -1,4 +1,5 @@
 import {
+  ChevronDown,
   Heart,
   Menu,
   Search,
@@ -11,16 +12,19 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useStore } from '../context/StoreContext'
 import { FusoraLogo } from './FusoraLogo'
 
-const primaryNav = [
-  { label: 'Men', to: '/category/men' },
-  { label: 'Women', to: '/category/women' },
+const leftNav = [
   { label: 'Sarees', to: '/category/women/sarees' },
+  { label: 'Women', to: '/category/women' },
+  { label: 'Men', to: '/category/men' },
+]
+
+const rightNav = [
   { label: 'Jeans', to: '/category/men/jeans' },
   { label: 'Jewellery', to: '/category/jewelry-eyewear-watches' },
-  { label: 'New In', to: '/deals' },
-  { label: 'Sale', to: '/deals', hot: true },
-  { label: 'Our Story', to: '/about' },
+  { label: 'Sale', to: '/deals' },
 ]
+
+const mobileNav = [...leftNav, ...rightNav, { label: 'New In', to: '/deals' }]
 
 export function Header() {
   const navigate = useNavigate()
@@ -40,7 +44,7 @@ export function Header() {
   }, [location.pathname])
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 48)
+    const onScroll = () => setScrolled(window.scrollY > 40)
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
@@ -48,15 +52,10 @@ export function Header() {
 
   useEffect(() => {
     if (!menuOpen) return
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setMenuOpen(false)
-    }
-    window.addEventListener('keydown', onKey)
     const prev = document.body.style.overflow
     document.body.style.overflow = 'hidden'
     return () => {
       document.body.style.overflow = prev
-      window.removeEventListener('keydown', onKey)
     }
   }, [menuOpen])
 
@@ -65,226 +64,206 @@ export function Header() {
     const term = q.trim()
     navigate(term ? `/search?q=${encodeURIComponent(term)}` : '/deals')
     setSearchOpen(false)
-    setMenuOpen(false)
   }
 
-  const closeMenu = () => setMenuOpen(false)
-  const ink = overHero ? 'text-white' : 'text-[#1a1a1a]'
-  const iconBtn =
-    'grid size-10 place-items-center transition hover:opacity-70'
+  const ink = overHero ? 'text-white' : 'text-[#121212]'
+  const barBg = overHero
+    ? 'bg-transparent'
+    : 'border-b border-[#e5ddd6] bg-white'
 
   return (
-    <header
-      className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
-        overHero ? 'bg-transparent' : 'border-b border-[#e8e0d8] bg-white'
-      }`}
-    >
-      {/* Koskii-style bar: MENU · SEARCH | LOGO | WISH · BAG · ACCOUNT */}
-      <div className="mx-auto grid h-14 max-w-[1440px] grid-cols-[1fr_auto_1fr] items-center px-3 sm:h-[3.75rem] sm:px-6 lg:px-10">
-        <div className={`flex items-center gap-4 sm:gap-7 ${ink}`}>
+    <header className={`fixed inset-x-0 top-0 z-50 ${barBg}`}>
+      {/* Announcement — Kankatala style */}
+      <div className="bg-[#6b161d] text-center">
+        <p className="truncate px-3 py-1.5 text-[0.68rem] tracking-wide text-white sm:text-[0.72rem]">
+          Free Shipping within India*
+        </p>
+      </div>
+
+      <div
+        className={`mx-auto flex h-14 max-w-[1400px] items-center gap-2 px-3 sm:h-[3.75rem] sm:px-6 lg:px-8 ${ink}`}
+      >
+        {/* Mobile menu */}
+        <button
+          type="button"
+          className="grid size-9 place-items-center lg:hidden"
+          aria-label="Menu"
+          onClick={() => setMenuOpen(true)}
+        >
+          <Menu className="size-5" strokeWidth={1.4} />
+        </button>
+
+        <div className="hidden items-center gap-3 lg:flex">
           <button
             type="button"
-            className="flex items-center gap-2 text-[0.7rem] font-medium tracking-[0.18em] uppercase transition hover:opacity-75"
-            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-            aria-expanded={menuOpen}
-            onClick={() => {
-              setMenuOpen((v) => !v)
-              setSearchOpen(false)
-            }}
+            className="flex items-center gap-1.5 text-[0.7rem] tracking-wide"
+            aria-label="Currency"
           >
-            {menuOpen ? (
-              <X className="size-[1.15rem]" strokeWidth={1.35} />
-            ) : (
-              <Menu className="size-[1.15rem]" strokeWidth={1.35} />
-            )}
-            <span>Menu</span>
+            <span className="text-base leading-none">🇮🇳</span>
+            INR
+            <ChevronDown className="size-3.5 opacity-70" strokeWidth={1.5} />
           </button>
-          <button
-            type="button"
-            className="flex items-center gap-2 text-[0.7rem] font-medium tracking-[0.18em] uppercase transition hover:opacity-75"
-            aria-label="Search"
-            onClick={() => {
-              setSearchOpen((v) => !v)
-              setMenuOpen(false)
-            }}
-          >
-            <Search className="size-[1.1rem]" strokeWidth={1.35} />
-            <span>Search</span>
-          </button>
-        </div>
-
-        <div className="justify-self-center px-2">
-          <FusoraLogo compact onDark={overHero} centered />
-        </div>
-
-        <div className={`flex items-center justify-end gap-0.5 sm:gap-1.5 ${ink}`}>
-          <Link to="/wishlist" className={`relative ${iconBtn}`} aria-label="Wishlist">
-            <Heart className="size-[1.25rem]" strokeWidth={1.25} />
+          <Link to="/wishlist" className="relative grid size-9 place-items-center" aria-label="Wishlist">
+            <Heart className="size-[1.15rem]" strokeWidth={1.35} />
             {wishlist.size > 0 && (
-              <span
-                className={`absolute top-1.5 right-1.5 size-1.5 rounded-full ${
-                  overHero ? 'bg-[#e8c84a]' : 'bg-[#5c2a2a]'
-                }`}
-              />
+              <span className="absolute top-1.5 right-1.5 size-1.5 rounded-full bg-[#d48c45]" />
             )}
+          </Link>
+        </div>
+
+        {/* Desktop nav + logo */}
+        <div className="flex min-w-0 flex-1 items-center justify-center gap-5 lg:gap-7">
+          <nav className="hidden items-center gap-5 lg:flex xl:gap-7">
+            {leftNav.map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                className="flex items-center gap-0.5 text-[0.78rem] tracking-wide transition hover:opacity-70"
+              >
+                {item.label}
+                <ChevronDown className="size-3 opacity-60" strokeWidth={1.5} />
+              </Link>
+            ))}
+          </nav>
+
+          <FusoraLogo compact onDark={overHero} centered />
+
+          <nav className="hidden items-center gap-5 lg:flex xl:gap-7">
+            {rightNav.map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                className="flex items-center gap-0.5 text-[0.78rem] tracking-wide transition hover:opacity-70"
+              >
+                {item.label}
+                <ChevronDown className="size-3 opacity-60" strokeWidth={1.5} />
+              </Link>
+            ))}
+          </nav>
+        </div>
+
+        <div className="flex items-center gap-0.5 sm:gap-1">
+          <button
+            type="button"
+            className="grid size-9 place-items-center"
+            aria-label="Search"
+            onClick={() => setSearchOpen((v) => !v)}
+          >
+            <Search className="size-[1.15rem]" strokeWidth={1.35} />
+          </button>
+          <Link
+            to="/account"
+            className="hidden size-9 place-items-center sm:grid"
+            aria-label="Account"
+          >
+            <User className="size-[1.15rem]" strokeWidth={1.35} />
           </Link>
           <button
             type="button"
             onClick={openCart}
-            className={`relative ${iconBtn}`}
+            className="relative grid size-9 place-items-center"
             aria-label="Cart"
           >
-            <ShoppingBag className="size-[1.25rem]" strokeWidth={1.25} />
-            {cartCount > 0 && (
-              <span
-                className={`absolute top-1 right-1 grid min-w-[1rem] place-items-center rounded-full px-1 text-[0.55rem] font-semibold ${
-                  overHero
-                    ? 'bg-white text-[#5c2a2a]'
-                    : 'bg-[#5c2a2a] text-white'
-                }`}
-              >
-                {cartCount}
-              </span>
-            )}
+            <ShoppingBag className="size-[1.15rem]" strokeWidth={1.35} />
+            <span className="absolute top-1 right-0.5 text-[0.6rem] font-medium">
+              {cartCount}
+            </span>
           </button>
-          <Link
-            to="/account"
-            className={`${iconBtn} hidden sm:grid`}
-            aria-label="Account"
-          >
-            <User className="size-[1.25rem]" strokeWidth={1.25} />
-          </Link>
         </div>
       </div>
 
       {searchOpen && (
-        <div
-          className={`border-t px-3 py-3 sm:px-6 ${
-            overHero
-              ? 'border-white/20 bg-black/40 backdrop-blur-md'
-              : 'border-[#e8e0d8] bg-white'
-          }`}
-        >
+        <div className="border-t border-[#e5ddd6] bg-white px-3 py-3 sm:px-6">
           <form
             onSubmit={onSearch}
-            className="mx-auto flex max-w-xl overflow-hidden rounded-sm border border-[#e8e0d8] bg-white"
+            className="mx-auto flex max-w-xl border border-[#e5ddd6]"
           >
-            <Search
-              className="ml-4 size-4 shrink-0 self-center text-[#776865]"
-              strokeWidth={1.5}
-            />
             <input
               value={q}
               onChange={(e) => setQ(e.target.value)}
               placeholder="Search sarees, jeans, jewellery…"
-              className="min-w-0 flex-1 bg-transparent px-3 py-3 text-sm text-[#1a1a1a] outline-none"
+              className="min-w-0 flex-1 px-4 py-3 text-sm text-[#121212] outline-none"
               autoFocus
             />
             <button
               type="submit"
-              className="bg-[#5c2a2a] px-5 text-[0.65rem] font-semibold tracking-[0.14em] text-white uppercase"
+              className="bg-[#6b161d] px-5 text-[0.68rem] font-medium tracking-[0.14em] text-white uppercase"
             >
-              Go
+              Search
             </button>
           </form>
         </div>
       )}
 
       {menuOpen && (
-        <div className="fixed inset-0 z-[60]">
+        <div className="fixed inset-0 z-[60] lg:hidden">
           <button
             type="button"
             className="absolute inset-0 bg-black/45"
-            aria-label="Close menu"
-            onClick={closeMenu}
+            aria-label="Close"
+            onClick={() => setMenuOpen(false)}
           />
-          <div className="absolute inset-y-0 left-0 flex w-[min(100%,20rem)] flex-col bg-white shadow-xl safe-pb">
-            <div className="flex h-16 items-center justify-between border-b border-[#e8e0d8] px-4">
+          <div className="absolute inset-y-0 left-0 flex w-[min(100%,19rem)] flex-col bg-white safe-pb">
+            <div className="flex h-14 items-center justify-between border-b border-[#e5ddd6] px-4">
               <FusoraLogo compact />
               <button
                 type="button"
-                onClick={closeMenu}
-                className="grid size-10 place-items-center"
-                aria-label="Close"
+                onClick={() => setMenuOpen(false)}
+                className="grid size-9 place-items-center"
               >
                 <X className="size-5" strokeWidth={1.4} />
               </button>
             </div>
-
-            <div className="flex flex-wrap gap-2 border-b border-[#e8e0d8] px-4 py-3">
+            <div className="flex gap-2 border-b border-[#e5ddd6] px-4 py-3">
               {isLoggedIn ? (
                 <>
                   <Link
                     to="/account"
-                    onClick={closeMenu}
-                    className="bg-[#5c2a2a] px-4 py-2.5 text-[0.65rem] font-semibold tracking-[0.14em] text-white uppercase"
+                    onClick={() => setMenuOpen(false)}
+                    className="bg-[#6b161d] px-4 py-2 text-[0.68rem] tracking-wide text-white uppercase"
                   >
-                    My account
+                    Account
                   </Link>
                   <button
                     type="button"
                     onClick={() => {
                       signOut()
-                      closeMenu()
+                      setMenuOpen(false)
                     }}
-                    className="border border-[#e8e0d8] px-4 py-2.5 text-[0.65rem] font-semibold tracking-[0.14em] uppercase"
+                    className="border border-[#e5ddd6] px-4 py-2 text-[0.68rem] tracking-wide uppercase"
                   >
                     Log out
                   </button>
                 </>
               ) : (
-                <>
-                  <Link
-                    to="/account"
-                    onClick={closeMenu}
-                    className="bg-[#5c2a2a] px-4 py-2.5 text-[0.65rem] font-semibold tracking-[0.14em] text-white uppercase"
-                  >
-                    Login
-                  </Link>
-                  <Link
-                    to="/register"
-                    onClick={closeMenu}
-                    className="border border-[#e8e0d8] px-4 py-2.5 text-[0.65rem] font-semibold tracking-[0.14em] uppercase"
-                  >
-                    Register
-                  </Link>
-                </>
+                <Link
+                  to="/account"
+                  onClick={() => setMenuOpen(false)}
+                  className="bg-[#6b161d] px-4 py-2 text-[0.68rem] tracking-wide text-white uppercase"
+                >
+                  Log in
+                </Link>
               )}
             </div>
-
-            <ul className="flex-1 overflow-y-auto px-2 py-2">
-              {primaryNav.map((item) => (
-                <li key={item.to + item.label}>
+            <ul className="flex-1 overflow-y-auto py-2">
+              {mobileNav.map((item) => (
+                <li key={item.to}>
                   <Link
                     to={item.to}
-                    onClick={closeMenu}
-                    className="flex items-center gap-2 px-3 py-3.5 text-sm font-medium tracking-[0.1em] text-[#1a1a1a] uppercase transition active:bg-[#f7f5f3]"
+                    onClick={() => setMenuOpen(false)}
+                    className="block px-5 py-3.5 text-sm tracking-wide"
                   >
                     {item.label}
-                    {item.hot && (
-                      <span className="bg-[#5c2a2a] px-1.5 py-0.5 text-[0.55rem] font-bold tracking-wide text-[#e8c84a]">
-                        HOT
-                      </span>
-                    )}
                   </Link>
                 </li>
               ))}
               <li>
                 <Link
                   to="/wishlist"
-                  onClick={closeMenu}
-                  className="block px-3 py-3.5 text-sm font-medium tracking-[0.1em] uppercase"
+                  onClick={() => setMenuOpen(false)}
+                  className="block px-5 py-3.5 text-sm tracking-wide"
                 >
                   Wishlist
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/support"
-                  onClick={closeMenu}
-                  className="block px-3 py-3.5 text-sm font-medium tracking-[0.1em] uppercase"
-                >
-                  Contact
                 </Link>
               </li>
             </ul>
