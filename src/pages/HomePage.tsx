@@ -6,17 +6,25 @@ import { ProductCard } from '../components/ProductCard'
 import { useCatalog } from '../hooks/useCatalog'
 import type { Product } from '../data'
 
-const PAGE = 24
+const PAGE = 12
 
 const trendTabs: {
   id: string
   label: string
   filter: (p: Product) => boolean
 }[] = [
-  { id: 'all', label: 'New Arrivals', filter: () => true },
+  { id: 'all', label: 'All', filter: () => true },
   { id: 'sarees', label: 'Sarees', filter: (p) => p.subtype === 'sarees' },
-  { id: 'women', label: 'Women', filter: (p) => p.gender === 'women' || p.tab === 'women' },
-  { id: 'men', label: 'Men', filter: (p) => p.gender === 'men' || p.tab === 'men' },
+  {
+    id: 'women',
+    label: 'Women',
+    filter: (p) => p.gender === 'women' || p.tab === 'women',
+  },
+  {
+    id: 'men',
+    label: 'Men',
+    filter: (p) => p.gender === 'men' || p.tab === 'men',
+  },
   { id: 'jeans', label: 'Jeans', filter: (p) => p.subtype === 'jeans' },
   {
     id: 'jewellery',
@@ -51,14 +59,6 @@ const shopCategories = [
   },
 ]
 
-const occasions = [
-  { label: 'Wedding', to: '/category/women/sarees' },
-  { label: 'Festive', to: '/category/women' },
-  { label: 'Casual', to: '/category/men' },
-  { label: 'Formal', to: '/category/men/jeans' },
-  { label: 'Party', to: '/deals' },
-]
-
 export function HomePage() {
   usePageTitle()
   const { products } = useCatalog()
@@ -76,14 +76,27 @@ export function HomePage() {
     <main className="bg-white">
       <Hero />
 
-      {/* TRENDING — all products with tabs */}
-      <section className="px-3 py-12 sm:px-6 sm:py-16 lg:px-10">
+      {/* Featured products — Nalli */}
+      <section className="px-3 py-12 sm:px-6 sm:py-14 lg:px-10">
         <div className="mx-auto max-w-[1280px]">
-          <h2 className="text-center font-serif text-3xl tracking-wide text-[#6b161d] sm:text-4xl">
-            Trending
-          </h2>
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <h2 className="font-serif text-3xl tracking-wide text-[#1a1a1a] sm:text-4xl">
+                Featured products
+              </h2>
+              <p className="mt-2 max-w-lg text-sm text-[#6e6a65]">
+                Fresh weaves, added daily — discover pieces handpicked for you
+              </p>
+            </div>
+            <Link
+              to="/deals"
+              className="text-sm font-medium text-[#8b1538] transition hover:underline"
+            >
+              View All →
+            </Link>
+          </div>
 
-          <div className="mt-7 flex justify-center gap-2 overflow-x-auto pb-1 sm:mt-8 sm:gap-2.5">
+          <div className="mt-6 flex gap-2 overflow-x-auto pb-1">
             {trendTabs.map((t) => (
               <button
                 key={t.id}
@@ -100,7 +113,7 @@ export function HomePage() {
             ))}
           </div>
 
-          <div className="mt-9 grid grid-cols-2 gap-x-3 gap-y-8 sm:mt-11 sm:gap-x-5 md:grid-cols-3 lg:grid-cols-4">
+          <div className="mt-8 grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-5 md:grid-cols-3 lg:grid-cols-4">
             {shown.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}
@@ -111,7 +124,7 @@ export function HomePage() {
               <button
                 type="button"
                 onClick={() => setVisible((n) => n + PAGE)}
-                className="border border-[#6b161d] px-10 py-3 text-[0.7rem] font-medium tracking-[0.16em] text-[#6b161d] uppercase transition hover:bg-[#6b161d] hover:text-white"
+                className="btn-maroon"
               >
                 Load more
               </button>
@@ -120,13 +133,21 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* Shop Categories */}
-      <section className="border-t border-[#e5ddd6] px-3 py-12 sm:px-6 sm:py-16 lg:px-10">
+      {/* Shop by category */}
+      <section className="border-t border-[#ebe6df] bg-[#faf8f5] px-3 py-12 sm:px-6 sm:py-14 lg:px-10">
         <div className="mx-auto max-w-[1280px]">
-          <h2 className="text-center font-serif text-3xl tracking-wide text-[#6b161d] sm:text-4xl">
-            Shop Categories
-          </h2>
-          <div className="mt-9 grid grid-cols-2 gap-3 sm:mt-11 sm:grid-cols-4 sm:gap-4">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <h2 className="font-serif text-3xl tracking-wide text-[#1a1a1a] sm:text-4xl">
+              Shop by category
+            </h2>
+            <Link
+              to="/category/women"
+              className="text-sm font-medium text-[#8b1538] hover:underline"
+            >
+              View All →
+            </Link>
+          </div>
+          <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
             {shopCategories.map((c) => (
               <Link
                 key={c.to}
@@ -138,8 +159,8 @@ export function HomePage() {
                   alt={c.title}
                   className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.03]"
                 />
-                <div className="absolute inset-0 bg-black/30" />
-                <p className="absolute inset-x-0 bottom-5 text-center font-serif text-xl tracking-[0.12em] text-white uppercase sm:text-2xl">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
+                <p className="absolute inset-x-0 bottom-5 text-center text-sm font-medium tracking-[0.16em] text-white uppercase sm:text-base">
                   {c.title}
                 </p>
               </Link>
@@ -148,42 +169,32 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* Wedding banner */}
-      <section className="relative min-h-[42svh] overflow-hidden sm:min-h-[50svh]">
-        <img
-          src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=2000&q=85"
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover object-[center_20%]"
-        />
-        <div className="absolute inset-0 bg-[#5a3826]/55" />
-        <div className="relative flex min-h-[42svh] flex-col items-center justify-center px-4 py-16 text-center text-white sm:min-h-[50svh]">
-          <h2 className="font-serif text-4xl tracking-wide sm:text-5xl">
-            Wedding Collection
-          </h2>
-          <p className="mt-3 max-w-md font-serif text-lg italic text-white/90">
-            Pieces chosen for the moments that matter.
-          </p>
-          <Link
-            to="/category/women/sarees"
-            className="btn-outline-light mt-8 inline-flex"
-          >
-            Shop Kanchipuram
-          </Link>
-        </div>
-      </section>
-
-      {/* Shop by Occasion */}
-      <section className="px-3 py-12 sm:px-6 sm:py-16 lg:px-10">
-        <div className="mx-auto max-w-[900px]">
-          <h2 className="text-center font-serif text-3xl tracking-wide text-[#6b161d] sm:text-4xl">
-            Shop by Occasion
-          </h2>
-          <div className="mt-8 flex flex-wrap justify-center gap-2.5 sm:mt-10">
-            {occasions.map((o) => (
-              <Link key={o.label} to={o.to} className="pill-tab">
-                {o.label}
-              </Link>
-            ))}
+      {/* Promo banner */}
+      <section className="relative mx-auto max-w-[1440px] px-2 py-6 sm:px-3 lg:px-4">
+        <div className="relative min-h-[40svh] overflow-hidden sm:min-h-[48svh]">
+          <div
+            className="pointer-events-none absolute inset-3 z-[1] border border-[#c4a574]/60"
+            aria-hidden
+          />
+          <img
+            src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=2000&q=85"
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover object-[center_20%]"
+          />
+          <div className="absolute inset-0 bg-black/40" />
+          <div className="relative z-[2] flex min-h-[40svh] flex-col items-center justify-center px-4 py-16 text-center text-white sm:min-h-[48svh]">
+            <h2 className="font-serif text-4xl tracking-[0.06em] uppercase sm:text-5xl">
+              Wedding Collection
+            </h2>
+            <p className="mt-3 max-w-md text-sm text-white/90 sm:text-base">
+              Pieces chosen for the celebrations that last forever
+            </p>
+            <Link
+              to="/category/women/sarees"
+              className="btn-gold mt-8 inline-flex"
+            >
+              Explore Now
+            </Link>
           </div>
         </div>
       </section>

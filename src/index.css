@@ -1,29 +1,29 @@
 @import 'tailwindcss';
 
 @theme {
-  /* Kankatala-inspired heritage commerce */
-  --font-sans: 'Roboto', Arial, Helvetica, sans-serif;
-  --font-serif: 'Cormorant', Georgia, 'Times New Roman', serif;
+  /* Nalli-inspired silk house commerce */
+  --font-sans: 'DM Sans', system-ui, sans-serif;
+  --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
 
-  --color-bb-blue: #6b161d;
-  --color-bb-blue-dark: #541218;
-  --color-bb-blue-deep: #3a0c10;
-  --color-bb-yellow: #d48c45;
-  --color-bb-link: #6b161d;
-  --color-bb-gray: #f5f3f1;
-  --color-bb-border: #e5ddd6;
-  --color-bb-text: #121212;
-  --color-bb-muted: #6b6560;
-  --color-bb-price: #121212;
-  --color-bb-save: #6b161d;
+  --color-bb-blue: #8b1538;
+  --color-bb-blue-dark: #6f102c;
+  --color-bb-blue-deep: #4a0a1e;
+  --color-bb-yellow: #c4a574;
+  --color-bb-link: #8b1538;
+  --color-bb-gray: #f7f5f2;
+  --color-bb-border: #ebe6df;
+  --color-bb-text: #1a1a1a;
+  --color-bb-muted: #6e6a65;
+  --color-bb-price: #1a1a1a;
+  --color-bb-save: #8b1538;
 
-  --color-fusora-wine: #6b161d;
-  --color-fusora-wine-soft: #8a2a32;
+  --color-fusora-wine: #8b1538;
+  --color-fusora-wine-soft: #a82a4a;
   --color-fusora-cream: #ffffff;
-  --color-fusora-ivory: #ffffff;
-  --color-fusora-gold: #d48c45;
-  --color-fusora-sand: #f5f3f1;
-  --color-fusora-brown: #5a3826;
+  --color-fusora-ivory: #faf8f5;
+  --color-fusora-gold: #c4a574;
+  --color-fusora-sand: #f7f5f2;
+  --color-fusora-brown: #5c4033;
 }
 
 @layer base {
@@ -41,7 +41,7 @@
     min-height: 100svh;
     font-family: var(--font-sans);
     font-weight: 400;
-    color: rgba(18, 18, 18, 0.85);
+    color: rgba(26, 26, 26, 0.88);
     background: #ffffff;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
@@ -71,7 +71,7 @@
   .font-serif {
     font-family: var(--font-serif);
     font-weight: 500;
-    color: #121212;
+    color: #1a1a1a;
   }
 }
 
@@ -82,37 +82,73 @@
     letter-spacing: 0.02em;
   }
 
+  .btn-gold {
+    border: none;
+    color: #fff;
+    background: linear-gradient(180deg, #d4b896 0%, #c4a574 55%, #b8956c 100%);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-size: 0.72rem;
+    font-weight: 500;
+    padding: 0.9rem 1.85rem;
+    border-radius: 0.35rem;
+    transition: filter 0.2s ease, transform 0.2s ease;
+  }
+
+  .btn-gold:hover {
+    filter: brightness(1.05);
+  }
+
   .btn-outline-light {
     border: 1px solid #fff;
     color: #fff;
     background: transparent;
-    letter-spacing: 0.16em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
-    font-size: 0.7rem;
+    font-size: 0.72rem;
     font-weight: 500;
     padding: 0.85rem 1.75rem;
+    border-radius: 0.35rem;
     transition: background 0.25s ease, color 0.25s ease;
   }
 
   .btn-outline-light:hover {
     background: #fff;
-    color: #121212;
+    color: #1a1a1a;
+  }
+
+  .btn-maroon {
+    border: 1px solid #8b1538;
+    color: #fff;
+    background: #8b1538;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-size: 0.72rem;
+    font-weight: 500;
+    padding: 0.85rem 1.75rem;
+    border-radius: 0.35rem;
+    transition: background 0.2s ease;
+  }
+
+  .btn-maroon:hover {
+    background: #6f102c;
   }
 
   .pill-tab {
-    border: 1px solid #6b161d;
-    color: #6b161d;
+    border: 1px solid #ebe6df;
+    color: #1a1a1a;
     background: #fff;
     border-radius: 999px;
-    padding: 0.45rem 1rem;
+    padding: 0.5rem 1.1rem;
     font-size: 0.75rem;
-    font-weight: 400;
+    font-weight: 500;
     white-space: nowrap;
-    transition: background 0.2s ease, color 0.2s ease;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
   }
 
   .pill-tab[data-active='true'] {
-    background: #6b161d;
+    background: #8b1538;
+    border-color: #8b1538;
     color: #fff;
   }
 

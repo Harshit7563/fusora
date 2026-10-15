@@ -42,24 +42,24 @@ const cols = [
 
 export function Footer() {
   return (
-    <footer className="border-t border-[#e5ddd6] bg-[#f5f3f1] text-[#121212]">
+    <footer className="border-t border-[#ebe6df] bg-[#faf8f5] text-[#1a1a1a]">
       <div className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 lg:px-10 lg:py-14">
         <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-4">
           <div>
             <FusoraLogo compact />
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-[#6b6560]">
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-[#6e6a65]">
               Handpicked sarees, apparel & jewellery from {COMPANY_NAME}.
             </p>
             <a
               href={SUPPORT_MAILTO}
-              className="mt-3 inline-block text-sm text-[#6b161d] hover:underline"
+              className="mt-3 inline-block text-sm text-[#8b1538] hover:underline"
             >
               {SUPPORT_EMAIL}
             </a>
           </div>
           {cols.map((col) => (
             <div key={col.title}>
-              <h3 className="mb-4 font-serif text-lg text-[#6b161d]">
+              <h3 className="mb-4 text-sm font-semibold tracking-[0.12em] text-[#1a1a1a] uppercase">
                 {col.title}
               </h3>
               <ul className="space-y-2.5">
@@ -67,7 +67,7 @@ export function Footer() {
                   <li key={l.to + l.label}>
                     <Link
                       to={l.to}
-                      className="text-sm text-[#6b6560] transition hover:text-[#6b161d]"
+                      className="text-sm text-[#6e6a65] transition hover:text-[#8b1538]"
                     >
                       {l.label}
                     </Link>
@@ -78,11 +78,11 @@ export function Footer() {
           ))}
         </div>
       </div>
-      <div className="border-t border-[#e5ddd6] bg-white">
+      <div className="border-t border-[#ebe6df] bg-white">
         <div className="mx-auto flex max-w-[1280px] flex-col gap-2 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-10">
-          <p className="text-[0.7rem] text-[#6b6560]">
+          <p className="text-[0.7rem] text-[#6e6a65]">
             © {new Date().getFullYear()} {COMPANY_NAME}. Fusora (
-            <a href={SITE_URL} className="hover:text-[#6b161d]">
+            <a href={SITE_URL} className="hover:text-[#8b1538]">
               {SITE_DOMAIN}
             </a>
             ).

@@ -165,8 +165,8 @@ export function CategoryPage() {
 
   return (
     <main className="bg-white">
-      {/* Category banner — Kankatala */}
-      <div className="relative h-[26svh] min-h-[160px] overflow-hidden bg-[#5a3826] sm:h-[32svh]">
+      {/* Category banner */}
+      <div className="relative h-[26svh] min-h-[160px] overflow-hidden bg-[#5c4033] sm:h-[32svh]">
         <img
           src={bannerImage}
           alt=""
@@ -181,18 +181,18 @@ export function CategoryPage() {
       </div>
 
       <div className="mx-auto max-w-[1280px] px-3 py-6 sm:px-6 lg:px-10">
-        <nav className="mb-6 text-xs text-[#6b6560]">
-          <Link to="/" className="hover:text-[#6b161d]">
+        <nav className="mb-6 text-xs text-[#6e6a65]">
+          <Link to="/" className="hover:text-[#8b1538]">
             Home
           </Link>
           <span className="mx-2">|</span>
-          <Link to={`/category/${active}`} className="hover:text-[#6b161d]">
+          <Link to={`/category/${active}`} className="hover:text-[#8b1538]">
             {meta.label}
           </Link>
           {subtypeMeta && (
             <>
               <span className="mx-2">|</span>
-              <span className="text-[#121212]">{subtypeMeta.label}</span>
+              <span className="text-[#1a1a1a]">{subtypeMeta.label}</span>
             </>
           )}
         </nav>
@@ -294,7 +294,7 @@ export function CategoryPage() {
               <Link
                 key={c.id}
                 to={`/category/${active}/sarees/${c.id}`}
-                className="group relative aspect-[4/5] overflow-hidden bg-[#f5f3f1]"
+                className="group relative aspect-[4/5] overflow-hidden bg-[#f7f5f2]"
               >
                 {c.cover ? (
                   <SafeImage
@@ -317,28 +317,28 @@ export function CategoryPage() {
 
         {(showProductGrid || showSareeAllGrid || denimCollection) && (
           <div className="grid gap-8 lg:grid-cols-[220px_1fr]">
-            {/* Filter sidebar — Kankatala */}
+            {/* Filter sidebar */}
             <aside className="hidden lg:block">
-              <h2 className="mb-4 font-serif text-2xl text-[#6b161d]">Filter</h2>
-              <div className="border-t border-[#e5ddd6] py-4">
+              <h2 className="mb-4 font-serif text-2xl text-[#8b1538]">Filter</h2>
+              <div className="border-t border-[#ebe6df] py-4">
                 <p className="mb-3 flex items-center justify-between text-sm font-medium">
                   Availability <ChevronDown className="size-4" />
                 </p>
-                <label className="mb-2 flex items-center gap-2 text-sm text-[#6b6560]">
+                <label className="mb-2 flex items-center gap-2 text-sm text-[#6e6a65]">
                   <input
                     type="checkbox"
                     checked={inStockOnly}
                     onChange={(e) => setInStockOnly(e.target.checked)}
-                    className="accent-[#6b161d]"
+                    className="accent-[#8b1538]"
                   />
                   In stock ({list.length})
                 </label>
-                <label className="flex items-center gap-2 text-sm text-[#6b6560]">
-                  <input type="checkbox" disabled className="accent-[#6b161d]" />
+                <label className="flex items-center gap-2 text-sm text-[#6e6a65]">
+                  <input type="checkbox" disabled className="accent-[#8b1538]" />
                   Out of stock (0)
                 </label>
               </div>
-              <div className="border-t border-[#e5ddd6] py-4">
+              <div className="border-t border-[#ebe6df] py-4">
                 <p className="mb-3 flex items-center justify-between text-sm font-medium">
                   Category <ChevronDown className="size-4" />
                 </p>
@@ -356,8 +356,8 @@ export function CategoryPage() {
                       }
                       className={`block text-sm ${
                         subtype === ('id' in s ? s.id : null)
-                          ? 'text-[#6b161d]'
-                          : 'text-[#6b6560] hover:text-[#6b161d]'
+                          ? 'text-[#8b1538]'
+                          : 'text-[#6e6a65] hover:text-[#8b1538]'
                       }`}
                     >
                       {s.label}
@@ -369,19 +369,19 @@ export function CategoryPage() {
 
             <div>
               {showSareeAllGrid && showSareeLanding && (
-                <h2 className="mb-6 font-serif text-2xl text-[#6b161d] sm:text-3xl">
+                <h2 className="mb-6 font-serif text-2xl text-[#8b1538] sm:text-3xl">
                   All sarees
                 </h2>
               )}
 
-              <div className="mb-5 flex items-center justify-between gap-3 border-b border-[#e5ddd6] pb-4">
-                <p className="text-sm text-[#6b6560]">{list.length} items</p>
-                <label className="flex items-center gap-2 text-sm text-[#6b6560]">
+              <div className="mb-5 flex items-center justify-between gap-3 border-b border-[#ebe6df] pb-4">
+                <p className="text-sm text-[#6e6a65]">{list.length} items</p>
+                <label className="flex items-center gap-2 text-sm text-[#6e6a65]">
                   Sort by
                   <select
                     value={sort}
                     onChange={(e) => setSort(e.target.value)}
-                    className="border border-[#e5ddd6] bg-white px-2 py-1.5 text-sm text-[#121212] outline-none"
+                    className="border border-[#ebe6df] bg-white px-2 py-1.5 text-sm text-[#1a1a1a] outline-none"
                   >
                     <option value="featured">Featured</option>
                     <option value="new">New</option>
@@ -410,14 +410,14 @@ export function CategoryPage() {
 
 function EmptyState() {
   return (
-    <div className="border border-dashed border-[#e5ddd6] px-6 py-20 text-center">
-      <p className="font-serif text-3xl text-[#6b161d]">Coming soon</p>
-      <p className="mx-auto mt-3 max-w-md text-sm text-[#6b6560]">
+    <div className="border border-dashed border-[#ebe6df] px-6 py-20 text-center">
+      <p className="font-serif text-3xl text-[#8b1538]">Coming soon</p>
+      <p className="mx-auto mt-3 max-w-md text-sm text-[#6e6a65]">
         We&apos;re stocking this collection. Browse other categories meanwhile.
       </p>
       <Link
         to="/category/women"
-        className="mt-8 inline-flex border border-[#6b161d] px-6 py-3 text-xs tracking-[0.16em] text-[#6b161d] uppercase"
+        className="mt-8 inline-flex border border-[#8b1538] px-6 py-3 text-xs tracking-[0.16em] text-[#8b1538] uppercase"
       >
         Shop women
       </Link>
