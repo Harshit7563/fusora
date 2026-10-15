@@ -1,12 +1,11 @@
 import { useMemo, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, Navigate, useParams } from 'react-router-dom'
 import { ChevronDown } from 'lucide-react'
 import { getCategory } from '../categories'
 import {
   ALL_APPAREL_SUBTYPES,
   apparelSubtypes,
   denimCollections,
-  dyntraFabricCategories,
   type ApparelSubtype,
 } from '../data/apparel'
 import { type CategoryId } from '../data'
@@ -34,6 +33,9 @@ export function CategoryPage() {
       ? (subtypeParam as ApparelSubtype)
       : null
 
+  const redirectSareeFabric =
+    subtype === 'sarees' && Boolean(collectionParam)
+
   const genderDenimCollections = useMemo(() => {
     if (active === 'men') {
       return denimCollections.filter((c) => c.id === 'mens-jeans')
@@ -51,20 +53,15 @@ export function CategoryPage() {
       ? collectionParam
       : null
 
-  const sareeFabric =
-    subtype === 'sarees' &&
-    collectionParam &&
-    dyntraFabricCategories.some((c) => c.id === collectionParam)
-      ? collectionParam
-      : null
-
-  const collection = denimCollection || sareeFabric
+  const collection = denimCollection
 
   const list = useMemo(() => {
     let rows = products.filter((p) => {
       if (shopGender) {
         if (!matchesGender(p, shopGender)) return false
         if (subtype && p.subtype !== subtype) return false
+        // Sarees: show all products, ignore fabric/collection subcats
+        if (subtype === 'sarees') return true
         if (
           collection &&
           p.collection !== collection &&
@@ -77,6 +74,7 @@ export function CategoryPage() {
       if (p.tab !== active) return false
       if (isApparel && subtype) {
         if (p.subtype !== subtype) return false
+        if (subtype === 'sarees') return true
         if (
           collection &&
           p.collection !== collection &&
@@ -105,42 +103,17 @@ export function CategoryPage() {
     return apparelSubtypes
   }, [active])
 
-  const fabricTiles = useMemo(() => {
-    return dyntraFabricCategories
-      .map((c) => {
-        const cover = products.find(
-          (p) =>
-            p.subtype === 'sarees' &&
-            (p.collection === c.id || p.categorySlug === c.id) &&
-            p.image,
-        )
-        const count = products.filter(
-          (p) =>
-            p.subtype === 'sarees' &&
-            (p.collection === c.id || p.categorySlug === c.id),
-        ).length
-        return { ...c, cover: cover?.image, count }
-      })
-      .filter((c) => c.count > 0)
-  }, [products])
-
   const subtypeMeta = apparelSubtypes.find((s) => s.id === subtype)
   const denimMeta = denimCollections.find((c) => c.id === denimCollection)
-  const fabricMeta = dyntraFabricCategories.find((c) => c.id === sareeFabric)
   const showGenderLanding = isGenderShop && !subtype
   const showApparelLanding = isApparel && !subtype
   const showJeansLanding = subtype === 'jeans' && !denimCollection
-  const showSareeLanding =
-    subtype === 'sarees' && !sareeFabric && active !== 'men'
 
-  const title =
-    denimMeta?.label || fabricMeta?.label || subtypeMeta?.label || meta.label
+  const title = denimMeta?.label || subtypeMeta?.label || meta.label
 
   const blurb =
     denimMeta?.blurb ||
-    (fabricMeta
-      ? `${fabricMeta.label} from the Fusora edit`
-      : subtypeMeta?.blurb) ||
+    subtypeMeta?.blurb ||
     (isGenderShop
       ? active === 'men'
         ? 'Men only — jeans, shirts and everyday wear.'
@@ -150,18 +123,17 @@ export function CategoryPage() {
   const bannerImage =
     subtypeMeta?.image ||
     denimMeta?.image ||
-    fabricTiles[0]?.cover ||
     'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=2000&q=80'
 
   usePageTitle(title)
 
   const showProductGrid =
-    !showApparelLanding &&
-    !showGenderLanding &&
-    !showJeansLanding &&
-    !(showSareeLanding && subtype === 'sarees')
+    !showApparelLanding && !showGenderLanding && !showJeansLanding
 
-  const showSareeAllGrid = subtype === 'sarees' && active !== 'men'
+  // Old saree fabric URLs → single Sarees listing
+  if (redirectSareeFabric) {
+    return <Navigate to={`/category/${active}/sarees`} replace />
+  }
 
   return (
     <main className="bg-white">
@@ -288,34 +260,7 @@ export function CategoryPage() {
           </div>
         )}
 
-        {showSareeLanding && (
-          <div className="mb-10 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
-            {fabricTiles.map((c) => (
-              <Link
-                key={c.id}
-                to={`/category/${active}/sarees/${c.id}`}
-                className="group relative aspect-[4/5] overflow-hidden bg-[#f7f5f2]"
-              >
-                {c.cover ? (
-                  <SafeImage
-                    src={c.cover}
-                    alt={c.label}
-                    className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                  />
-                ) : null}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 p-3 text-white sm:p-4">
-                  <h2 className="font-serif text-lg sm:text-xl">{c.label}</h2>
-                  <p className="mt-1 text-[0.65rem] tracking-[0.14em] uppercase opacity-85">
-                    {c.count} pieces
-                  </p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        )}
-
-        {(showProductGrid || showSareeAllGrid || denimCollection) && (
+        {(showProductGrid || denimCollection) && (
           <div className="grid gap-8 lg:grid-cols-[220px_1fr]">
             {/* Filter sidebar */}
             <aside className="hidden lg:block">
@@ -368,12 +313,6 @@ export function CategoryPage() {
             </aside>
 
             <div>
-              {showSareeAllGrid && showSareeLanding && (
-                <h2 className="mb-6 font-serif text-2xl text-[#8b1538] sm:text-3xl">
-                  All sarees
-                </h2>
-              )}
-
               <div className="mb-5 flex items-center justify-between gap-3 border-b border-[#ebe6df] pb-4">
                 <p className="text-sm text-[#6e6a65]">{list.length} items</p>
                 <label className="flex items-center gap-2 text-sm text-[#6e6a65]">
