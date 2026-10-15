@@ -22,19 +22,17 @@ export function DealsPage() {
 
   return (
     <main className="bg-white">
-      <div className="relative h-[28svh] min-h-[180px] overflow-hidden bg-[#5c4033] sm:h-[34svh]">
+      <div className="relative h-[26svh] min-h-[170px] overflow-hidden bg-[#3a1018] sm:h-[32svh]">
         <img
           src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=2000&q=80"
           alt=""
-          className="h-full w-full object-cover opacity-70"
+          className="h-full w-full object-cover object-[center_25%]"
         />
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/35 px-4 text-center text-white">
-          <h1 className="font-serif text-4xl tracking-wide text-white sm:text-5xl">
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#2a0c12]/45 px-4 text-center">
+          <h1 className="font-serif text-4xl tracking-[0.08em] text-[#f7f0e6] uppercase sm:text-5xl">
             {title}
           </h1>
-          <p className="mt-2 max-w-lg text-sm text-white/85">
-            {list.length} items
-          </p>
+          <p className="mt-2 text-sm text-[#f7f0e6]/80">{list.length} items</p>
         </div>
       </div>
 

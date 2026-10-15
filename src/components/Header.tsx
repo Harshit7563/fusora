@@ -49,77 +49,76 @@ export function Header() {
   }
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 bg-white">
-      {/* Promo bar — Taneira */}
+    <header className="fixed inset-x-0 top-0 z-50 bg-white/95 shadow-[0_1px_0_rgba(0,0,0,0.04)] backdrop-blur-md">
       <div className="bg-[#6d1f2c] text-center">
-        <p className="truncate px-3 py-2 text-[0.72rem] tracking-wide text-white sm:text-[0.78rem]">
+        <p className="truncate px-3 py-[0.45rem] text-[0.7rem] tracking-[0.04em] text-white sm:text-[0.75rem]">
           Free shipping within India · Fresh weaves, added daily
         </p>
       </div>
 
-      {/* Logo + search + icons */}
-      <div className="border-b border-[#e8e1d8]">
-        <div className="mx-auto flex h-[3.75rem] max-w-[1280px] items-center gap-3 px-3 sm:h-16 sm:gap-5 sm:px-5 lg:px-8">
-          <button
-            type="button"
-            className="grid size-9 place-items-center text-[#1c1c1c] lg:hidden"
-            aria-label="Menu"
-            onClick={() => setMenuOpen(true)}
-          >
-            <Menu className="size-5" strokeWidth={1.5} />
-          </button>
-
-          <FusoraLogo compact className="shrink-0" />
+      <div className="border-b border-[#efe9e1]">
+        <div className="mx-auto grid h-14 max-w-[1280px] grid-cols-[auto_1fr_auto] items-center gap-3 px-3 sm:h-[3.85rem] sm:gap-6 sm:px-5 lg:px-8">
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              className="grid size-9 place-items-center text-[#1c1c1c] lg:hidden"
+              aria-label="Menu"
+              onClick={() => setMenuOpen(true)}
+            >
+              <Menu className="size-5" strokeWidth={1.5} />
+            </button>
+            <FusoraLogo compact className="shrink-0" />
+          </div>
 
           <form
             onSubmit={onSearch}
-            className="mx-auto hidden min-w-0 flex-1 max-w-xl items-center rounded-full bg-[#f3efe8] px-4 py-2.5 lg:flex"
+            className="mx-auto hidden w-full max-w-[34rem] items-center rounded-full bg-[#f3efe8] px-4 py-2.5 lg:flex"
           >
             <input
               value={q}
               onChange={(e) => setQ(e.target.value)}
               placeholder="Search for festive sarees"
-              className="min-w-0 flex-1 bg-transparent text-sm text-[#1c1c1c] outline-none placeholder:text-[#8a847c]"
+              className="min-w-0 flex-1 bg-transparent text-[0.9rem] text-[#1c1c1c] outline-none placeholder:text-[#8a847c]"
             />
             <button type="submit" aria-label="Search" className="text-[#6d1f2c]">
-              <Search className="size-[1.15rem]" strokeWidth={1.6} />
+              <Search className="size-[1.1rem]" strokeWidth={1.7} />
             </button>
           </form>
 
-          <div className="ml-auto flex items-center gap-0.5 sm:gap-1">
+          <div className="flex items-center justify-end gap-0.5 sm:gap-1">
             <button
               type="button"
               className="grid size-9 place-items-center text-[#1c1c1c] lg:hidden"
               aria-label="Search"
               onClick={() => navigate('/deals')}
             >
-              <Search className="size-[1.15rem]" strokeWidth={1.5} />
+              <Search className="size-[1.1rem]" strokeWidth={1.5} />
             </button>
             <Link
               to="/account"
-              className="grid size-9 place-items-center text-[#1c1c1c]"
+              className="grid size-9 place-items-center text-[#1c1c1c] transition hover:text-[#6d1f2c]"
               aria-label="Account"
             >
-              <User className="size-[1.15rem]" strokeWidth={1.5} />
+              <User className="size-[1.1rem]" strokeWidth={1.5} />
             </Link>
             <Link
               to="/wishlist"
-              className="relative grid size-9 place-items-center text-[#1c1c1c]"
+              className="relative grid size-9 place-items-center text-[#1c1c1c] transition hover:text-[#6d1f2c]"
               aria-label="Wishlist"
             >
-              <Heart className="size-[1.15rem]" strokeWidth={1.5} />
-              <span className="absolute top-0.5 right-0.5 flex min-w-3.5 items-center justify-center rounded-full bg-[#6d1f2c] px-0.5 text-[0.55rem] font-semibold text-white">
+              <Heart className="size-[1.1rem]" strokeWidth={1.5} />
+              <span className="absolute top-0.5 right-0 flex min-w-[1rem] items-center justify-center rounded-full bg-[#6d1f2c] px-1 text-[0.55rem] font-semibold leading-none text-white">
                 {wishlist.size}
               </span>
             </Link>
             <button
               type="button"
               onClick={openCart}
-              className="relative grid size-9 place-items-center text-[#1c1c1c]"
+              className="relative grid size-9 place-items-center text-[#1c1c1c] transition hover:text-[#6d1f2c]"
               aria-label="Cart"
             >
-              <ShoppingBag className="size-[1.15rem]" strokeWidth={1.5} />
-              <span className="absolute top-0.5 right-0.5 flex min-w-3.5 items-center justify-center rounded-full bg-[#6d1f2c] px-0.5 text-[0.55rem] font-semibold text-white">
+              <ShoppingBag className="size-[1.1rem]" strokeWidth={1.5} />
+              <span className="absolute top-0.5 right-0 flex min-w-[1rem] items-center justify-center rounded-full bg-[#6d1f2c] px-1 text-[0.55rem] font-semibold leading-none text-white">
                 {cartCount}
               </span>
             </button>
@@ -127,14 +126,13 @@ export function Header() {
         </div>
       </div>
 
-      {/* Category nav — Taneira */}
-      <nav className="hidden border-b border-[#e8e1d8] lg:block">
-        <ul className="mx-auto flex max-w-[1280px] items-center justify-center gap-6 px-4 py-3 xl:gap-8">
+      <nav className="hidden border-b border-[#efe9e1] lg:block">
+        <ul className="mx-auto flex max-w-[1280px] items-center justify-center gap-7 px-4 py-2.5 xl:gap-9">
           {nav.map((item) => (
             <li key={item.to + item.label}>
               <Link
                 to={item.to}
-                className="text-[0.82rem] font-medium tracking-wide text-[#1c1c1c] transition hover:text-[#6d1f2c]"
+                className="text-[0.8rem] font-medium tracking-[0.02em] text-[#2a2a2a] transition hover:text-[#6d1f2c]"
               >
                 {item.label}
               </Link>

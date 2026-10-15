@@ -138,17 +138,17 @@ export function CategoryPage() {
   return (
     <main className="bg-white">
       {/* Category banner */}
-      <div className="relative h-[26svh] min-h-[160px] overflow-hidden bg-[#5c4033] sm:h-[32svh]">
+      <div className="relative h-[26svh] min-h-[160px] overflow-hidden bg-[#3a1018] sm:h-[32svh]">
         <img
           src={bannerImage}
           alt=""
-          className="h-full w-full object-cover opacity-75"
+          className="h-full w-full object-cover object-[center_25%]"
         />
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 px-4 text-center text-white">
-          <h1 className="font-serif text-4xl tracking-wide text-white sm:text-5xl">
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#2a0c12]/45 px-4 text-center">
+          <h1 className="font-serif text-4xl tracking-[0.08em] text-[#f7f0e6] uppercase sm:text-5xl">
             {title}
           </h1>
-          <p className="mt-2 max-w-xl text-sm text-white/85">{blurb}</p>
+          <p className="mt-2 max-w-xl text-sm text-[#f7f0e6]/80">{blurb}</p>
         </div>
       </div>
 

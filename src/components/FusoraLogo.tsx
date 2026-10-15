@@ -16,7 +16,7 @@ export function FusoraLogo({
   centered = false,
 }: Props) {
   const sizeClass = compact
-    ? 'h-7 w-auto max-w-[7rem] sm:h-8 sm:max-w-[8rem]'
+    ? 'h-8 w-auto max-w-[8.5rem] sm:h-9 sm:max-w-[9.5rem]'
     : 'h-9 w-auto max-w-[10rem] sm:h-11'
 
   return (

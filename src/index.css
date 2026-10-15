@@ -8,7 +8,7 @@
   --color-bb-blue: #6d1f2c;
   --color-bb-blue-dark: #541822;
   --color-bb-blue-deep: #3a1018;
-  --color-bb-yellow: #c4a574;
+  --color-bb-yellow: #d4af77;
   --color-bb-link: #6d1f2c;
   --color-bb-gray: #f5f1eb;
   --color-bb-border: #e8e1d8;
@@ -21,7 +21,7 @@
   --color-fusora-wine-soft: #8a2e3d;
   --color-fusora-cream: #faf7f2;
   --color-fusora-ivory: #faf7f2;
-  --color-fusora-gold: #c4a574;
+  --color-fusora-gold: #d4af77;
   --color-fusora-sand: #f5f1eb;
   --color-fusora-brown: #5c4033;
 }
@@ -86,18 +86,20 @@
     align-items: center;
     justify-content: center;
     border-radius: 999px;
-    background: #fff;
-    color: #6d1f2c;
-    letter-spacing: 0.08em;
+    background: #f7f0e6;
+    color: #1c1c1c;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     font-weight: 600;
-    padding: 0.75rem 1.75rem;
-    transition: background 0.2s ease, color 0.2s ease;
+    padding: 0.8rem 1.9rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+    transition: background 0.2s ease, transform 0.2s ease;
   }
 
   .btn-shop:hover {
-    background: #faf7f2;
+    background: #fff;
+    transform: translateY(-1px);
   }
 
   .btn-shop-dark {
@@ -107,16 +109,17 @@
     border-radius: 999px;
     background: #6d1f2c;
     color: #fff;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     font-weight: 600;
-    padding: 0.75rem 1.75rem;
-    transition: background 0.2s ease;
+    padding: 0.8rem 1.9rem;
+    transition: background 0.2s ease, transform 0.2s ease;
   }
 
   .btn-shop-dark:hover {
     background: #541822;
+    transform: translateY(-1px);
   }
 
   .btn-outline-light {
@@ -124,11 +127,11 @@
     color: #fff;
     background: transparent;
     border-radius: 999px;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     font-weight: 600;
-    padding: 0.75rem 1.75rem;
+    padding: 0.8rem 1.9rem;
     transition: background 0.25s ease, color 0.25s ease;
   }
 
@@ -142,11 +145,16 @@
     color: #1c1c1c;
     background: #fff;
     border-radius: 999px;
-    padding: 0.5rem 1.15rem;
-    font-size: 0.8rem;
+    padding: 0.5rem 1.2rem;
+    font-size: 0.78rem;
     font-weight: 500;
     white-space: nowrap;
     transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .pill-tab:hover {
+    border-color: #6d1f2c;
+    color: #6d1f2c;
   }
 
   .pill-tab[data-active='true'] {
@@ -155,19 +163,51 @@
     color: #fff;
   }
 
+  /* Cream diamond motif band — Taneira-like */
   .motif-border {
+    height: 14px;
+    background-color: #6d1f2c;
     background-image: repeating-linear-gradient(
-      90deg,
-      #6d1f2c 0,
-      #6d1f2c 8px,
-      transparent 8px,
-      transparent 12px,
-      #c4a574 12px,
-      #c4a574 14px,
-      transparent 14px,
-      transparent 18px
-    );
-    height: 6px;
+        45deg,
+        transparent 0,
+        transparent 5px,
+        rgba(247, 240, 230, 0.35) 5px,
+        rgba(247, 240, 230, 0.35) 6px
+      ),
+      repeating-linear-gradient(
+        -45deg,
+        transparent 0,
+        transparent 5px,
+        rgba(212, 175, 119, 0.45) 5px,
+        rgba(212, 175, 119, 0.45) 6px
+      );
+  }
+
+  .festive-glow {
+    background-color: #6d1f2c;
+    background-image: radial-gradient(
+        circle at 20% 30%,
+        rgba(212, 175, 119, 0.14) 0%,
+        transparent 42%
+      ),
+      radial-gradient(
+        circle at 80% 20%,
+        rgba(212, 175, 119, 0.1) 0%,
+        transparent 38%
+      ),
+      radial-gradient(
+        circle at 50% 80%,
+        rgba(255, 255, 255, 0.04) 0%,
+        transparent 45%
+      );
+  }
+
+  .hide-scrollbar {
+    scrollbar-width: none;
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 
   .safe-pb {
