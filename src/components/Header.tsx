@@ -40,7 +40,7 @@ export function Header() {
   }, [location.pathname])
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40)
+    const onScroll = () => setScrolled(window.scrollY > 48)
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
@@ -70,20 +70,21 @@ export function Header() {
 
   const closeMenu = () => setMenuOpen(false)
   const ink = overHero ? 'text-white' : 'text-[#1a1a1a]'
+  const iconBtn =
+    'grid size-10 place-items-center transition hover:opacity-70'
 
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
-        overHero
-          ? 'bg-transparent'
-          : 'border-b border-[#e8e0d8] bg-white/95 backdrop-blur-sm'
+        overHero ? 'bg-transparent' : 'border-b border-[#e8e0d8] bg-white'
       }`}
     >
-      <div className="mx-auto grid max-w-[1440px] grid-cols-[1fr_auto_1fr] items-center gap-2 px-3 py-3 sm:px-6 sm:py-3.5 lg:px-10">
-        <div className={`flex items-center gap-3 sm:gap-5 ${ink}`}>
+      {/* Koskii-style bar: MENU · SEARCH | LOGO | WISH · BAG · ACCOUNT */}
+      <div className="mx-auto grid h-[3.75rem] max-w-[1440px] grid-cols-[1fr_auto_1fr] items-center px-3 sm:h-16 sm:px-6 lg:px-10">
+        <div className={`flex items-center gap-4 sm:gap-7 ${ink}`}>
           <button
             type="button"
-            className="flex items-center gap-1.5 text-[0.65rem] font-medium tracking-[0.16em] uppercase transition hover:opacity-70"
+            className="flex items-center gap-2 text-[0.7rem] font-medium tracking-[0.18em] uppercase transition hover:opacity-75"
             aria-label={menuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={menuOpen}
             onClick={() => {
@@ -92,69 +93,77 @@ export function Header() {
             }}
           >
             {menuOpen ? (
-              <X className="size-4" strokeWidth={1.5} />
+              <X className="size-[1.15rem]" strokeWidth={1.35} />
             ) : (
-              <Menu className="size-4" strokeWidth={1.5} />
+              <Menu className="size-[1.15rem]" strokeWidth={1.35} />
             )}
-            <span className="hidden sm:inline">Menu</span>
+            <span>Menu</span>
           </button>
           <button
             type="button"
-            className="flex items-center gap-1.5 text-[0.65rem] font-medium tracking-[0.16em] uppercase transition hover:opacity-70"
+            className="flex items-center gap-2 text-[0.7rem] font-medium tracking-[0.18em] uppercase transition hover:opacity-75"
             aria-label="Search"
             onClick={() => {
               setSearchOpen((v) => !v)
               setMenuOpen(false)
             }}
           >
-            <Search className="size-4" strokeWidth={1.5} />
-            <span className="hidden sm:inline">Search</span>
+            <Search className="size-[1.1rem]" strokeWidth={1.35} />
+            <span>Search</span>
           </button>
         </div>
 
-        <div className="justify-self-center">
+        <div className="justify-self-center px-2">
           <FusoraLogo compact onDark={overHero} centered />
         </div>
 
-        <div className={`flex items-center justify-end gap-1 sm:gap-2 ${ink}`}>
-          <Link
-            to="/account"
-            className="hidden size-10 place-items-center transition hover:opacity-70 sm:grid"
-            aria-label="Account"
-          >
-            <User className="size-[1.15rem]" strokeWidth={1.4} />
-          </Link>
-          <Link
-            to="/wishlist"
-            className="relative grid size-10 place-items-center transition hover:opacity-70"
-            aria-label="Wishlist"
-          >
-            <Heart className="size-[1.15rem]" strokeWidth={1.4} />
+        <div className={`flex items-center justify-end gap-0.5 sm:gap-1 ${ink}`}>
+          <Link to="/wishlist" className={`relative ${iconBtn}`} aria-label="Wishlist">
+            <Heart className="size-[1.2rem]" strokeWidth={1.3} />
             {wishlist.size > 0 && (
-              <span className="absolute top-2 right-2 size-1.5 rounded-full bg-[#e8c84a]" />
+              <span
+                className={`absolute top-1.5 right-1.5 size-1.5 rounded-full ${
+                  overHero ? 'bg-[#e8c84a]' : 'bg-[#5c2a2a]'
+                }`}
+              />
             )}
           </Link>
           <button
             type="button"
             onClick={openCart}
-            className="relative grid size-10 place-items-center transition hover:opacity-70"
+            className={`relative ${iconBtn}`}
             aria-label="Cart"
           >
-            <ShoppingBag className="size-[1.15rem]" strokeWidth={1.4} />
+            <ShoppingBag className="size-[1.2rem]" strokeWidth={1.3} />
             {cartCount > 0 && (
-              <span className="absolute top-1.5 right-1.5 grid min-w-[1rem] place-items-center rounded-full bg-[#5c2a2a] px-1 text-[0.55rem] font-semibold text-white">
+              <span
+                className={`absolute top-1 right-1 grid min-w-[1rem] place-items-center rounded-full px-1 text-[0.55rem] font-semibold ${
+                  overHero
+                    ? 'bg-white text-[#5c2a2a]'
+                    : 'bg-[#5c2a2a] text-white'
+                }`}
+              >
                 {cartCount}
               </span>
             )}
           </button>
+          <Link to="/account" className={iconBtn} aria-label="Account">
+            <User className="size-[1.2rem]" strokeWidth={1.3} />
+          </Link>
         </div>
       </div>
 
       {searchOpen && (
-        <div className="border-t border-[#e8e0d8] bg-white px-3 py-3 sm:px-6">
+        <div
+          className={`border-t px-3 py-3 sm:px-6 ${
+            overHero
+              ? 'border-white/20 bg-black/40 backdrop-blur-md'
+              : 'border-[#e8e0d8] bg-white'
+          }`}
+        >
           <form
             onSubmit={onSearch}
-            className="mx-auto flex max-w-xl overflow-hidden rounded-full border border-[#e8e0d8] bg-[#f7f5f3]"
+            className="mx-auto flex max-w-xl overflow-hidden rounded-sm border border-[#e8e0d8] bg-white"
           >
             <Search
               className="ml-4 size-4 shrink-0 self-center text-[#776865]"
@@ -164,14 +173,14 @@ export function Header() {
               value={q}
               onChange={(e) => setQ(e.target.value)}
               placeholder="Search sarees, jeans, jewellery…"
-              className="min-w-0 flex-1 bg-transparent px-3 py-3 text-sm outline-none"
+              className="min-w-0 flex-1 bg-transparent px-3 py-3 text-sm text-[#1a1a1a] outline-none"
               autoFocus
             />
             <button
               type="submit"
               className="bg-[#5c2a2a] px-5 text-[0.65rem] font-semibold tracking-[0.14em] text-white uppercase"
             >
-              Search
+              Go
             </button>
           </form>
         </div>
@@ -181,12 +190,12 @@ export function Header() {
         <div className="fixed inset-0 z-[60]">
           <button
             type="button"
-            className="absolute inset-0 bg-black/40"
+            className="absolute inset-0 bg-black/45"
             aria-label="Close menu"
             onClick={closeMenu}
           />
           <div className="absolute inset-y-0 left-0 flex w-[min(100%,20rem)] flex-col bg-white shadow-xl safe-pb">
-            <div className="flex items-center justify-between border-b border-[#e8e0d8] px-4 py-3">
+            <div className="flex h-16 items-center justify-between border-b border-[#e8e0d8] px-4">
               <FusoraLogo compact />
               <button
                 type="button"
@@ -194,7 +203,7 @@ export function Header() {
                 className="grid size-10 place-items-center"
                 aria-label="Close"
               >
-                <X className="size-5" strokeWidth={1.5} />
+                <X className="size-5" strokeWidth={1.4} />
               </button>
             </div>
 
@@ -204,7 +213,7 @@ export function Header() {
                   <Link
                     to="/account"
                     onClick={closeMenu}
-                    className="rounded-md bg-[#5c2a2a] px-4 py-2.5 text-[0.65rem] font-semibold tracking-[0.14em] text-white uppercase"
+                    className="bg-[#5c2a2a] px-4 py-2.5 text-[0.65rem] font-semibold tracking-[0.14em] text-white uppercase"
                   >
                     My account
                   </Link>
@@ -214,7 +223,7 @@ export function Header() {
                       signOut()
                       closeMenu()
                     }}
-                    className="rounded-md border border-[#e8e0d8] px-4 py-2.5 text-[0.65rem] font-semibold tracking-[0.14em] uppercase"
+                    className="border border-[#e8e0d8] px-4 py-2.5 text-[0.65rem] font-semibold tracking-[0.14em] uppercase"
                   >
                     Log out
                   </button>
@@ -224,14 +233,14 @@ export function Header() {
                   <Link
                     to="/account"
                     onClick={closeMenu}
-                    className="rounded-md bg-[#5c2a2a] px-4 py-2.5 text-[0.65rem] font-semibold tracking-[0.14em] text-white uppercase"
+                    className="bg-[#5c2a2a] px-4 py-2.5 text-[0.65rem] font-semibold tracking-[0.14em] text-white uppercase"
                   >
                     Login
                   </Link>
                   <Link
                     to="/register"
                     onClick={closeMenu}
-                    className="rounded-md border border-[#e8e0d8] px-4 py-2.5 text-[0.65rem] font-semibold tracking-[0.14em] uppercase"
+                    className="border border-[#e8e0d8] px-4 py-2.5 text-[0.65rem] font-semibold tracking-[0.14em] uppercase"
                   >
                     Register
                   </Link>
@@ -245,11 +254,11 @@ export function Header() {
                   <Link
                     to={item.to}
                     onClick={closeMenu}
-                    className="flex items-center gap-2 px-3 py-3.5 text-sm font-medium tracking-[0.08em] text-[#1a1a1a] uppercase transition active:bg-[#f7f5f3]"
+                    className="flex items-center gap-2 px-3 py-3.5 text-sm font-medium tracking-[0.1em] text-[#1a1a1a] uppercase transition active:bg-[#f7f5f3]"
                   >
                     {item.label}
                     {item.hot && (
-                      <span className="rounded bg-[#5c2a2a] px-1.5 py-0.5 text-[0.55rem] font-bold tracking-wide text-[#e8c84a]">
+                      <span className="bg-[#5c2a2a] px-1.5 py-0.5 text-[0.55rem] font-bold tracking-wide text-[#e8c84a]">
                         HOT
                       </span>
                     )}
@@ -260,7 +269,7 @@ export function Header() {
                 <Link
                   to="/wishlist"
                   onClick={closeMenu}
-                  className="block px-3 py-3.5 text-sm font-medium tracking-[0.08em] uppercase"
+                  className="block px-3 py-3.5 text-sm font-medium tracking-[0.1em] uppercase"
                 >
                   Wishlist
                 </Link>
@@ -269,7 +278,7 @@ export function Header() {
                 <Link
                   to="/support"
                   onClick={closeMenu}
-                  className="block px-3 py-3.5 text-sm font-medium tracking-[0.08em] uppercase"
+                  className="block px-3 py-3.5 text-sm font-medium tracking-[0.1em] uppercase"
                 >
                   Contact
                 </Link>
