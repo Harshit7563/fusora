@@ -29,7 +29,7 @@ export function DealsPage() {
           className="h-full w-full object-cover opacity-70"
         />
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/35 px-4 text-center text-white">
-          <h1 className="font-serif text-4xl tracking-wide sm:text-5xl">
+          <h1 className="font-serif text-4xl tracking-wide text-white sm:text-5xl">
             {title}
           </h1>
           <p className="mt-2 max-w-lg text-sm text-white/85">
