@@ -1,5 +1,6 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { ChevronDown } from 'lucide-react'
 import { getCategory } from '../categories'
 import {
   ALL_APPAREL_SUBTYPES,
@@ -12,12 +13,16 @@ import { type CategoryId } from '../data'
 import { ProductCard } from '../components/ProductCard'
 import { SafeImage } from '../components/SafeImage'
 import { useCatalog } from '../hooks/useCatalog'
+import { usePageTitle } from '../hooks/usePageTitle'
 import { getProductGender, matchesGender, type Gender } from '../lib/gender'
 
 export function CategoryPage() {
   const { tab, subtype: subtypeParam, collection: collectionParam } =
     useParams()
   const { products } = useCatalog()
+  const [sort, setSort] = useState('featured')
+  const [inStockOnly, setInStockOnly] = useState(true)
+
   const active = (tab as CategoryId) || 'apparel-accessories'
   const meta = getCategory(active)
   const isApparel = active === 'apparel-accessories'
@@ -55,52 +60,48 @@ export function CategoryPage() {
 
   const collection = denimCollection || sareeFabric
 
-  const list = useMemo(
-    () =>
-      products.filter((p) => {
-        if (shopGender) {
-          if (!matchesGender(p, shopGender)) return false
-          if (subtype && p.subtype !== subtype) return false
-          if (
-            collection &&
-            p.collection !== collection &&
-            p.categorySlug !== collection
-          ) {
-            return false
-          }
-          return true
-        }
-
-        if (p.tab !== active) return false
-        if (isApparel && subtype) {
-          if (p.subtype !== subtype) return false
-          if (
-            collection &&
-            p.collection !== collection &&
-            p.categorySlug !== collection
-          ) {
-            return false
-          }
-          // Keep men's / women's jeans collections strictly separated
-          if (collection === 'mens-jeans' && getProductGender(p) !== 'men') {
-            return false
-          }
-          if (collection === 'womens-jeans' && getProductGender(p) !== 'women') {
-            return false
-          }
+  const list = useMemo(() => {
+    let rows = products.filter((p) => {
+      if (shopGender) {
+        if (!matchesGender(p, shopGender)) return false
+        if (subtype && p.subtype !== subtype) return false
+        if (
+          collection &&
+          p.collection !== collection &&
+          p.categorySlug !== collection
+        ) {
+          return false
         }
         return true
-      }),
-    [active, isApparel, subtype, collection, shopGender, products],
-  )
+      }
+      if (p.tab !== active) return false
+      if (isApparel && subtype) {
+        if (p.subtype !== subtype) return false
+        if (
+          collection &&
+          p.collection !== collection &&
+          p.categorySlug !== collection
+        ) {
+          return false
+        }
+        if (collection === 'mens-jeans' && getProductGender(p) !== 'men') {
+          return false
+        }
+        if (collection === 'womens-jeans' && getProductGender(p) !== 'women') {
+          return false
+        }
+      }
+      return true
+    })
+
+    if (sort === 'price-asc') rows = [...rows].sort((a, b) => a.price - b.price)
+    if (sort === 'price-desc') rows = [...rows].sort((a, b) => b.price - a.price)
+    if (sort === 'new') rows = [...rows].sort((a, b) => Number(b.topDeal) - Number(a.topDeal))
+    return rows
+  }, [active, isApparel, subtype, collection, shopGender, products, sort])
 
   const genderSubtypes = useMemo(() => {
-    if (active === 'men') {
-      return apparelSubtypes.filter((s) => s.id !== 'sarees')
-    }
-    if (active === 'women') {
-      return apparelSubtypes
-    }
+    if (active === 'men') return apparelSubtypes.filter((s) => s.id !== 'sarees')
     return apparelSubtypes
   }, [active])
 
@@ -121,7 +122,7 @@ export function CategoryPage() {
         return { ...c, cover: cover?.image, count }
       })
       .filter((c) => c.count > 0)
-  }, [])
+  }, [products])
 
   const subtypeMeta = apparelSubtypes.find((s) => s.id === subtype)
   const denimMeta = denimCollections.find((c) => c.id === denimCollection)
@@ -133,10 +134,7 @@ export function CategoryPage() {
     subtype === 'sarees' && !sareeFabric && active !== 'men'
 
   const title =
-    denimMeta?.label ||
-    fabricMeta?.label ||
-    subtypeMeta?.label ||
-    meta.label
+    denimMeta?.label || fabricMeta?.label || subtypeMeta?.label || meta.label
 
   const blurb =
     denimMeta?.blurb ||
@@ -147,311 +145,281 @@ export function CategoryPage() {
       ? active === 'men'
         ? 'Men only — jeans, shirts and everyday wear.'
         : 'Women only — sarees, jeans and festive apparel.'
-      : undefined)
+      : 'Carefully chosen pieces for every occasion.')
+
+  const bannerImage =
+    subtypeMeta?.image ||
+    denimMeta?.image ||
+    fabricTiles[0]?.cover ||
+    'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=2000&q=80'
+
+  usePageTitle(title)
+
+  const showProductGrid =
+    !showApparelLanding &&
+    !showGenderLanding &&
+    !showJeansLanding &&
+    !(showSareeLanding && subtype === 'sarees')
+
+  const showSareeAllGrid = subtype === 'sarees' && active !== 'men'
 
   return (
-    <main className="mx-auto max-w-[1440px] px-3 py-8 sm:px-4 sm:py-10 lg:px-8">
-      <nav className="mb-5 text-[0.65rem] tracking-wide text-bb-muted uppercase sm:text-xs">
-        <Link to="/" className="hover:text-bb-text">
-          Home
-        </Link>
-        {' / '}
-        <Link to={`/category/${active}`} className="hover:text-bb-text">
-          {meta.label}
-        </Link>
-        {subtypeMeta && (
-          <>
-            {' / '}
-            <Link
-              to={`/category/${active}/${subtype}`}
-              className="hover:text-bb-text"
-            >
-              {subtypeMeta.label}
-            </Link>
-          </>
-        )}
-        {(denimMeta || fabricMeta) && (
-          <>
-            {' / '}
-            <span className="text-bb-text">
-              {denimMeta?.label || fabricMeta?.label}
-            </span>
-          </>
-        )}
-      </nav>
-
-      <div className="max-w-2xl">
-        <h1 className="text-display text-[2rem] leading-none text-bb-text sm:text-5xl">
-          {title}
-        </h1>
-        <p className="mt-3 text-sm text-bb-muted">
-          {blurb ? `${blurb} · ` : ''}
-          {list.length} product{list.length === 1 ? '' : 's'}
-        </p>
+    <main className="bg-white">
+      {/* Category banner — Kankatala */}
+      <div className="relative h-[26svh] min-h-[160px] overflow-hidden bg-[#5a3826] sm:h-[32svh]">
+        <img
+          src={bannerImage}
+          alt=""
+          className="h-full w-full object-cover opacity-75"
+        />
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 px-4 text-center text-white">
+          <h1 className="font-serif text-4xl tracking-wide sm:text-5xl">
+            {title}
+          </h1>
+          <p className="mt-2 max-w-xl text-sm text-white/85">{blurb}</p>
+        </div>
       </div>
 
-      {(isApparel || isGenderShop) && (
-        <div className="mt-7 flex gap-5 overflow-x-auto border-b border-bb-border pb-px">
-          <Link
-            to={`/category/${active}`}
-            className={`relative shrink-0 pb-3 text-[0.7rem] tracking-[0.14em] uppercase ${
-              !subtype
-                ? 'font-semibold text-bb-blue'
-                : 'text-bb-muted hover:text-bb-text'
-            }`}
-          >
-            All
-            {!subtype && (
-              <span className="absolute inset-x-0 bottom-0 h-0.5 bg-bb-blue" />
-            )}
+      <div className="mx-auto max-w-[1280px] px-3 py-6 sm:px-6 lg:px-10">
+        <nav className="mb-6 text-xs text-[#6b6560]">
+          <Link to="/" className="hover:text-[#6b161d]">
+            Home
           </Link>
-          {genderSubtypes.map((s) => (
+          <span className="mx-2">|</span>
+          <Link to={`/category/${active}`} className="hover:text-[#6b161d]">
+            {meta.label}
+          </Link>
+          {subtypeMeta && (
+            <>
+              <span className="mx-2">|</span>
+              <span className="text-[#121212]">{subtypeMeta.label}</span>
+            </>
+          )}
+        </nav>
+
+        {(isApparel || isGenderShop) && (
+          <div className="mb-8 flex flex-wrap gap-2">
             <Link
-              key={s.id}
-              to={`/category/${active}/${s.id}`}
-              className={`relative shrink-0 pb-3 text-[0.7rem] tracking-[0.14em] uppercase ${
-                subtype === s.id
-                  ? 'font-semibold text-bb-blue'
-                  : 'text-bb-muted hover:text-bb-text'
-              }`}
-            >
-              {s.label}
-              {subtype === s.id && (
-                <span className="absolute inset-x-0 bottom-0 h-0.5 bg-bb-blue" />
-              )}
-            </Link>
-          ))}
-        </div>
-      )}
-
-      {(showApparelLanding || showGenderLanding) && (
-        <div className="mt-8 grid grid-cols-2 gap-3 sm:mt-10 sm:gap-5 md:grid-cols-4">
-          {genderSubtypes.map((s) => {
-            const count = products.filter((p) => {
-              if (p.subtype !== s.id) return false
-              if (shopGender) return matchesGender(p, shopGender)
-              return p.tab === 'apparel-accessories'
-            }).length
-            return (
-              <Link
-                key={s.id}
-                to={`/category/${active}/${s.id}`}
-                className="group relative aspect-[3/4] overflow-hidden bg-bb-gray"
-              >
-                <SafeImage
-                  src={s.image}
-                  alt={s.label}
-                  className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-bb-blue-deep/75 via-black/15 to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 p-3 text-white sm:p-5">
-                  <h2 className="text-display text-xl sm:text-2xl">{s.label}</h2>
-                  <p className="mt-1 line-clamp-2 text-xs text-white/80 sm:text-sm">
-                    {s.blurb}
-                  </p>
-                  <p className="mt-2 text-[0.6rem] tracking-[0.14em] uppercase sm:mt-3">
-                    {count} pieces · Shop now
-                  </p>
-                </div>
-              </Link>
-            )
-          })}
-        </div>
-      )}
-
-      {showJeansLanding && (
-        <div className="mt-8 grid grid-cols-1 gap-3 sm:mt-10 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
-          {genderDenimCollections.map((c) => {
-            const count = products.filter(
-              (p) =>
-                p.subtype === 'jeans' &&
-                p.collection === c.id &&
-                (!shopGender || matchesGender(p, shopGender)),
-            ).length
-            const jeansBase = isGenderShop
-              ? `/category/${active}/jeans`
-              : '/category/apparel-accessories/jeans'
-            return (
-              <Link
-                key={c.id}
-                to={`${jeansBase}/${c.id}`}
-                className="group relative aspect-[4/5] overflow-hidden bg-bb-gray sm:aspect-[3/4]"
-              >
-                <SafeImage
-                  src={c.image}
-                  alt={c.label}
-                  className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-bb-blue-deep/75 via-black/20 to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 p-4 text-white sm:p-6">
-                  <h2 className="text-display text-2xl sm:text-3xl">
-                    {c.label}
-                  </h2>
-                  <p className="mt-1 text-sm text-white/85">{c.blurb}</p>
-                  <p className="mt-3 text-[0.65rem] tracking-[0.16em] uppercase">
-                    {count} styles · Shop now
-                  </p>
-                </div>
-              </Link>
-            )
-          })}
-        </div>
-      )}
-
-      {subtype === 'sarees' && active !== 'men' && (
-        <>
-          <div className="mt-8 flex gap-3 overflow-x-auto pb-1">
-            <Link
-              to={`/category/${active}/sarees`}
-              className={`shrink-0 border px-4 py-2 text-[0.68rem] tracking-[0.12em] uppercase transition ${
-                !sareeFabric
-                  ? 'border-bb-blue bg-bb-blue text-white'
-                  : 'border-bb-border text-bb-muted hover:border-bb-blue hover:text-bb-text'
-              }`}
+              to={`/category/${active}`}
+              className="pill-tab"
+              data-active={!subtype}
             >
               All
             </Link>
+            {genderSubtypes.map((s) => (
+              <Link
+                key={s.id}
+                to={`/category/${active}/${s.id}`}
+                className="pill-tab"
+                data-active={subtype === s.id}
+              >
+                {s.label}
+              </Link>
+            ))}
+          </div>
+        )}
+
+        {(showApparelLanding || showGenderLanding) && (
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
+            {genderSubtypes.map((s) => {
+              const count = products.filter((p) => {
+                if (p.subtype !== s.id) return false
+                if (shopGender) return matchesGender(p, shopGender)
+                return p.tab === 'apparel-accessories'
+              }).length
+              return (
+                <Link
+                  key={s.id}
+                  to={`/category/${active}/${s.id}`}
+                  className="group relative aspect-[3/4] overflow-hidden"
+                >
+                  <SafeImage
+                    src={s.image}
+                    alt={s.label}
+                    className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                  <div className="absolute inset-x-0 bottom-0 p-4 text-white">
+                    <h2 className="font-serif text-xl sm:text-2xl">{s.label}</h2>
+                    <p className="mt-1 text-[0.65rem] tracking-[0.14em] uppercase opacity-85">
+                      {count} pieces
+                    </p>
+                  </div>
+                </Link>
+              )
+            })}
+          </div>
+        )}
+
+        {showJeansLanding && (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {genderDenimCollections.map((c) => {
+              const count = products.filter(
+                (p) =>
+                  p.subtype === 'jeans' &&
+                  p.collection === c.id &&
+                  (!shopGender || matchesGender(p, shopGender)),
+              ).length
+              const jeansBase = isGenderShop
+                ? `/category/${active}/jeans`
+                : '/category/apparel-accessories/jeans'
+              return (
+                <Link
+                  key={c.id}
+                  to={`${jeansBase}/${c.id}`}
+                  className="group relative aspect-[3/4] overflow-hidden"
+                >
+                  <SafeImage
+                    src={c.image}
+                    alt={c.label}
+                    className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                  <div className="absolute inset-x-0 bottom-0 p-5 text-white">
+                    <h2 className="font-serif text-2xl">{c.label}</h2>
+                    <p className="mt-1 text-sm text-white/85">{c.blurb}</p>
+                    <p className="mt-2 text-[0.65rem] tracking-[0.14em] uppercase">
+                      {count} styles
+                    </p>
+                  </div>
+                </Link>
+              )
+            })}
+          </div>
+        )}
+
+        {showSareeLanding && (
+          <div className="mb-10 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
             {fabricTiles.map((c) => (
               <Link
                 key={c.id}
                 to={`/category/${active}/sarees/${c.id}`}
-                className={`shrink-0 border px-4 py-2 text-[0.68rem] tracking-[0.12em] uppercase transition ${
-                  sareeFabric === c.id
-                    ? 'border-bb-blue bg-bb-blue text-white'
-                    : 'border-bb-border text-bb-muted hover:border-bb-blue hover:text-bb-text'
-                }`}
+                className="group relative aspect-[4/5] overflow-hidden bg-[#f5f3f1]"
               >
-                {c.label.replace(/ sarees$/i, '')}
+                {c.cover ? (
+                  <SafeImage
+                    src={c.cover}
+                    alt={c.label}
+                    className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                  />
+                ) : null}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 p-3 text-white sm:p-4">
+                  <h2 className="font-serif text-lg sm:text-xl">{c.label}</h2>
+                  <p className="mt-1 text-[0.65rem] tracking-[0.14em] uppercase opacity-85">
+                    {c.count} pieces
+                  </p>
+                </div>
               </Link>
             ))}
           </div>
+        )}
 
-          {showSareeLanding && (
-            <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
-              {fabricTiles.map((c) => (
-                <Link
-                  key={c.id}
-                  to={`/category/${active}/sarees/${c.id}`}
-                  className="group relative aspect-[4/5] overflow-hidden bg-bb-gray"
-                >
-                  {c.cover ? (
-                    <SafeImage
-                      src={c.cover}
-                      alt={c.label}
-                      className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-                    />
-                  ) : (
-                    <div className="h-full w-full bg-bb-gray" />
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-bb-blue-deep/80 via-black/20 to-transparent" />
-                  <div className="absolute inset-x-0 bottom-0 p-3 text-[#fbf7f2] sm:p-4">
-                    <h2 className="text-display text-lg sm:text-xl">{c.label}</h2>
-                    <p className="mt-1 text-[0.65rem] tracking-[0.14em] uppercase text-[#f3e8d8]/85">
-                      {c.count} pieces · Shop
-                    </p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          )}
-
-          <div className={showSareeLanding ? 'mt-12' : 'mt-8'}>
-            {showSareeLanding && (
-              <h2 className="text-display mb-6 text-2xl sm:text-3xl">
-                All sarees
-              </h2>
-            )}
-            {list.length === 0 ? (
-              <EmptyState />
-            ) : (
-              <div className="grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-5 md:grid-cols-3 lg:grid-cols-4">
-                {list.map((p) => (
-                  <ProductCard key={p.id} product={p} />
-                ))}
+        {(showProductGrid || showSareeAllGrid || denimCollection) && (
+          <div className="grid gap-8 lg:grid-cols-[220px_1fr]">
+            {/* Filter sidebar — Kankatala */}
+            <aside className="hidden lg:block">
+              <h2 className="mb-4 font-serif text-2xl text-[#6b161d]">Filter</h2>
+              <div className="border-t border-[#e5ddd6] py-4">
+                <p className="mb-3 flex items-center justify-between text-sm font-medium">
+                  Availability <ChevronDown className="size-4" />
+                </p>
+                <label className="mb-2 flex items-center gap-2 text-sm text-[#6b6560]">
+                  <input
+                    type="checkbox"
+                    checked={inStockOnly}
+                    onChange={(e) => setInStockOnly(e.target.checked)}
+                    className="accent-[#6b161d]"
+                  />
+                  In stock ({list.length})
+                </label>
+                <label className="flex items-center gap-2 text-sm text-[#6b6560]">
+                  <input type="checkbox" disabled className="accent-[#6b161d]" />
+                  Out of stock (0)
+                </label>
               </div>
-            )}
-          </div>
-        </>
-      )}
+              <div className="border-t border-[#e5ddd6] py-4">
+                <p className="mb-3 flex items-center justify-between text-sm font-medium">
+                  Category <ChevronDown className="size-4" />
+                </p>
+                <div className="space-y-2">
+                  {(isApparel || isGenderShop
+                    ? genderSubtypes
+                    : [{ id: 'all', label: meta.label }]
+                  ).map((s) => (
+                    <Link
+                      key={s.id}
+                      to={
+                        'id' in s && s.id !== 'all'
+                          ? `/category/${active}/${s.id}`
+                          : `/category/${active}`
+                      }
+                      className={`block text-sm ${
+                        subtype === ('id' in s ? s.id : null)
+                          ? 'text-[#6b161d]'
+                          : 'text-[#6b6560] hover:text-[#6b161d]'
+                      }`}
+                    >
+                      {s.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </aside>
 
-      {subtype === 'jeans' && denimCollection && (
-        <>
-          <div className="mt-8 flex gap-3 overflow-x-auto pb-1">
-            <Link
-              to={`/category/${active}/jeans`}
-              className="shrink-0 border border-bb-border px-4 py-2 text-[0.68rem] tracking-[0.12em] text-bb-muted uppercase hover:border-bb-blue hover:text-bb-text"
-            >
-              All
-            </Link>
-            {genderDenimCollections.map((c) => (
-              <Link
-                key={c.id}
-                to={`/category/${active}/jeans/${c.id}`}
-                className={`shrink-0 border px-4 py-2 text-[0.68rem] tracking-[0.12em] uppercase ${
-                  c.id === denimCollection
-                    ? 'border-bb-blue bg-bb-blue text-white'
-                    : 'border-bb-border text-bb-muted hover:border-bb-blue hover:text-bb-text'
-                }`}
-              >
-                {c.label}
-              </Link>
-            ))}
-          </div>
-          <div className="mt-8 grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-5 md:grid-cols-3 lg:grid-cols-4">
-            {list.length === 0 ? (
-              <div className="col-span-full">
+            <div>
+              {showSareeAllGrid && showSareeLanding && (
+                <h2 className="mb-6 font-serif text-2xl text-[#6b161d] sm:text-3xl">
+                  All sarees
+                </h2>
+              )}
+
+              <div className="mb-5 flex items-center justify-between gap-3 border-b border-[#e5ddd6] pb-4">
+                <p className="text-sm text-[#6b6560]">{list.length} items</p>
+                <label className="flex items-center gap-2 text-sm text-[#6b6560]">
+                  Sort by
+                  <select
+                    value={sort}
+                    onChange={(e) => setSort(e.target.value)}
+                    className="border border-[#e5ddd6] bg-white px-2 py-1.5 text-sm text-[#121212] outline-none"
+                  >
+                    <option value="featured">Featured</option>
+                    <option value="new">New</option>
+                    <option value="price-asc">Price, low to high</option>
+                    <option value="price-desc">Price, high to low</option>
+                  </select>
+                </label>
+              </div>
+
+              {list.length === 0 ? (
                 <EmptyState />
-              </div>
-            ) : (
-              list.map((p) => <ProductCard key={p.id} product={p} />)
-            )}
+              ) : (
+                <div className="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-3 lg:gap-x-6">
+                  {list.map((p) => (
+                    <ProductCard key={p.id} product={p} />
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
-        </>
-      )}
-
-      {(subtype === 'tshirts' || subtype === 'shirts') && (
-        <div className="mt-8">
-          {list.length === 0 ? (
-            <EmptyState />
-          ) : (
-            <div className="grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-5 md:grid-cols-3 lg:grid-cols-4">
-              {list.map((p) => (
-                <ProductCard key={p.id} product={p} />
-              ))}
-            </div>
-          )}
-        </div>
-      )}
-
-      {!isApparel && (
-        <div className="mt-8">
-          {list.length === 0 ? (
-            <EmptyState />
-          ) : (
-            <div className="grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-5 md:grid-cols-3 lg:grid-cols-4">
-              {list.map((p) => (
-                <ProductCard key={p.id} product={p} />
-              ))}
-            </div>
-          )}
-        </div>
-      )}
+        )}
+      </div>
     </main>
   )
 }
 
 function EmptyState() {
   return (
-    <div className="border border-dashed border-bb-border px-6 py-20 text-center">
-      <p className="text-display text-3xl text-bb-text">Coming soon</p>
-      <p className="mx-auto mt-3 max-w-md text-sm text-bb-muted">
+    <div className="border border-dashed border-[#e5ddd6] px-6 py-20 text-center">
+      <p className="font-serif text-3xl text-[#6b161d]">Coming soon</p>
+      <p className="mx-auto mt-3 max-w-md text-sm text-[#6b6560]">
         We&apos;re stocking this collection. Browse other categories meanwhile.
       </p>
       <Link
-        to="/category/apparel-accessories"
-        className="mt-8 inline-flex bg-bb-blue px-6 py-3 text-xs font-semibold tracking-[0.18em] text-white uppercase"
+        to="/category/women"
+        className="mt-8 inline-flex border border-[#6b161d] px-6 py-3 text-xs tracking-[0.16em] text-[#6b161d] uppercase"
       >
-        Back to apparel
+        Shop women
       </Link>
     </div>
   )

@@ -1,18 +1,19 @@
 import {
   Check,
-  ChevronRight,
+  ChevronDown,
   Heart,
   Minus,
   Plus,
-  RotateCcw,
   Ruler,
   Share2,
-  ShieldCheck,
-  Star,
-  ThumbsUp,
-  Truck,
 } from 'lucide-react'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { getCategory } from '../categories'
 import { formatMoney } from '../data'
@@ -21,45 +22,21 @@ import { getProductDetails } from '../productDetails'
 import { usePageTitle } from '../hooks/usePageTitle'
 import { useCatalog } from '../hooks/useCatalog'
 import { SafeImage } from '../components/SafeImage'
-
-type TabId = 'overview' | 'specs' | 'sizechart' | 'reviews'
-
-function Stars({
-  value,
-  size = 'size-4',
-}: {
-  value: number
-  size?: string
-}) {
-  return (
-    <div className="flex items-center gap-0.5 text-[#c4a35a]">
-      {Array.from({ length: 5 }).map((_, i) => (
-        <Star
-          key={i}
-          className={`${size} ${i < Math.round(value) ? 'fill-current' : 'opacity-25'}`}
-        />
-      ))}
-    </div>
-  )
-}
+import { ProductCard } from '../components/ProductCard'
 
 export function ProductPage() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const {
-    addToCart,
-    wishlist,
-    toggleWish,
-    openCart,
-  } = useStore()
+  const { addToCart, wishlist, toggleWish, openCart } = useStore()
 
   const { products } = useCatalog()
   const product = products.find((p) => p.id === id)
-  const [activeImage, setActiveImage] = useState(0)
   const [qty, setQty] = useState(1)
-  const [tab, setTab] = useState<TabId>('overview')
   const [selectedSize, setSelectedSize] = useState<string | null>(null)
   const [sizeHint, setSizeHint] = useState(false)
+  const [openAccordions, setOpenAccordions] = useState<Set<string>>(
+    () => new Set(['description']),
+  )
   const sizeSectionRef = useRef<HTMLDivElement>(null)
 
   const details = useMemo(
@@ -70,31 +47,24 @@ export function ProductPage() {
   usePageTitle(product?.name)
 
   useEffect(() => {
-    setActiveImage(0)
     setQty(1)
-    setTab('overview')
     setSizeHint(false)
+    setOpenAccordions(new Set(['description']))
     if (!product) {
       setSelectedSize(null)
       return
     }
     const sizes = getProductDetails(product).sizes
-    // One size (e.g. Free Size) — preselect so Buy works on mobile
     setSelectedSize(sizes.length === 1 ? sizes[0] : null)
   }, [product?.id])
-
-  const safeImageIndex = Math.min(
-    activeImage,
-    Math.max(0, (details?.gallery.length ?? 1) - 1),
-  )
 
   if (!product || !details) {
     return (
       <main className="mx-auto max-w-[900px] px-4 py-20 text-center">
-        <h1 className="font-serif text-3xl text-bb-text">Product not found</h1>
+        <h1 className="font-serif text-3xl text-[#6b161d]">Product not found</h1>
         <Link
           to="/deals"
-          className="mt-4 inline-block text-sm tracking-wide text-bb-link uppercase hover:underline"
+          className="mt-4 inline-block text-sm tracking-wide text-[#6b161d] uppercase hover:underline"
         >
           Back to shop
         </Link>
@@ -107,13 +77,10 @@ export function ProductPage() {
     .filter((p) => p.tab === product.tab && p.id !== product.id)
     .slice(0, 4)
   const saveAmt = product.was > product.price ? product.was - product.price : 0
-  const savePct =
-    product.was > product.price
-      ? Math.round((saveAmt / product.was) * 100)
-      : 0
   const saved = wishlist.has(product.id)
   const needsSize = details.sizes.length > 0
-  const maxBreakdown = Math.max(...details.ratingBreakdown, 1)
+  const gallery =
+    details.gallery.length > 0 ? details.gallery : [product.image]
 
   const requireSizeOrScroll = () => {
     if (!needsSize || selectedSize) return true
@@ -133,144 +100,109 @@ export function ProductPage() {
     return true
   }
 
-  const tabs: { id: TabId; label: string }[] = [
-    { id: 'overview', label: 'Overview' },
-    { id: 'specs', label: 'Details' },
-    ...(details.sizeChart
-      ? [{ id: 'sizechart' as const, label: 'Size chart' }]
-      : []),
-    { id: 'reviews', label: `Reviews (${details.reviewCount})` },
-  ]
+  const toggleAccordion = (key: string) => {
+    setOpenAccordions((prev) => {
+      const next = new Set(prev)
+      if (next.has(key)) next.delete(key)
+      else next.add(key)
+      return next
+    })
+  }
 
   return (
-    <main className="bg-fusora-ivory pb-36 lg:pb-0">
-      <div className="mx-auto max-w-[1400px] px-3 py-4 sm:px-4 sm:py-6 lg:px-8 lg:py-10">
-        <nav className="mb-4 flex flex-wrap items-center gap-1 text-[0.65rem] tracking-[0.12em] text-bb-muted uppercase sm:mb-6 sm:text-xs sm:tracking-[0.14em]">
-          <Link to="/" className="hover:text-bb-text">
+    <main className="bg-white pb-28 lg:pb-0">
+      <div className="mx-auto max-w-[1280px] px-3 py-5 sm:px-6 lg:px-10 lg:py-10">
+        <nav className="mb-6 text-xs text-[#6b6560]">
+          <Link to="/" className="hover:text-[#6b161d]">
             Home
           </Link>
-          <ChevronRight className="size-3.5 opacity-50" />
-          <Link to={`/category/${product.tab}`} className="hover:text-bb-text">
+          <span className="mx-2">|</span>
+          <Link
+            to={`/category/${product.tab}`}
+            className="hover:text-[#6b161d]"
+          >
             {category.label}
           </Link>
           {product.subtype && (
             <>
-              <ChevronRight className="size-3.5 opacity-50" />
+              <span className="mx-2">|</span>
               <Link
                 to={`/category/${product.tab}/${product.subtype}`}
-                className="hover:text-bb-text"
+                className="hover:text-[#6b161d] capitalize"
               >
                 {product.subtype}
               </Link>
             </>
           )}
-          <ChevronRight className="size-3.5 opacity-50" />
-          <span className="line-clamp-1 text-bb-text">{product.brand}</span>
+          <span className="mx-2">|</span>
+          <span className="text-[#121212]">{product.name}</span>
         </nav>
 
-        <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] xl:gap-12">
-          {/* Gallery */}
-          <section>
-            <div className="relative overflow-hidden bg-bb-gray">
-              <SafeImage
-                key={details.gallery[safeImageIndex]}
-                src={details.gallery[safeImageIndex]}
-                alt={product.name}
-                className="aspect-[4/5] w-full object-cover sm:aspect-square"
-                loading="eager"
-              />
-              {product.topDeal && (
-                <span className="absolute top-4 left-4 bg-bb-blue px-3 py-1 text-[0.65rem] font-semibold tracking-[0.16em] text-white uppercase">
-                  New
-                </span>
-              )}
-              {savePct > 0 && (
-                <span className="absolute top-4 right-4 bg-[#8b2e2e] px-3 py-1 text-[0.65rem] font-semibold tracking-[0.16em] text-white uppercase">
-                  Save {savePct}%
-                </span>
-              )}
-            </div>
-            {details.gallery.length > 1 && (
-              <div className="mt-3 flex gap-2 overflow-x-auto pb-1">
-                {details.gallery.map((src, i) => (
-                  <button
-                    key={src}
-                    type="button"
-                    onClick={() => setActiveImage(i)}
-                    className={`size-16 shrink-0 overflow-hidden border sm:size-[4.5rem] ${
-                      safeImageIndex === i
-                        ? 'border-bb-blue'
-                        : 'border-transparent opacity-75 hover:opacity-100'
-                    }`}
-                  >
-                    <SafeImage
-                      src={src}
-                      alt=""
-                      className="h-full w-full object-cover"
-                    />
-                  </button>
-                ))}
+        <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 xl:gap-16">
+          {/* Multi-image gallery — Kankatala 2×2 */}
+          <section
+            className={
+              gallery.length === 1
+                ? 'overflow-hidden bg-[#f5f3f1]'
+                : 'grid grid-cols-2 gap-2 sm:gap-3'
+            }
+          >
+            {gallery.slice(0, 4).map((src, i) => (
+              <div
+                key={`${src}-${i}`}
+                className="overflow-hidden bg-[#f5f3f1]"
+              >
+                <SafeImage
+                  src={src}
+                  alt={`${product.name} ${i + 1}`}
+                  className="aspect-[3/4] w-full object-cover"
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                />
               </div>
-            )}
+            ))}
           </section>
 
           {/* Buy box */}
           <section className="lg:sticky lg:top-28 lg:self-start">
-            <p className="text-[0.7rem] font-medium tracking-[0.28em] text-bb-muted uppercase">
-              {product.brand}
-            </p>
-            <h1 className="font-serif mt-2 text-[1.65rem] leading-tight text-bb-text sm:text-4xl">
+            <h1 className="font-serif text-2xl leading-snug tracking-wide text-[#6b161d] uppercase sm:text-3xl lg:text-[2rem]">
               {product.name}
             </h1>
 
-            <button
-              type="button"
-              onClick={() => setTab('reviews')}
-              className="mt-4 flex flex-wrap items-center gap-2 text-sm"
-            >
-              <Stars value={details.rating} />
-              <span className="font-semibold text-bb-text">{details.rating}</span>
-              <span className="text-bb-muted underline-offset-2 hover:underline">
-                {details.reviewCount} reviews
-              </span>
-            </button>
-
-            <div className="mt-6 border-y border-bb-border py-5">
-              <div className="flex flex-wrap items-end gap-3">
-                <p className="font-serif text-3xl text-bb-text sm:text-4xl">
-                  {formatMoney(product.price)}
-                </p>
-                {saveAmt > 0 && (
-                  <>
-                    <p className="pb-1 text-sm text-bb-muted line-through">
-                      {formatMoney(product.was)}
-                    </p>
-                    <p className="pb-1 text-sm font-semibold text-[#8b2e2e]">
-                      You save {formatMoney(saveAmt)}
-                    </p>
-                  </>
-                )}
-              </div>
-              <p className="mt-2 text-xs tracking-wide text-bb-muted">
-                SKU {details.sku} · {details.color} · {details.material}
+            <div className="mt-5 flex flex-wrap items-baseline gap-3">
+              <p className="text-xl font-medium text-[#121212] sm:text-2xl">
+                {formatMoney(product.price)}
               </p>
+              {saveAmt > 0 && (
+                <>
+                  <p className="text-sm text-[#6b6560] line-through">
+                    {formatMoney(product.was)}
+                  </p>
+                  <p className="text-sm text-[#6b161d]">
+                    Save {formatMoney(saveAmt)}
+                  </p>
+                </>
+              )}
             </div>
+
+            <p className="mt-3 text-xs tracking-[0.08em] text-[#6b6560]">
+              SKU: {details.sku}
+            </p>
 
             {needsSize && (
               <div
                 ref={sizeSectionRef}
                 id="product-size"
-                className={`mt-6 scroll-mt-28 ${
+                className={`mt-7 scroll-mt-28 ${
                   sizeHint && !selectedSize
-                    ? 'rounded-2xl ring-2 ring-[#8b2e2e]/35 ring-offset-2 ring-offset-fusora-ivory'
+                    ? 'rounded ring-2 ring-[#6b161d]/30 ring-offset-2'
                     : ''
                 }`}
               >
                 <div className="mb-3 flex items-center justify-between gap-3">
-                  <p className="text-sm font-semibold tracking-wide text-bb-text">
-                    Select size
+                  <p className="text-sm font-medium text-[#121212]">
+                    Size
                     {selectedSize ? (
-                      <span className="ml-2 font-normal text-bb-muted">
+                      <span className="ml-2 font-normal text-[#6b6560]">
                         · {selectedSize}
                       </span>
                     ) : null}
@@ -279,12 +211,12 @@ export function ProductPage() {
                     <button
                       type="button"
                       onClick={() => {
-                        setTab('sizechart')
+                        setOpenAccordions((prev) => new Set(prev).add('sizechart'))
                         document
-                          .getElementById('product-tabs')
+                          .getElementById('pdp-accordions')
                           ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
                       }}
-                      className="inline-flex items-center gap-1.5 text-xs font-semibold tracking-[0.14em] text-bb-link uppercase hover:underline"
+                      className="inline-flex items-center gap-1.5 text-xs tracking-[0.12em] text-[#6b161d] uppercase hover:underline"
                     >
                       <Ruler className="size-3.5" />
                       Size chart
@@ -302,10 +234,10 @@ export function ProductPage() {
                           setSelectedSize(size)
                           setSizeHint(false)
                         }}
-                        className={`min-h-11 min-w-12 touch-manipulation border px-3.5 py-2.5 text-sm font-medium transition ${
+                        className={`min-h-11 min-w-12 touch-manipulation border px-3.5 py-2.5 text-sm transition ${
                           active
-                            ? 'border-bb-blue bg-bb-blue text-white'
-                            : 'border-bb-border bg-white text-bb-text hover:border-bb-blue'
+                            ? 'border-[#6b161d] bg-[#6b161d] text-white'
+                            : 'border-[#d4cbc3] bg-white text-[#121212] hover:border-[#6b161d]'
                         }`}
                       >
                         {size}
@@ -314,432 +246,259 @@ export function ProductPage() {
                   })}
                 </div>
                 {sizeHint && !selectedSize && (
-                  <p className="mt-2 text-xs font-medium text-[#8b2e2e]">
+                  <p className="mt-2 text-xs font-medium text-[#6b161d]">
                     Please select a size to continue.
                   </p>
                 )}
               </div>
             )}
 
-            <div className="mt-6">
-              <p className="mb-2 text-sm font-semibold">Delivery</p>
-              <div className="rounded-2xl border border-bb-border bg-white px-3.5 py-3.5 text-left text-sm">
-                <div className="flex items-start gap-2.5">
-                  <Truck className="mt-0.5 size-4 shrink-0 text-bb-blue" />
-                  <div>
-                    <span className="block font-semibold text-bb-text">
-                      Normal delivery
-                    </span>
-                    <span className="mt-0.5 block text-xs text-bb-muted">
-                      2–5 business days · Standard shipping only
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-6 flex items-center gap-3">
-              <span className="text-sm font-semibold">Qty</span>
-              <div className="inline-flex items-center border border-bb-border bg-white">
+            <div className="mt-7 flex items-center gap-3">
+              <span className="text-sm text-[#6b6560]">Quantity</span>
+              <div className="inline-flex items-center border border-[#d4cbc3]">
                 <button
                   type="button"
-                  className="grid size-10 place-items-center"
+                  className="grid size-10 place-items-center text-[#121212]"
                   onClick={() => setQty((q) => Math.max(1, q - 1))}
                   aria-label="Decrease quantity"
                 >
-                  <Minus className="size-4" />
+                  <Minus className="size-3.5" />
                 </button>
-                <span className="w-8 text-center text-sm font-bold">{qty}</span>
+                <span className="w-9 text-center text-sm">{qty}</span>
                 <button
                   type="button"
-                  className="grid size-10 place-items-center"
+                  className="grid size-10 place-items-center text-[#121212]"
                   onClick={() => setQty((q) => Math.min(8, q + 1))}
                   aria-label="Increase quantity"
                 >
-                  <Plus className="size-4" />
+                  <Plus className="size-3.5" />
                 </button>
               </div>
             </div>
 
-            <div className="mt-4 flex flex-col gap-2 sm:flex-row lg:flex">
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
               <button
                 type="button"
                 onClick={() => {
                   if (addQty()) openCart()
                 }}
-                className="hidden flex-1 touch-manipulation border border-bb-border bg-white py-3.5 text-xs font-semibold tracking-[0.16em] text-bb-text uppercase transition hover:bg-bb-gray sm:block"
+                className="hidden flex-1 touch-manipulation border border-[#6b161d] bg-white py-3.5 text-xs font-medium tracking-[0.16em] text-[#6b161d] uppercase transition hover:bg-[#6b161d] hover:text-white sm:block"
               >
-                Add to bag
+                Add to cart
               </button>
-              <button
-                type="button"
-                onClick={() => {
-                  if (addQty()) navigate('/cart')
-                }}
-                className="hidden flex-1 touch-manipulation bg-bb-blue py-3.5 text-xs font-semibold tracking-[0.16em] text-white uppercase hover:bg-bb-blue-dark sm:block"
-              >
-                Buy now
-              </button>
-            </div>
-
-            <div className="mt-3 flex gap-2">
               <button
                 type="button"
                 onClick={() => toggleWish(product.id)}
-                className="inline-flex flex-1 items-center justify-center gap-2 border border-bb-border bg-white py-2.5 text-sm font-semibold hover:bg-bb-gray"
+                className="hidden flex-1 touch-manipulation border border-[#d4cbc3] bg-white py-3.5 text-xs font-medium tracking-[0.16em] text-[#121212] uppercase transition hover:border-[#6b161d] sm:inline-flex sm:items-center sm:justify-center sm:gap-2"
               >
                 <Heart
-                  className={`size-4 ${saved ? 'fill-bb-save text-bb-save' : ''}`}
+                  className={`size-4 ${saved ? 'fill-[#6b161d] text-[#6b161d]' : ''}`}
+                  strokeWidth={1.4}
                 />
-                {saved ? 'Saved' : 'Save'}
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  const url = window.location.href
-                  if (navigator.share) {
-                    void navigator.share({ title: product.name, url }).catch(() => {})
-                  } else {
-                    void navigator.clipboard?.writeText(url)
-                  }
-                }}
-                className="inline-flex flex-1 items-center justify-center gap-2 border border-bb-border bg-white py-2.5 text-sm font-semibold hover:bg-bb-gray"
-              >
-                <Share2 className="size-4" />
-                Share
+                {saved ? 'Wishlisted' : 'Add to wishlist'}
               </button>
             </div>
 
-            <ul className="mt-6 space-y-3 border-t border-bb-border pt-5 text-sm">
-              <li className="flex gap-2.5">
-                <ShieldCheck className="mt-0.5 size-4 shrink-0 text-bb-blue" />
-                <span>
-                  <strong>Purchase protection</strong> on eligible orders
-                </span>
-              </li>
-              <li className="flex gap-2.5">
-                <Truck className="mt-0.5 size-4 shrink-0 text-bb-blue" />
-                <span>
-                  <strong>Delivery</strong> in 2–5 days
-                </span>
-              </li>
-              <li className="flex gap-2.5">
-                <RotateCcw className="mt-0.5 size-4 shrink-0 text-bb-blue" />
-                <span>
-                  <strong>Easy returns</strong> within 15 days with receipt
-                </span>
-              </li>
-            </ul>
-          </section>
-        </div>
+            <button
+              type="button"
+              onClick={() => {
+                if (addQty()) navigate('/cart')
+              }}
+              className="mt-3 hidden w-full touch-manipulation bg-[#6b161d] py-3.5 text-xs font-medium tracking-[0.16em] text-white uppercase transition hover:bg-[#5a1218] sm:block"
+            >
+              Buy it now
+            </button>
 
-        {/* Highlights */}
-        <section className="mt-10 border-t border-bb-border pt-10">
-          <p className="text-[0.7rem] font-medium tracking-[0.28em] text-bb-muted uppercase">
-            Why you’ll love it
-          </p>
-          <ul className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {details.highlights.map((h) => (
-              <li key={h} className="flex gap-2.5 text-sm leading-relaxed">
-                <Check className="mt-0.5 size-4 shrink-0 text-bb-blue" />
-                {h}
-              </li>
-            ))}
-          </ul>
-        </section>
+            <button
+              type="button"
+              onClick={() => {
+                const url = window.location.href
+                if (navigator.share) {
+                  void navigator.share({ title: product.name, url }).catch(() => {})
+                } else {
+                  void navigator.clipboard?.writeText(url)
+                }
+              }}
+              className="mt-4 inline-flex items-center gap-2 text-xs tracking-[0.12em] text-[#6b6560] uppercase hover:text-[#6b161d]"
+            >
+              <Share2 className="size-3.5" />
+              Share
+            </button>
 
-        {/* Tabs */}
-        <section id="product-tabs" className="mt-10 scroll-mt-24 border-t border-bb-border pt-2">
-          <div className="flex gap-1 overflow-x-auto border-b border-bb-border">
-            {tabs.map((t) => (
-              <button
-                key={t.id}
-                type="button"
-                onClick={() => setTab(t.id)}
-                className={`shrink-0 px-4 py-4 text-xs font-semibold tracking-[0.14em] uppercase sm:px-5 ${
-                  tab === t.id
-                    ? 'border-b-2 border-bb-blue text-bb-blue'
-                    : 'text-bb-muted hover:text-bb-text'
-                }`}
+            {/* Accordion — Kankatala */}
+            <div id="pdp-accordions" className="mt-10 scroll-mt-24 border-t border-[#e5ddd6]">
+              <Accordion
+                title="Description"
+                open={openAccordions.has('description')}
+                onToggle={() => toggleAccordion('description')}
               >
-                {t.label}
-              </button>
-            ))}
-          </div>
-
-          <div className="py-8">
-            {tab === 'overview' && (
-              <div className="grid max-w-4xl gap-8 lg:grid-cols-[1.4fr_1fr]">
-                <div>
-                  <h2 className="font-serif text-2xl text-bb-text">About this piece</h2>
-                  <p className="mt-4 text-sm leading-relaxed text-bb-muted sm:text-base">
-                    {details.overview}
-                  </p>
-                  <h3 className="mt-8 text-xs font-semibold tracking-[0.18em] text-bb-text uppercase">
-                    Care
-                  </h3>
-                  <ul className="mt-3 space-y-2">
-                    {details.care.map((c) => (
+                <p className="text-sm leading-relaxed text-[#6b6560]">
+                  {details.overview}
+                </p>
+                {details.highlights.length > 0 && (
+                  <ul className="mt-4 space-y-2">
+                    {details.highlights.map((h) => (
                       <li
-                        key={c}
-                        className="flex gap-2 text-sm text-bb-muted"
+                        key={h}
+                        className="flex gap-2 text-sm text-[#6b6560]"
                       >
-                        <Check className="mt-0.5 size-3.5 shrink-0 text-bb-blue" />
-                        {c}
+                        <Check className="mt-0.5 size-3.5 shrink-0 text-[#6b161d]" />
+                        {h}
                       </li>
                     ))}
                   </ul>
-                </div>
-                <div className="bg-bb-gray/60 p-5 sm:p-6">
-                  <h3 className="text-xs font-semibold tracking-[0.18em] text-bb-text uppercase">
-                    Protection
-                  </h3>
-                  <ul className="mt-4 space-y-3">
-                    {details.protection.map((p) => (
-                      <li
-                        key={p}
-                        className="flex items-start gap-2 text-sm text-bb-muted"
-                      >
-                        <ShieldCheck className="mt-0.5 size-4 shrink-0 text-bb-blue" />
-                        {p}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            )}
+                )}
+              </Accordion>
 
-            {tab === 'specs' && (
-              <div className="max-w-3xl">
-                <h2 className="font-serif text-2xl text-bb-text">Product details</h2>
-                <table className="mt-6 w-full text-left text-sm">
-                  <tbody>
-                    {details.specs.map((row, i) => (
-                      <tr
-                        key={row.label}
-                        className={i % 2 === 0 ? 'bg-bb-gray/45' : ''}
-                      >
-                        <th className="w-[40%] px-4 py-3.5 font-semibold text-bb-text">
-                          {row.label}
-                        </th>
-                        <td className="px-4 py-3.5 text-bb-muted">{row.value}</td>
-                      </tr>
-                    ))}
-                    <tr>
-                      <th className="px-4 py-3.5 font-semibold">Brand</th>
-                      <td className="px-4 py-3.5 text-bb-muted">{product.brand}</td>
-                    </tr>
-                    <tr className="bg-bb-gray/45">
-                      <th className="px-4 py-3.5 font-semibold">SKU</th>
-                      <td className="px-4 py-3.5 text-bb-muted">{details.sku}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            )}
-
-            {tab === 'sizechart' && details.sizeChart && (
-              <div className="max-w-4xl">
-                <div className="flex flex-wrap items-end justify-between gap-3">
-                  <div>
-                    <h2 className="font-serif text-2xl text-bb-text">
-                      {details.sizeChart.title}
-                    </h2>
-                    <p className="mt-1 text-sm text-bb-muted">
-                      Measurements in {details.sizeChart.unit}
-                    </p>
+              <Accordion
+                title="Product details"
+                open={openAccordions.has('details')}
+                onToggle={() => toggleAccordion('details')}
+              >
+                <dl className="space-y-2 text-sm">
+                  {details.specs.map((row) => (
+                    <div key={row.label} className="flex gap-3">
+                      <dt className="w-28 shrink-0 font-medium text-[#121212]">
+                        {row.label}
+                      </dt>
+                      <dd className="text-[#6b6560]">{row.value}</dd>
+                    </div>
+                  ))}
+                  <div className="flex gap-3">
+                    <dt className="w-28 shrink-0 font-medium text-[#121212]">
+                      Brand
+                    </dt>
+                    <dd className="text-[#6b6560]">{product.brand}</dd>
                   </div>
-                  {needsSize && (
-                    <p className="text-xs tracking-wide text-bb-muted uppercase">
-                      Selected · {selectedSize ?? 'none'}
-                    </p>
-                  )}
-                </div>
+                  <div className="flex gap-3">
+                    <dt className="w-28 shrink-0 font-medium text-[#121212]">
+                      Color
+                    </dt>
+                    <dd className="text-[#6b6560]">{details.color}</dd>
+                  </div>
+                  <div className="flex gap-3">
+                    <dt className="w-28 shrink-0 font-medium text-[#121212]">
+                      Material
+                    </dt>
+                    <dd className="text-[#6b6560]">{details.material}</dd>
+                  </div>
+                </dl>
+              </Accordion>
 
-                <div className="mt-6 overflow-x-auto border border-bb-border">
-                  <table className="w-full min-w-[520px] text-left text-sm">
-                    <thead>
-                      <tr className="bg-bb-blue text-white">
-                        {details.sizeChart.headers.map((h) => (
-                          <th
-                            key={h}
-                            className="px-4 py-3 text-xs font-semibold tracking-[0.12em] uppercase"
-                          >
-                            {h}
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {details.sizeChart.rows.map((row) => {
-                        const isActive =
-                          selectedSize != null && row[0] === selectedSize
-                        return (
+              {details.sizeChart && (
+                <Accordion
+                  title="Size chart"
+                  open={openAccordions.has('sizechart')}
+                  onToggle={() => toggleAccordion('sizechart')}
+                >
+                  <p className="mb-3 text-xs text-[#6b6560]">
+                    Measurements in {details.sizeChart.unit}
+                  </p>
+                  <div className="overflow-x-auto">
+                    <table className="w-full min-w-[400px] text-left text-sm">
+                      <thead>
+                        <tr className="border-b border-[#e5ddd6]">
+                          {details.sizeChart.headers.map((h) => (
+                            <th
+                              key={h}
+                              className="px-2 py-2 text-xs font-medium tracking-wide text-[#121212] uppercase"
+                            >
+                              {h}
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {details.sizeChart.rows.map((row) => (
                           <tr
                             key={row.join('-')}
-                            className={`border-t border-bb-border ${
-                              isActive ? 'bg-bb-blue/8' : 'odd:bg-white even:bg-bb-gray'
-                            }`}
+                            className="border-b border-[#f0ebe6]"
                           >
                             {row.map((cell, idx) => (
                               <td
                                 key={`${row[0]}-${idx}`}
-                                className={`px-4 py-3 ${
+                                className={`px-2 py-2.5 ${
                                   idx === 0
-                                    ? 'font-semibold text-bb-text'
-                                    : 'text-bb-muted'
+                                    ? 'font-medium text-[#121212]'
+                                    : 'text-[#6b6560]'
                                 }`}
                               >
-                                {idx === 0 && needsSize ? (
-                                  <button
-                                    type="button"
-                                    onClick={() => {
-                                      setSelectedSize(cell)
-                                      setSizeHint(false)
-                                    }}
-                                    className="hover:underline"
-                                  >
-                                    {cell}
-                                  </button>
-                                ) : (
-                                  cell
-                                )}
+                                {cell}
                               </td>
                             ))}
                           </tr>
-                        )
-                      })}
-                    </tbody>
-                  </table>
-                </div>
-                <p className="mt-4 max-w-2xl text-sm leading-relaxed text-bb-muted">
-                  {details.sizeChart.note}
-                </p>
-              </div>
-            )}
-
-            {tab === 'reviews' && (
-              <div className="grid gap-10 lg:grid-cols-[0.9fr_1.4fr]">
-                <div>
-                  <h2 className="font-serif text-2xl text-bb-text">Customer reviews</h2>
-                  <div className="mt-5 flex items-end gap-3">
-                    <p className="font-serif text-5xl text-bb-text">
-                      {details.rating}
-                    </p>
-                    <div className="pb-1">
-                      <Stars value={details.rating} />
-                      <p className="mt-1 text-sm text-bb-muted">
-                        {details.reviewCount} ratings
-                      </p>
-                    </div>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
-
-                  <ul className="mt-6 space-y-2.5">
-                    {[5, 4, 3, 2, 1].map((star) => {
-                      const count = details.ratingBreakdown[star - 1] ?? 0
-                      const pct = Math.round((count / maxBreakdown) * 100)
-                      return (
-                        <li key={star} className="flex items-center gap-3 text-sm">
-                          <span className="w-8 text-bb-muted">{star}★</span>
-                          <div className="h-2 flex-1 overflow-hidden rounded-full bg-bb-gray">
-                            <div
-                              className="h-full rounded-full bg-[#c4a35a]"
-                              style={{ width: `${pct}%` }}
-                            />
-                          </div>
-                          <span className="w-10 text-right text-xs text-bb-muted">
-                            {count}
-                          </span>
-                        </li>
-                      )
-                    })}
-                  </ul>
-                </div>
-
-                <div className="space-y-4">
-                  {details.reviews.map((r) => (
-                    <article
-                      key={r.id}
-                      className="border-b border-bb-border pb-5 last:border-0"
-                    >
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        <div>
-                          <p className="text-sm font-semibold text-bb-text">
-                            {r.name}
-                          </p>
-                          <p className="mt-0.5 text-xs text-bb-muted">
-                            {r.date}
-                            {r.verified ? ' · Verified purchase' : ''}
-                          </p>
-                        </div>
-                        <Stars value={r.rating} size="size-3.5" />
-                      </div>
-                      <h3 className="mt-3 text-sm font-semibold text-bb-text">
-                        {r.title}
-                      </h3>
-                      <p className="mt-1.5 text-sm leading-relaxed text-bb-muted">
-                        {r.text}
-                      </p>
-                      <p className="mt-3 inline-flex items-center gap-1.5 text-xs text-bb-muted">
-                        <ThumbsUp className="size-3.5" />
-                        {r.helpful} found this helpful
-                      </p>
-                    </article>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        </section>
-
-        {/* Related */}
-        {related.length > 0 && (
-          <section className="mt-4 mb-6 border-t border-bb-border pt-10">
-            <div className="mb-6 flex items-end justify-between gap-3">
-              <div>
-                <p className="text-[0.7rem] font-medium tracking-[0.28em] text-bb-muted uppercase">
-                  You may also like
-                </p>
-                <h2 className="font-serif mt-2 text-3xl text-bb-text">
-                  Similar pieces
-                </h2>
-              </div>
-              <Link
-                to={`/category/${product.tab}`}
-                className="text-xs font-semibold tracking-[0.16em] text-bb-link uppercase hover:underline"
-              >
-                See all
-              </Link>
-            </div>
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
-              {related.map((p) => (
-                <Link key={p.id} to={`/product/${p.id}`} className="group">
-                  <div className="overflow-hidden bg-bb-gray">
-                    <img
-                      src={p.image}
-                      alt=""
-                      className="aspect-[3/4] w-full object-cover transition duration-500 group-hover:scale-[1.03]"
-                    />
-                  </div>
-                  <p className="mt-3 line-clamp-2 text-sm text-bb-text">
-                    {p.name}
+                  <p className="mt-3 text-sm leading-relaxed text-[#6b6560]">
+                    {details.sizeChart.note}
                   </p>
-                  <p className="mt-1 font-semibold">{formatMoney(p.price)}</p>
-                  {p.was > p.price && (
-                    <p className="text-xs text-bb-muted line-through">
-                      {formatMoney(p.was)}
-                    </p>
-                  )}
-                </Link>
+                </Accordion>
+              )}
+
+              <Accordion
+                title="Care instructions"
+                open={openAccordions.has('care')}
+                onToggle={() => toggleAccordion('care')}
+              >
+                <ul className="space-y-2">
+                  {details.care.map((c) => (
+                    <li
+                      key={c}
+                      className="flex gap-2 text-sm text-[#6b6560]"
+                    >
+                      <Check className="mt-0.5 size-3.5 shrink-0 text-[#6b161d]" />
+                      {c}
+                    </li>
+                  ))}
+                </ul>
+              </Accordion>
+
+              <Accordion
+                title="Shipping & returns"
+                open={openAccordions.has('shipping')}
+                onToggle={() => toggleAccordion('shipping')}
+              >
+                <ul className="space-y-2 text-sm text-[#6b6560]">
+                  {details.protection.map((p) => (
+                    <li key={p} className="flex gap-2">
+                      <Check className="mt-0.5 size-3.5 shrink-0 text-[#6b161d]" />
+                      {p}
+                    </li>
+                  ))}
+                  <li className="flex gap-2">
+                    <Check className="mt-0.5 size-3.5 shrink-0 text-[#6b161d]" />
+                    Delivery in 2–5 business days
+                  </li>
+                  <li className="flex gap-2">
+                    <Check className="mt-0.5 size-3.5 shrink-0 text-[#6b161d]" />
+                    Easy returns within 15 days with receipt
+                  </li>
+                </ul>
+              </Accordion>
+            </div>
+          </section>
+        </div>
+
+        {/* Related — Kankatala */}
+        {related.length > 0 && (
+          <section className="mt-16 border-t border-[#e5ddd6] pt-12 sm:mt-20">
+            <h2 className="mb-8 text-center font-serif text-3xl tracking-wide text-[#6b161d] sm:text-4xl">
+              You may also like
+            </h2>
+            <div className="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-4 lg:gap-x-6">
+              {related.map((p) => (
+                <ProductCard key={p.id} product={p} />
               ))}
             </div>
           </section>
         )}
       </div>
 
-      {/* Mobile sticky buy bar */}
-      <div className="fixed inset-x-0 bottom-0 z-50 border-t border-bb-border bg-fusora-ivory/98 px-3 pt-2.5 shadow-[0_-8px_24px_rgba(42,28,26,0.08)] backdrop-blur safe-pb lg:hidden">
-        <div className="mx-auto max-w-[1400px]">
+      {/* Mobile sticky bar */}
+      <div className="fixed inset-x-0 bottom-0 z-50 border-t border-[#e5ddd6] bg-white/98 px-3 pt-2.5 shadow-[0_-8px_24px_rgba(42,28,26,0.08)] backdrop-blur safe-pb lg:hidden">
+        <div className="mx-auto max-w-[1280px]">
           {needsSize && (
             <div className="-mx-1 mb-2 flex gap-1.5 overflow-x-auto px-1 pb-0.5">
               {details.sizes.map((size) => {
@@ -752,10 +511,10 @@ export function ProductPage() {
                       setSelectedSize(size)
                       setSizeHint(false)
                     }}
-                    className={`min-h-9 shrink-0 touch-manipulation border px-3 text-xs font-semibold ${
+                    className={`min-h-9 shrink-0 touch-manipulation border px-3 text-xs font-medium ${
                       active
-                        ? 'border-bb-blue bg-bb-blue text-white'
-                        : 'border-bb-border bg-white text-bb-text'
+                        ? 'border-[#6b161d] bg-[#6b161d] text-white'
+                        : 'border-[#d4cbc3] bg-white text-[#121212]'
                     }`}
                   >
                     {size}
@@ -765,34 +524,37 @@ export function ProductPage() {
             </div>
           )}
           {sizeHint && needsSize && !selectedSize && (
-            <p className="mb-2 text-center text-[0.7rem] font-medium text-[#8b2e2e]">
+            <p className="mb-2 text-center text-[0.7rem] font-medium text-[#6b161d]">
               Select a size above, then tap Buy
             </p>
           )}
           <div className="flex items-center gap-2">
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-xs text-bb-muted">
-                {selectedSize ? `Size ${selectedSize}` : product.brand}
-              </p>
-              <p className="font-serif text-lg leading-none text-bb-text">
-                {formatMoney(product.price)}
-              </p>
-            </div>
+            <button
+              type="button"
+              onClick={() => toggleWish(product.id)}
+              className="grid size-11 shrink-0 place-items-center border border-[#d4cbc3]"
+              aria-label="Wishlist"
+            >
+              <Heart
+                className={`size-4 ${saved ? 'fill-[#6b161d] text-[#6b161d]' : ''}`}
+                strokeWidth={1.4}
+              />
+            </button>
             <button
               type="button"
               onClick={() => {
                 if (addQty()) openCart()
               }}
-              className="min-h-11 shrink-0 touch-manipulation border border-bb-border bg-white px-4 py-3 text-[0.65rem] font-semibold tracking-[0.12em] text-bb-text uppercase"
+              className="min-h-11 flex-1 touch-manipulation border border-[#6b161d] bg-white px-3 py-3 text-[0.65rem] font-medium tracking-[0.12em] text-[#6b161d] uppercase"
             >
-              Add
+              Add to cart
             </button>
             <button
               type="button"
               onClick={() => {
                 if (addQty()) navigate('/cart')
               }}
-              className="min-h-11 shrink-0 touch-manipulation bg-bb-blue px-5 py-3 text-[0.65rem] font-semibold tracking-[0.12em] text-white uppercase"
+              className="min-h-11 flex-1 touch-manipulation bg-[#6b161d] px-3 py-3 text-[0.65rem] font-medium tracking-[0.12em] text-white uppercase"
             >
               Buy now
             </button>
@@ -800,5 +562,35 @@ export function ProductPage() {
         </div>
       </div>
     </main>
+  )
+}
+
+function Accordion({
+  title,
+  open,
+  onToggle,
+  children,
+}: {
+  title: string
+  open: boolean
+  onToggle: () => void
+  children: ReactNode
+}) {
+  return (
+    <div className="border-b border-[#e5ddd6]">
+      <button
+        type="button"
+        onClick={onToggle}
+        className="flex w-full items-center justify-between py-4 text-left"
+      >
+        <span className="text-sm font-medium tracking-wide text-[#121212]">
+          {title}
+        </span>
+        <ChevronDown
+          className={`size-4 text-[#6b6560] transition ${open ? 'rotate-180' : ''}`}
+        />
+      </button>
+      {open && <div className="pb-5">{children}</div>}
+    </div>
   )
 }
