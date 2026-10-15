@@ -117,9 +117,9 @@ export function Header() {
           <FusoraLogo compact onDark={overHero} centered />
         </div>
 
-        <div className={`flex items-center justify-end gap-0.5 sm:gap-1 ${ink}`}>
+        <div className={`flex items-center justify-end gap-0.5 sm:gap-1.5 ${ink}`}>
           <Link to="/wishlist" className={`relative ${iconBtn}`} aria-label="Wishlist">
-            <Heart className="size-[1.2rem]" strokeWidth={1.3} />
+            <Heart className="size-[1.25rem]" strokeWidth={1.25} />
             {wishlist.size > 0 && (
               <span
                 className={`absolute top-1.5 right-1.5 size-1.5 rounded-full ${
@@ -134,7 +134,7 @@ export function Header() {
             className={`relative ${iconBtn}`}
             aria-label="Cart"
           >
-            <ShoppingBag className="size-[1.2rem]" strokeWidth={1.3} />
+            <ShoppingBag className="size-[1.25rem]" strokeWidth={1.25} />
             {cartCount > 0 && (
               <span
                 className={`absolute top-1 right-1 grid min-w-[1rem] place-items-center rounded-full px-1 text-[0.55rem] font-semibold ${
@@ -147,8 +147,12 @@ export function Header() {
               </span>
             )}
           </button>
-          <Link to="/account" className={iconBtn} aria-label="Account">
-            <User className="size-[1.2rem]" strokeWidth={1.3} />
+          <Link
+            to="/account"
+            className={`${iconBtn} hidden sm:grid`}
+            aria-label="Account"
+          >
+            <User className="size-[1.25rem]" strokeWidth={1.25} />
           </Link>
         </div>
       </div>

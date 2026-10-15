@@ -23,7 +23,7 @@ export function ProductCard({ product: p, showAdd = true }: Props) {
 
   return (
     <article className="group">
-      <div className="relative mb-3 overflow-hidden bg-[#f7f5f3] gold-frame sm:mb-3.5">
+      <div className="relative mb-3 overflow-hidden rounded-[6px] border border-[#c5a059] bg-[#f7f5f3] sm:mb-3.5">
         <Link to={`/product/${p.id}`}>
           <SafeImage
             src={p.image}

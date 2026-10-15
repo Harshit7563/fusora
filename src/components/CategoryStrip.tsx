@@ -7,8 +7,6 @@ const featured = [
     id: 'sale',
     title: 'Sale',
     to: '/deals',
-    image:
-      'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&w=400&q=80',
     sale: true,
   },
   {
@@ -23,7 +21,7 @@ const featured = [
     title: 'Women',
     to: '/category/women',
     image:
-      'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=400&q=80',
+      'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=400&q=80',
   },
   {
     id: 'men',
@@ -43,11 +41,11 @@ const featured = [
     title: 'Jewellery',
     to: '/category/jewelry-eyewear-watches',
     image:
-      'https://images.unsplash.com/photo-1601121141461-9d6647bca1ed?auto=format&fit=crop&w=400&q=80',
+      'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=400&q=80',
   },
 ]
 
-/** Ornate scalloped ring — Koskii category icons */
+/** Ornate scalloped gold ring — Koskii category icons */
 function ScallopRing({
   children,
   sale,
@@ -56,36 +54,30 @@ function ScallopRing({
   sale?: boolean
 }) {
   return (
-    <div className="relative mx-auto size-[5.5rem] sm:size-[6.75rem]">
+    <div className="relative mx-auto size-[5.25rem] sm:size-[6.5rem] lg:size-[7.25rem]">
       <svg
         viewBox="0 0 100 100"
-        className="absolute inset-0 size-full"
+        className="absolute inset-0 size-full drop-shadow-sm"
         aria-hidden
       >
-        <defs>
-          <path
-            id="scallop"
-            d="M50,4
-              C56,4 58,10 62,12 C68,10 72,4 78,8
-              C84,12 82,18 86,22 C92,24 96,28 96,34
-              C96,40 90,42 88,48 C90,54 96,56 96,62
-              C96,68 92,72 86,74 C82,78 84,84 78,88
-              C72,92 68,86 62,84 C58,86 56,92 50,92
-              C44,92 42,86 38,84 C32,86 28,92 22,88
-              C16,84 18,78 14,74 C8,72 4,68 4,62
-              C4,56 10,54 12,48 C10,42 4,40 4,34
-              C4,28 8,24 14,22 C18,18 16,12 22,8
-              C28,4 32,10 38,12 C42,10 44,4 50,4 Z"
-          />
-        </defs>
-        <use
-          href="#scallop"
-          fill={sale ? '#9b1b4a' : 'none'}
+        <path
+          d="M50,3.5
+            C55.5,3.5 58,9.5 62,11.5 C67.5,9.5 72,3.8 77.5,7.5
+            C83.5,11.5 81.5,18 85.5,22 C92,24.5 96.5,29 96.5,35
+            C96.5,41 90.5,43 88.5,49 C90.5,55 96.5,57 96.5,63
+            C96.5,69 92,73.5 85.5,76 C81.5,80 83.5,86.5 77.5,90.5
+            C72,94.2 67.5,88.5 62,86.5 C58,88.5 55.5,94.5 50,94.5
+            C44.5,94.5 42,88.5 38,86.5 C32.5,88.5 28,94.2 22.5,90.5
+            C16.5,86.5 18.5,80 14.5,76 C8,73.5 3.5,69 3.5,63
+            C3.5,57 9.5,55 11.5,49 C9.5,43 3.5,41 3.5,35
+            C3.5,29 8,24.5 14.5,22 C18.5,18 16.5,11.5 22.5,7.5
+            C28,3.8 32.5,9.5 38,11.5 C42,9.5 44.5,3.5 50,3.5 Z"
+          fill={sale ? '#c2185b' : '#fff'}
           stroke="#c5a059"
-          strokeWidth="2.2"
+          strokeWidth="1.8"
         />
       </svg>
-      <div className="absolute inset-[12%] overflow-hidden rounded-full bg-[#f7f5f3]">
+      <div className="absolute inset-[14%] overflow-hidden rounded-full bg-[#f7f5f3]">
         {children}
       </div>
     </div>
@@ -94,31 +86,37 @@ function ScallopRing({
 
 export function CategoryStrip() {
   return (
-    <section className="bg-white px-3 py-8 sm:px-5 sm:py-10 lg:px-8">
-      <div className="mx-auto max-w-[1100px]">
-        <div className="flex gap-4 overflow-x-auto pb-2 sm:grid sm:grid-cols-6 sm:gap-5 sm:overflow-visible sm:pb-0">
+    <section className="bg-white px-3 py-9 sm:px-6 sm:py-11 lg:px-10">
+      <div className="mx-auto max-w-[980px]">
+        <div className="flex justify-between gap-3 overflow-x-auto pb-1 sm:gap-0 sm:overflow-visible">
           {featured.map((item) => (
             <Link
               key={item.id}
               to={item.to}
-              className="group w-[5.75rem] shrink-0 text-center sm:w-auto"
+              className="group w-[5.5rem] shrink-0 text-center sm:w-[14%] sm:shrink"
             >
               <ScallopRing sale={item.sale}>
                 {item.sale ? (
-                  <div className="grid h-full place-items-center bg-gradient-to-br from-[#c2185b] to-[#7b1fa2]">
-                    <span className="font-serif text-sm tracking-wide text-[#e8c84a] sm:text-base">
+                  <div
+                    className="grid h-full place-items-center"
+                    style={{
+                      background:
+                        'radial-gradient(circle at center, #e91e63 0%, #ad1457 70%)',
+                    }}
+                  >
+                    <span className="font-serif text-[0.95rem] tracking-wide text-[#e8c84a] sm:text-lg">
                       SALE
                     </span>
                   </div>
                 ) : (
                   <SafeImage
-                    src={item.image}
+                    src={item.image!}
                     alt={item.title}
                     className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                   />
                 )}
               </ScallopRing>
-              <p className="mt-3 text-[0.62rem] font-medium tracking-[0.14em] text-[#776865] uppercase sm:text-[0.68rem]">
+              <p className="mt-2.5 text-[0.58rem] font-medium tracking-[0.14em] text-[#8a7e7a] uppercase sm:mt-3 sm:text-[0.62rem]">
                 {item.title}
               </p>
             </Link>

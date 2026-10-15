@@ -2,57 +2,53 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
-/** Ethnic / occasion-wear only — no western street fashion */
+/** Koskii-style full-bleed promo slides — ethnic occasion wear only */
 const slides = [
   {
-    id: 'festive',
+    id: 'garba',
     image:
       'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=2400&q=85',
     position: 'object-[center_18%]',
-    edit: 'The Garba Glow Edit',
-    title: 'Everyday Elegance',
-    accent: 'Rooted in Tradition',
+    line1: 'THE',
+    line2: 'FESTIVE GLOW',
+    line3: 'EDIT',
     offer: 'FLAT 30%–50% OFF',
-    cats: 'SAREES  ·  BANARASI  ·  SILK',
-    cta: 'Shop Sarees',
+    cats: 'SAREES  |  BANARASI  |  SILK  |  JEWELLERY',
     to: '/category/women/sarees',
   },
   {
-    id: 'bridal',
+    id: 'saree',
     image:
       'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=2400&q=85',
-    position: 'object-[center_22%]',
-    edit: 'The Wedding Edit',
-    title: 'Moments that',
-    accent: 'Deserve Silk',
+    position: 'object-[center_20%]',
+    line1: 'THE',
+    line2: 'SILK EDIT',
+    line3: '',
     offer: 'UP TO 40% OFF',
-    cats: 'BANARASI  ·  KANJIVARAM  ·  HANDLOOM',
-    cta: 'Shop Now',
+    cats: 'BANARASI  |  KANJIVARAM  |  HANDLOOM',
     to: '/category/women/sarees',
   },
   {
-    id: 'jewellery',
+    id: 'jewels',
     image:
       'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=2400&q=85',
-    position: 'object-[center_30%]',
-    edit: 'The Finishing Edit',
-    title: 'Jewellery that',
-    accent: 'Catches Light',
+    position: 'object-[center_28%]',
+    line1: 'THE',
+    line2: 'FINISHING',
+    line3: 'EDIT',
     offer: 'FROM ₹499',
-    cats: 'SETS  ·  EARRINGS  ·  NECKLACES',
-    cta: 'Shop Jewellery',
+    cats: 'SETS  |  EARRINGS  |  NECKLACES',
     to: '/category/jewelry-eyewear-watches',
   },
   {
     id: 'men',
     image: '/heroes/hero-denim.jpg',
-    position: 'object-[center_20%]',
-    edit: 'The Denim Edit',
-    title: 'Men’s Everyday',
-    accent: 'Clean Fits',
+    position: 'object-[center_22%]',
+    line1: 'THE',
+    line2: 'DENIM',
+    line3: 'EDIT',
     offer: 'UP TO 40% OFF',
-    cats: 'JEANS  ·  SHIRTS  ·  TEES',
-    cta: 'Shop Men',
+    cats: 'JEANS  |  SHIRTS  |  TEES',
     to: '/category/men',
   },
 ]
@@ -64,101 +60,89 @@ export function Hero() {
   useEffect(() => {
     const id = window.setInterval(() => {
       setIndex((i) => (i + 1) % slides.length)
-    }, 7000)
+    }, 6500)
     return () => window.clearInterval(id)
   }, [])
 
   useEffect(() => {
-    const next = slides[(index + 1) % slides.length]
     const img = new Image()
-    img.src = next.image
+    img.src = slides[(index + 1) % slides.length].image
   }, [index])
 
   return (
-    <section className="relative min-h-[78svh] overflow-hidden bg-[#2e1515] sm:min-h-[85svh]">
+    <section className="relative h-[min(92svh,920px)] min-h-[560px] overflow-hidden bg-[#1a1210]">
       <AnimatePresence mode="wait">
         <motion.div
           key={slide.id}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.75 }}
           className="absolute inset-0"
         >
           <motion.img
             src={slide.image}
-            alt={slide.title}
-            initial={{ scale: 1.06 }}
+            alt=""
+            initial={{ scale: 1.04 }}
             animate={{ scale: 1 }}
-            transition={{ duration: 7.5, ease: 'linear' }}
+            transition={{ duration: 7, ease: 'linear' }}
             className={`h-full w-full object-cover ${slide.position}`}
           />
         </motion.div>
       </AnimatePresence>
 
-      {/* Soft wash — photo stays visible, text stays readable */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-black/35 to-black/70" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/30" />
+      <div className="absolute inset-0 bg-gradient-to-r from-black/15 via-black/25 to-black/65" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/25" />
 
-      <div className="relative mx-auto flex min-h-[78svh] max-w-[1440px] items-center justify-end px-4 pb-14 pt-24 sm:min-h-[85svh] sm:px-10 sm:pb-16 lg:px-16">
+      <div className="relative flex h-full items-center justify-end px-5 pb-16 pt-24 sm:px-12 lg:px-20">
         <AnimatePresence mode="wait">
           <motion.div
             key={slide.id}
-            initial={{ opacity: 0, x: 24 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -12 }}
-            transition={{ duration: 0.5 }}
-            className="w-full max-w-md text-right text-white sm:max-w-lg"
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.45 }}
+            className="max-w-md text-center text-white sm:max-w-lg sm:text-right"
           >
-            <p className="text-[0.68rem] font-medium tracking-[0.32em] text-white/85 uppercase">
-              {slide.edit}
+            <p className="font-serif text-lg italic tracking-wide text-white/90 sm:text-xl">
+              {slide.line1}
             </p>
-
-            <h1 className="text-display mt-4 text-[2.35rem] leading-[1.08] sm:text-5xl md:text-[3.25rem]">
-              {slide.title}
-              <span className="mt-1 block italic text-[#e8c84a]">
-                {slide.accent}
-              </span>
+            <h1 className="text-display mt-1 text-[2.6rem] leading-[0.98] sm:text-5xl md:text-[3.6rem]">
+              {slide.line2}
+              {slide.line3 ? (
+                <span className="mt-1 block text-[1.6rem] tracking-[0.12em] sm:text-3xl">
+                  {slide.line3}
+                </span>
+              ) : null}
             </h1>
-
-            <div className="mt-5 ml-auto h-px w-16 bg-[#c5a059]" />
-
-            <p className="mt-5 text-2xl font-semibold tracking-[0.04em] text-[#e8c84a] sm:text-[1.85rem]">
+            <p className="mt-5 text-[1.65rem] font-semibold tracking-wide text-[#e8c84a] sm:text-[2rem]">
               {slide.offer}
             </p>
-            <p className="mt-3 text-[0.65rem] font-medium tracking-[0.2em] text-white/80 uppercase">
+            <p className="mt-3 text-[0.62rem] font-medium tracking-[0.16em] text-white/85 uppercase sm:text-[0.68rem]">
               {slide.cats}
             </p>
-
-            <div className="mt-8 flex justify-end gap-3">
+            <div className="mt-8 flex justify-center sm:justify-end">
               <Link
                 to={slide.to}
-                className="inline-flex items-center justify-center rounded-md bg-white px-9 py-3.5 text-[0.72rem] font-semibold tracking-[0.18em] text-[#1a1a1a] uppercase transition hover:bg-[#f7f5f3]"
+                className="inline-flex items-center justify-center rounded-[4px] bg-white px-10 py-3.5 text-[0.72rem] font-semibold tracking-[0.2em] text-[#1a1a1a] uppercase transition hover:bg-[#f7f5f3]"
               >
-                {slide.cta}
-              </Link>
-              <Link
-                to="/deals"
-                className="inline-flex items-center justify-center rounded-md border border-white/70 px-6 py-3.5 text-[0.68rem] font-semibold tracking-[0.16em] text-white uppercase transition hover:bg-white/10"
-              >
-                Sale
+                Shop Now
               </Link>
             </div>
           </motion.div>
         </AnimatePresence>
       </div>
 
-      <div className="absolute inset-x-0 bottom-5 flex justify-center gap-2.5">
+      {/* Koskii-style dash indicators */}
+      <div className="absolute inset-x-0 bottom-7 flex justify-center gap-2">
         {slides.map((s, i) => (
           <button
             key={s.id}
             type="button"
-            aria-label={`Go to ${s.edit}`}
+            aria-label={`Slide ${i + 1}`}
             onClick={() => setIndex(i)}
-            className={`rounded-full transition ${
-              i === index
-                ? 'h-2.5 w-6 bg-[#e8c84a]'
-                : 'size-2.5 bg-white/45 hover:bg-white/75'
+            className={`h-[3px] rounded-full transition ${
+              i === index ? 'w-7 bg-white' : 'w-5 bg-white/40 hover:bg-white/70'
             }`}
           />
         ))}
