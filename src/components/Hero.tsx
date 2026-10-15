@@ -7,44 +7,48 @@ const slides = [
     id: 'sarees',
     image:
       'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=2400&q=85',
-    position: 'object-[center_15%]',
-    eyebrow: 'Women · Sarees',
-    title: 'Silk & Banarasi, ready for every celebration',
-    line: 'Festive weaves with a clean fall — chosen for evenings that matter.',
-    cta: 'Shop sarees',
-    to: '/category/women/sarees',
-  },
-  {
-    id: 'men',
-    image:
-      'https://images.unsplash.com/photo-1558171813-4c088753af8f?auto=format&fit=crop&w=2400&q=85',
     position: 'object-[center_20%]',
-    eyebrow: 'Men',
-    title: 'Jeans, shirts and everyday denim',
-    line: 'Men only — fits and washes for workdays and weekends.',
-    cta: 'Shop men',
-    to: '/category/men',
+    edit: 'THE FESTIVE EDIT',
+    title: 'Silk & Banarasi',
+    offer: 'FLAT 30%–50% OFF',
+    cats: 'SAREES  ·  BANARASI  ·  HANDLOOM',
+    cta: 'Shop Now',
+    to: '/category/women/sarees',
   },
   {
     id: 'women',
     image:
       'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=2400&q=85',
     position: 'object-[center_22%]',
-    eyebrow: 'Women',
-    title: 'Apparel made for how you move',
-    line: 'Women only — sarees, jeans and ready-to-wear in one edit.',
-    cta: 'Shop women',
+    edit: 'THE NEW SEASON EDIT',
+    title: 'Women’s Collection',
+    offer: 'FLAT 20%–40% OFF',
+    cats: 'SAREES  ·  APPAREL  ·  JEWELLERY',
+    cta: 'Shop Now',
     to: '/category/women',
+  },
+  {
+    id: 'men',
+    image:
+      'https://images.unsplash.com/photo-1558171813-4c088753af8f?auto=format&fit=crop&w=2400&q=85',
+    position: 'object-[center_18%]',
+    edit: 'THE DENIM EDIT',
+    title: 'Men’s Everyday',
+    offer: 'UP TO 40% OFF',
+    cats: 'JEANS  ·  SHIRTS  ·  TEES',
+    cta: 'Shop Now',
+    to: '/category/men',
   },
   {
     id: 'jewellery',
     image:
       'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=2400&q=85',
     position: 'object-center',
-    eyebrow: 'Jewellery',
-    title: 'Finishing pieces that catch the light',
-    line: 'Gold-tone sets and everyday jewellery for festive and daily wear.',
-    cta: 'Shop jewellery',
+    edit: 'THE FINISHING EDIT',
+    title: 'Jewellery Lights',
+    offer: 'FROM ₹499',
+    cats: 'SETS  ·  EARRINGS  ·  NECKLACES',
+    cta: 'Shop Now',
     to: '/category/jewelry-eyewear-watches',
   },
 ]
@@ -56,11 +60,10 @@ export function Hero() {
   useEffect(() => {
     const id = window.setInterval(() => {
       setIndex((i) => (i + 1) % slides.length)
-    }, 6000)
+    }, 6500)
     return () => window.clearInterval(id)
   }, [])
 
-  // Warm the next image so slides feel instant
   useEffect(() => {
     const next = slides[(index + 1) % slides.length]
     const img = new Image()
@@ -68,7 +71,7 @@ export function Hero() {
   }, [index])
 
   return (
-    <section className="relative min-h-[58svh] overflow-hidden bg-[#1c1c1c] sm:min-h-[70svh] lg:min-h-[78svh]">
+    <section className="relative min-h-[88svh] overflow-hidden bg-[#2e1515] sm:min-h-[92svh]">
       <AnimatePresence mode="wait">
         <motion.div
           key={slide.id}
@@ -80,77 +83,66 @@ export function Hero() {
         >
           <motion.img
             src={slide.image}
-            alt={slide.eyebrow}
-            initial={{ scale: 1.06 }}
+            alt={slide.title}
+            initial={{ scale: 1.05 }}
             animate={{ scale: 1 }}
-            transition={{ duration: 6.5, ease: 'linear' }}
+            transition={{ duration: 7, ease: 'linear' }}
             className={`h-full w-full object-cover ${slide.position}`}
           />
         </motion.div>
       </AnimatePresence>
 
-      {/* Soft side wash — keeps the photo bright */}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/35 to-black/10 sm:from-black/65 sm:via-black/25 sm:to-transparent" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/10" />
+      <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/25 to-black/45" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/25" />
 
-      <div className="relative mx-auto flex min-h-[58svh] max-w-[1400px] flex-col justify-end px-4 pb-16 pt-20 sm:min-h-[70svh] sm:px-8 sm:pb-20 lg:min-h-[78svh] lg:justify-center lg:pb-0 lg:pt-0">
+      <div className="relative mx-auto flex min-h-[88svh] max-w-[1440px] items-center justify-end px-4 pb-16 pt-28 sm:min-h-[92svh] sm:px-10 sm:pb-20 lg:px-16">
         <AnimatePresence mode="wait">
           <motion.div
             key={slide.id}
-            initial={{ opacity: 0, y: 18 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-            className="max-w-xl text-left"
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.45 }}
+            className="max-w-md text-right text-white sm:max-w-lg"
           >
-            <p className="mb-3 text-[0.68rem] font-semibold tracking-[0.22em] text-white/90 uppercase">
-              {slide.eyebrow}
+            <p className="text-[0.7rem] font-medium tracking-[0.28em] text-white/90 uppercase">
+              {slide.edit}
             </p>
-            <h1 className="text-display text-[1.85rem] leading-[1.12] text-white sm:text-4xl md:text-[3rem]">
+            <h1 className="text-display mt-3 text-[2.4rem] leading-[1.05] sm:text-5xl md:text-[3.4rem]">
               {slide.title}
             </h1>
-            <p className="mt-4 max-w-md text-sm leading-relaxed text-white/88 sm:text-[0.95rem]">
-              {slide.line}
+            <p className="mt-4 text-2xl font-semibold tracking-wide text-[#e8c84a] sm:text-3xl">
+              {slide.offer}
             </p>
-            <div className="mt-8 flex flex-col gap-2.5 sm:flex-row sm:items-center sm:gap-3">
+            <p className="mt-3 text-[0.68rem] font-medium tracking-[0.18em] text-white/85 uppercase">
+              {slide.cats}
+            </p>
+            <div className="mt-8 flex justify-end">
               <Link
                 to={slide.to}
-                className="inline-flex items-center justify-center bg-white px-8 py-3.5 text-[0.7rem] font-semibold tracking-[0.16em] text-[#1f1f1f] uppercase transition hover:bg-[#f5f5f5]"
+                className="inline-flex items-center justify-center rounded-md bg-white px-9 py-3.5 text-[0.72rem] font-semibold tracking-[0.18em] text-[#1a1a1a] uppercase transition hover:bg-[#f7f5f3]"
               >
                 {slide.cta}
-              </Link>
-              <Link
-                to="/deals"
-                className="inline-flex items-center justify-center border border-white/80 px-7 py-3.5 text-[0.7rem] font-semibold tracking-[0.16em] text-white uppercase transition hover:bg-white/10"
-              >
-                New in
               </Link>
             </div>
           </motion.div>
         </AnimatePresence>
+      </div>
 
-        <div className="mt-10 flex flex-wrap gap-2 lg:absolute lg:right-8 lg:bottom-10 lg:mt-0 lg:max-w-none">
-          {slides.map((s, i) => (
-            <button
-              key={s.id}
-              type="button"
-              onClick={() => setIndex(i)}
-              className={`px-3.5 py-2 text-[0.62rem] font-semibold tracking-[0.14em] uppercase transition ${
-                i === index
-                  ? 'bg-white text-[#1f1f1f]'
-                  : 'bg-white/15 text-white backdrop-blur-sm hover:bg-white/25'
-              }`}
-            >
-              {s.id === 'sarees'
-                ? 'Sarees'
-                : s.id === 'men'
-                  ? 'Men'
-                  : s.id === 'women'
-                    ? 'Women'
-                    : 'Jewellery'}
-            </button>
-          ))}
-        </div>
+      <div className="absolute inset-x-0 bottom-6 flex justify-center gap-2">
+        {slides.map((s, i) => (
+          <button
+            key={s.id}
+            type="button"
+            aria-label={`Slide ${i + 1}`}
+            onClick={() => setIndex(i)}
+            className={`rounded-full transition ${
+              i === index
+                ? 'h-2.5 w-2.5 bg-white'
+                : 'size-2 bg-white/45 hover:bg-white/70'
+            }`}
+          />
+        ))}
       </div>
     </section>
   )

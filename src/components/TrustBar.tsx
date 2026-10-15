@@ -19,14 +19,14 @@ const items = [
 
 export function TrustBar() {
   return (
-    <section className="border-b border-bb-border bg-white px-3 py-7 sm:px-5 sm:py-10 lg:px-8">
+    <section className="border-y border-[#e8e0d8] bg-white px-3 py-7 sm:px-5 sm:py-9 lg:px-8">
       <div className="mx-auto grid max-w-[1400px] grid-cols-2 gap-5 sm:gap-8 lg:grid-cols-4 lg:gap-6">
         {items.map(({ title, line }) => (
           <div key={title} className="text-center">
-            <p className="text-[0.62rem] font-semibold tracking-[0.12em] text-bb-text uppercase sm:text-[0.72rem] sm:tracking-[0.16em]">
+            <p className="text-[0.62rem] font-semibold tracking-[0.14em] text-[#5c2a2a] uppercase sm:text-[0.72rem]">
               {title}
             </p>
-            <p className="mt-1 text-[0.7rem] leading-snug text-bb-muted sm:mt-1.5 sm:text-xs">
+            <p className="mt-1 text-[0.7rem] leading-snug text-[#776865] sm:mt-1.5 sm:text-xs">
               {line}
             </p>
           </div>

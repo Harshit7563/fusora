@@ -1,28 +1,28 @@
 @import 'tailwindcss';
 
 @theme {
-  /* Muhurth-inspired boutique commerce */
+  /* Koskii-inspired ethnic commerce */
   --font-sans: 'Poppins', Arial, Helvetica, sans-serif;
-  --font-serif: 'Poppins', Arial, Helvetica, sans-serif;
+  --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
 
-  --color-bb-blue: #323232;
-  --color-bb-blue-dark: #1f1f1f;
-  --color-bb-blue-deep: #141414;
-  --color-bb-yellow: #fae3ca;
-  --color-bb-link: #323232;
-  --color-bb-gray: #f5f5f5;
-  --color-bb-border: #ececec;
-  --color-bb-text: #272727;
-  --color-bb-muted: #787878;
-  --color-bb-price: #272727;
+  --color-bb-blue: #5c2a2a;
+  --color-bb-blue-dark: #4a2222;
+  --color-bb-blue-deep: #2e1515;
+  --color-bb-yellow: #e8c84a;
+  --color-bb-link: #5c2a2a;
+  --color-bb-gray: #f7f5f3;
+  --color-bb-border: #e8e0d8;
+  --color-bb-text: #1a1a1a;
+  --color-bb-muted: #776865;
+  --color-bb-price: #1a1a1a;
   --color-bb-save: #b4232f;
 
-  --color-fusora-wine: #323232;
-  --color-fusora-wine-soft: #505050;
+  --color-fusora-wine: #5c2a2a;
+  --color-fusora-wine-soft: #7a4545;
   --color-fusora-cream: #ffffff;
   --color-fusora-ivory: #ffffff;
-  --color-fusora-gold: #c4a574;
-  --color-fusora-sand: #f5f5f5;
+  --color-fusora-gold: #c5a059;
+  --color-fusora-sand: #f7f5f3;
 }
 
 @layer base {
@@ -68,16 +68,28 @@
   h2,
   h3,
   .font-serif {
-    font-family: var(--font-sans);
+    font-family: var(--font-serif);
     font-weight: 500;
   }
 }
 
 @layer utilities {
   .text-display {
-    font-family: var(--font-sans);
+    font-family: var(--font-serif);
     font-weight: 500;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.01em;
+  }
+
+  .text-section {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-bb-blue);
+  }
+
+  .gold-frame {
+    border: 1px solid var(--color-fusora-gold);
   }
 
   .safe-pb {
@@ -112,5 +124,50 @@
 
   .nav-link:hover::after {
     transform: scaleX(1);
+  }
+
+  /* Koskii-style scalloped circle frame */
+  .scallop-frame {
+    background: radial-gradient(
+        circle at 50% 0%,
+        var(--color-fusora-gold) 0 5px,
+        transparent 5.5px
+      ),
+      radial-gradient(
+        circle at 85% 15%,
+        var(--color-fusora-gold) 0 5px,
+        transparent 5.5px
+      ),
+      radial-gradient(
+        circle at 100% 50%,
+        var(--color-fusora-gold) 0 5px,
+        transparent 5.5px
+      ),
+      radial-gradient(
+        circle at 85% 85%,
+        var(--color-fusora-gold) 0 5px,
+        transparent 5.5px
+      ),
+      radial-gradient(
+        circle at 50% 100%,
+        var(--color-fusora-gold) 0 5px,
+        transparent 5.5px
+      ),
+      radial-gradient(
+        circle at 15% 85%,
+        var(--color-fusora-gold) 0 5px,
+        transparent 5.5px
+      ),
+      radial-gradient(
+        circle at 0% 50%,
+        var(--color-fusora-gold) 0 5px,
+        transparent 5.5px
+      ),
+      radial-gradient(
+        circle at 15% 15%,
+        var(--color-fusora-gold) 0 5px,
+        transparent 5.5px
+      ),
+      #fff;
   }
 }

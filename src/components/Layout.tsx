@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
 import { useStore } from '../context/StoreContext'
 import { CartDrawer } from './CartDrawer'
 import { Footer } from './Footer'
@@ -7,13 +7,17 @@ import { LocationModal } from './LocationModal'
 import { NewsletterPopup } from './NewsletterPopup'
 
 export function Layout() {
+  const { pathname } = useLocation()
   const { cart, cartOpen, closeCart, setQty, removeFromCart, toast } =
     useStore()
+  const needsHeaderOffset = pathname !== '/'
 
   return (
-    <div id="top" className="min-h-svh bg-fusora-ivory">
+    <div id="top" className="min-h-svh bg-white">
       <Header />
-      <Outlet />
+      <div className={needsHeaderOffset ? 'pt-[4.25rem] sm:pt-[4.75rem]' : ''}>
+        <Outlet />
+      </div>
       <Footer />
       <CartDrawer
         open={cartOpen}

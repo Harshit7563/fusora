@@ -57,12 +57,12 @@ export function TrendingDeals() {
     <section id="deals" className="bg-white px-3 py-12 sm:px-5 sm:py-16 lg:px-8">
       <div className="mx-auto max-w-[1440px]">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="text-[0.68rem] font-medium tracking-[0.28em] text-bb-blue uppercase">
-            Beautiful pieces
-          </p>
-          <h2 className="text-display mt-2 text-[2rem] leading-none text-bb-text sm:text-4xl">
-            At special prices
+          <h2 className="text-section text-[0.78rem] sm:text-[0.85rem]">
+            Beautiful Pieces
           </h2>
+          <p className="text-display mt-2 text-[1.85rem] leading-none text-[#5c2a2a] sm:text-4xl">
+            At special prices
+          </p>
         </div>
 
         <div
