@@ -153,18 +153,18 @@ export function CategoryPage() {
       </div>
 
       <div className="mx-auto max-w-[1280px] px-3 py-6 sm:px-6 lg:px-10">
-        <nav className="mb-6 text-xs text-[#6e6a65]">
-          <Link to="/" className="hover:text-[#8b1538]">
+        <nav className="mb-6 text-xs text-[#6b6560]">
+          <Link to="/" className="hover:text-[#6d1f2c]">
             Home
           </Link>
           <span className="mx-2">|</span>
-          <Link to={`/category/${active}`} className="hover:text-[#8b1538]">
+          <Link to={`/category/${active}`} className="hover:text-[#6d1f2c]">
             {meta.label}
           </Link>
           {subtypeMeta && (
             <>
               <span className="mx-2">|</span>
-              <span className="text-[#1a1a1a]">{subtypeMeta.label}</span>
+              <span className="text-[#1c1c1c]">{subtypeMeta.label}</span>
             </>
           )}
         </nav>
@@ -264,26 +264,26 @@ export function CategoryPage() {
           <div className="grid gap-8 lg:grid-cols-[220px_1fr]">
             {/* Filter sidebar */}
             <aside className="hidden lg:block">
-              <h2 className="mb-4 font-serif text-2xl text-[#8b1538]">Filter</h2>
-              <div className="border-t border-[#ebe6df] py-4">
+              <h2 className="mb-4 font-serif text-2xl text-[#6d1f2c]">Filter</h2>
+              <div className="border-t border-[#e8e1d8] py-4">
                 <p className="mb-3 flex items-center justify-between text-sm font-medium">
                   Availability <ChevronDown className="size-4" />
                 </p>
-                <label className="mb-2 flex items-center gap-2 text-sm text-[#6e6a65]">
+                <label className="mb-2 flex items-center gap-2 text-sm text-[#6b6560]">
                   <input
                     type="checkbox"
                     checked={inStockOnly}
                     onChange={(e) => setInStockOnly(e.target.checked)}
-                    className="accent-[#8b1538]"
+                    className="accent-[#6d1f2c]"
                   />
                   In stock ({list.length})
                 </label>
-                <label className="flex items-center gap-2 text-sm text-[#6e6a65]">
-                  <input type="checkbox" disabled className="accent-[#8b1538]" />
+                <label className="flex items-center gap-2 text-sm text-[#6b6560]">
+                  <input type="checkbox" disabled className="accent-[#6d1f2c]" />
                   Out of stock (0)
                 </label>
               </div>
-              <div className="border-t border-[#ebe6df] py-4">
+              <div className="border-t border-[#e8e1d8] py-4">
                 <p className="mb-3 flex items-center justify-between text-sm font-medium">
                   Category <ChevronDown className="size-4" />
                 </p>
@@ -301,8 +301,8 @@ export function CategoryPage() {
                       }
                       className={`block text-sm ${
                         subtype === ('id' in s ? s.id : null)
-                          ? 'text-[#8b1538]'
-                          : 'text-[#6e6a65] hover:text-[#8b1538]'
+                          ? 'text-[#6d1f2c]'
+                          : 'text-[#6b6560] hover:text-[#6d1f2c]'
                       }`}
                     >
                       {s.label}
@@ -313,14 +313,14 @@ export function CategoryPage() {
             </aside>
 
             <div>
-              <div className="mb-5 flex items-center justify-between gap-3 border-b border-[#ebe6df] pb-4">
-                <p className="text-sm text-[#6e6a65]">{list.length} items</p>
-                <label className="flex items-center gap-2 text-sm text-[#6e6a65]">
+              <div className="mb-5 flex items-center justify-between gap-3 border-b border-[#e8e1d8] pb-4">
+                <p className="text-sm text-[#6b6560]">{list.length} items</p>
+                <label className="flex items-center gap-2 text-sm text-[#6b6560]">
                   Sort by
                   <select
                     value={sort}
                     onChange={(e) => setSort(e.target.value)}
-                    className="border border-[#ebe6df] bg-white px-2 py-1.5 text-sm text-[#1a1a1a] outline-none"
+                    className="border border-[#e8e1d8] bg-white px-2 py-1.5 text-sm text-[#1c1c1c] outline-none"
                   >
                     <option value="featured">Featured</option>
                     <option value="new">New</option>
@@ -349,14 +349,14 @@ export function CategoryPage() {
 
 function EmptyState() {
   return (
-    <div className="border border-dashed border-[#ebe6df] px-6 py-20 text-center">
-      <p className="font-serif text-3xl text-[#8b1538]">Coming soon</p>
-      <p className="mx-auto mt-3 max-w-md text-sm text-[#6e6a65]">
+    <div className="border border-dashed border-[#e8e1d8] px-6 py-20 text-center">
+      <p className="font-serif text-3xl text-[#6d1f2c]">Coming soon</p>
+      <p className="mx-auto mt-3 max-w-md text-sm text-[#6b6560]">
         We&apos;re stocking this collection. Browse other categories meanwhile.
       </p>
       <Link
         to="/category/women"
-        className="mt-8 inline-flex border border-[#8b1538] px-6 py-3 text-xs tracking-[0.16em] text-[#8b1538] uppercase"
+        className="mt-8 inline-flex border border-[#6d1f2c] px-6 py-3 text-xs tracking-[0.16em] text-[#6d1f2c] uppercase"
       >
         Shop women
       </Link>

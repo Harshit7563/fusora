@@ -39,23 +39,23 @@ export function DealsPage() {
       </div>
 
       <div className="mx-auto max-w-[1280px] px-3 py-8 sm:px-6 lg:px-10">
-        <nav className="mb-6 text-xs text-[#6e6a65]">
-          <Link to="/" className="hover:text-[#8b1538]">
+        <nav className="mb-6 text-xs text-[#6b6560]">
+          <Link to="/" className="hover:text-[#6d1f2c]">
             Home
           </Link>
           <span className="mx-2">|</span>
-          <span className="text-[#1a1a1a]">{title}</span>
+          <span className="text-[#1c1c1c]">{title}</span>
         </nav>
 
-        <div className="mb-6 flex items-center justify-between gap-3 border-b border-[#ebe6df] pb-4">
-          <p className="text-sm text-[#6e6a65]">{list.length} items</p>
-          <p className="text-sm text-[#6e6a65]">Sort by: Featured</p>
+        <div className="mb-6 flex items-center justify-between gap-3 border-b border-[#e8e1d8] pb-4">
+          <p className="text-sm text-[#6b6560]">{list.length} items</p>
+          <p className="text-sm text-[#6b6560]">Sort by: Featured</p>
         </div>
 
         {list.length === 0 ? (
-          <p className="border border-dashed border-[#ebe6df] px-6 py-16 text-center text-[#6e6a65]">
+          <p className="border border-dashed border-[#e8e1d8] px-6 py-16 text-center text-[#6b6560]">
             No products found.{' '}
-            <Link to="/deals" className="text-[#8b1538] underline">
+            <Link to="/deals" className="text-[#6d1f2c] underline">
               Clear search
             </Link>
           </p>
