@@ -80,7 +80,7 @@ export function Header() {
       }`}
     >
       {/* Koskii-style bar: MENU · SEARCH | LOGO | WISH · BAG · ACCOUNT */}
-      <div className="mx-auto grid h-[3.75rem] max-w-[1440px] grid-cols-[1fr_auto_1fr] items-center px-3 sm:h-16 sm:px-6 lg:px-10">
+      <div className="mx-auto grid h-14 max-w-[1440px] grid-cols-[1fr_auto_1fr] items-center px-3 sm:h-[3.75rem] sm:px-6 lg:px-10">
         <div className={`flex items-center gap-4 sm:gap-7 ${ink}`}>
           <button
             type="button"
