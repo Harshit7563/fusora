@@ -23,12 +23,12 @@ type Slide =
 
 const slides: Slide[] = [
   {
-    id: 'kalyanam',
+    id: 'fusora',
     kind: 'triptych',
     left: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1200&q=85',
     right:
       'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=1200&q=85',
-    title: 'Kalyanam',
+    title: 'Fusora',
     line: 'Woven for moments that last forever.',
     to: '/category/women/sarees',
   },
