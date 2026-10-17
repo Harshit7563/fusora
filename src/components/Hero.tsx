@@ -7,51 +7,58 @@ type Slide = {
   id: string
   image: string
   position?: string
+  eyebrow: string
   title: string
   line: string
   cta: string
   to: string
+  align?: 'left' | 'right'
 }
 
 const slides: Slide[] = [
   {
     id: 'sarees',
-    image:
-      'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=2400&q=85',
-    position: 'object-[center_22%]',
+    image: '/heroes/saree-outdoor.jpg',
+    position: 'object-[center_35%]',
+    eyebrow: 'New season',
     title: 'Saree Edit',
-    line: 'Handpicked weaves for every celebration',
-    cta: 'Shop Now',
+    line: 'Outdoor weaves. Festive colour. Everyday grace.',
+    cta: 'Shop Sarees',
     to: '/category/women/sarees',
+    align: 'left',
+  },
+  {
+    id: 'wedding',
+    image: '/heroes/saree-portrait.jpg',
+    position: 'object-[center_20%]',
+    eyebrow: 'Occasion wear',
+    title: 'Wedding Edit',
+    line: 'Rich tones and heritage drapes for big days.',
+    cta: 'Shop Now',
+    to: '/category/women',
+    align: 'right',
   },
   {
     id: 'men',
-    image: '/heroes/hero-denim.jpg',
-    position: 'object-[center_18%]',
+    image: '/heroes/men-suit.jpg',
+    position: 'object-[center_25%]',
+    eyebrow: 'For him',
     title: 'Men’s Drop',
-    line: 'Shirts, tees & denim built for everyday',
+    line: 'Sharp fits — shirts, tees & denim that move with you.',
     cta: 'Shop Men',
     to: '/category/men',
-  },
-  {
-    id: 'women',
-    image:
-      'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=2400&q=85',
-    position: 'object-[center_20%]',
-    title: 'Women’s Edit',
-    line: 'Festive looks, everyday ease',
-    cta: 'Shop Women',
-    to: '/category/women',
+    align: 'left',
   },
   {
     id: 'sale',
-    image:
-      'https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&w=2400&q=85',
-    position: 'object-[center_28%]',
-    title: 'Sale',
-    line: 'Limited pieces. Fresh markdowns.',
+    image: '/heroes/fashion-street.jpg',
+    position: 'object-[center_30%]',
+    eyebrow: 'Limited time',
+    title: 'Sale Live',
+    line: 'Fresh markdowns across sarees, apparel & more.',
     cta: 'Shop Sale',
     to: '/deals',
+    align: 'right',
   },
 ]
 
@@ -62,7 +69,7 @@ export function Hero() {
   useEffect(() => {
     const id = window.setInterval(() => {
       setIndex((i) => (i + 1) % slides.length)
-    }, 5500)
+    }, 6000)
     return () => window.clearInterval(id)
   }, [index])
 
@@ -70,36 +77,53 @@ export function Hero() {
     setIndex((i) => (i + dir + slides.length) % slides.length)
   }
 
+  const alignRight = slide.align === 'right'
+
   return (
-    <section className="relative h-[min(70svh,620px)] min-h-[360px] overflow-hidden bg-[#111]">
+    <section className="relative h-[min(78svh,700px)] min-h-[420px] overflow-hidden bg-[#111]">
       <AnimatePresence mode="wait">
         <motion.div
           key={slide.id}
-          initial={{ opacity: 0.35 }}
+          initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.45 }}
+          transition={{ duration: 0.55 }}
           className="absolute inset-0"
         >
-          <Link to={slide.to} className="absolute inset-0 block">
-            <img
-              src={slide.image}
-              alt=""
-              className={`h-full w-full object-cover ${slide.position || 'object-center'}`}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-transparent" />
-          </Link>
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] flex flex-col items-start justify-end px-5 pb-14 sm:px-10 sm:pb-16 lg:px-14">
-            <p className="text-3xl font-extrabold tracking-tight text-white uppercase sm:text-5xl">
-              {slide.title}
+          <motion.img
+            src={slide.image}
+            alt=""
+            initial={{ scale: 1.06 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 6.5, ease: 'linear' }}
+            className={`absolute inset-0 h-full w-full object-cover ${slide.position || 'object-center'}`}
+          />
+
+          {/* Readable gradient — keep photo alive */}
+          <div
+            className={`absolute inset-0 ${
+              alignRight
+                ? 'bg-gradient-to-l from-black/70 via-black/25 to-transparent'
+                : 'bg-gradient-to-r from-black/70 via-black/25 to-transparent'
+            }`}
+          />
+          <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/50 to-transparent" />
+
+          <div
+            className={`absolute inset-0 z-[1] flex flex-col justify-end px-5 pb-16 sm:px-10 sm:pb-20 lg:px-16 ${
+              alignRight ? 'items-end text-right' : 'items-start text-left'
+            }`}
+          >
+            <p className="mb-2 text-[0.7rem] font-bold tracking-[0.2em] text-white/85 uppercase">
+              {slide.eyebrow}
             </p>
-            <p className="mt-2 max-w-md text-sm text-white/90 sm:text-base">
+            <h1 className="max-w-xl text-4xl font-extrabold leading-[1.05] tracking-tight text-white uppercase sm:text-5xl md:text-6xl lg:text-7xl">
+              {slide.title}
+            </h1>
+            <p className="mt-3 max-w-md text-sm leading-relaxed text-white/90 sm:text-base">
               {slide.line}
             </p>
-            <Link
-              to={slide.to}
-              className="pointer-events-auto btn-primary mt-5"
-            >
+            <Link to={slide.to} className="btn-primary mt-6">
               {slide.cta}
             </Link>
           </div>
@@ -110,7 +134,7 @@ export function Hero() {
         type="button"
         aria-label="Previous"
         onClick={() => go(-1)}
-        className="absolute top-1/2 left-3 z-[2] grid size-10 -translate-y-1/2 place-items-center rounded-full bg-white/85 text-[#111] shadow transition hover:bg-white"
+        className="absolute top-1/2 left-3 z-[2] grid size-10 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-[#111] shadow-md transition hover:bg-white sm:left-5"
       >
         <ChevronLeft className="size-5" strokeWidth={2.2} />
       </button>
@@ -118,20 +142,20 @@ export function Hero() {
         type="button"
         aria-label="Next"
         onClick={() => go(1)}
-        className="absolute top-1/2 right-3 z-[2] grid size-10 -translate-y-1/2 place-items-center rounded-full bg-white/85 text-[#111] shadow transition hover:bg-white"
+        className="absolute top-1/2 right-3 z-[2] grid size-10 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-[#111] shadow-md transition hover:bg-white sm:right-5"
       >
         <ChevronRight className="size-5" strokeWidth={2.2} />
       </button>
 
-      <div className="absolute inset-x-0 bottom-4 z-[2] flex justify-center gap-2">
+      <div className="absolute inset-x-0 bottom-5 z-[2] flex justify-center gap-2">
         {slides.map((s, i) => (
           <button
             key={s.id}
             type="button"
             aria-label={`Slide ${i + 1}`}
             onClick={() => setIndex(i)}
-            className={`size-2 rounded-full transition ${
-              i === index ? 'bg-[#e30613] scale-110' : 'bg-white/70'
+            className={`h-2 rounded-full transition-all ${
+              i === index ? 'w-7 bg-[#e30613]' : 'w-2 bg-white/75 hover:bg-white'
             }`}
           />
         ))}

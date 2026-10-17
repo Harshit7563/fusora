@@ -231,9 +231,9 @@ export function HomePage() {
       {/* Promo strip */}
       <section className="relative min-h-[38svh] overflow-hidden sm:min-h-[44svh]">
         <img
-          src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=2000&q=85"
+          src="/heroes/saree-blue.jpg"
           alt=""
-          className="absolute inset-0 h-full w-full object-cover object-[center_20%]"
+          className="absolute inset-0 h-full w-full object-cover object-[center_25%]"
         />
         <div className="absolute inset-0 bg-black/45" />
         <div className="relative flex min-h-[38svh] flex-col items-center justify-center px-4 py-14 text-center text-white sm:min-h-[44svh]">
