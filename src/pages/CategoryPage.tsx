@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
-import { ChevronDown } from 'lucide-react'
 import { getCategory } from '../categories'
 import {
   ALL_APPAREL_SUBTYPES,
@@ -20,7 +19,6 @@ export function CategoryPage() {
     useParams()
   const { products } = useCatalog()
   const [sort, setSort] = useState('featured')
-  const [inStockOnly, setInStockOnly] = useState(true)
 
   const active = (tab as CategoryId) || 'apparel-accessories'
   const meta = getCategory(active)
@@ -33,8 +31,7 @@ export function CategoryPage() {
       ? (subtypeParam as ApparelSubtype)
       : null
 
-  const redirectSareeFabric =
-    subtype === 'sarees' && Boolean(collectionParam)
+  const redirectSareeFabric = subtype === 'sarees' && Boolean(collectionParam)
 
   const genderDenimCollections = useMemo(() => {
     if (active === 'men') {
@@ -60,7 +57,6 @@ export function CategoryPage() {
       if (shopGender) {
         if (!matchesGender(p, shopGender)) return false
         if (subtype && p.subtype !== subtype) return false
-        // Sarees: show all products, ignore fabric/collection subcats
         if (subtype === 'sarees') return true
         if (
           collection &&
@@ -94,7 +90,8 @@ export function CategoryPage() {
 
     if (sort === 'price-asc') rows = [...rows].sort((a, b) => a.price - b.price)
     if (sort === 'price-desc') rows = [...rows].sort((a, b) => b.price - a.price)
-    if (sort === 'new') rows = [...rows].sort((a, b) => Number(b.topDeal) - Number(a.topDeal))
+    if (sort === 'new')
+      rows = [...rows].sort((a, b) => Number(b.topDeal) - Number(a.topDeal))
     return rows
   }, [active, isApparel, subtype, collection, shopGender, products, sort])
 
@@ -120,60 +117,46 @@ export function CategoryPage() {
         : 'Women only — sarees, jeans and festive apparel.'
       : 'Carefully chosen pieces for every occasion.')
 
-  const bannerImage =
-    subtypeMeta?.image ||
-    denimMeta?.image ||
-    'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=2000&q=80'
-
   usePageTitle(title)
 
   const showProductGrid =
     !showApparelLanding && !showGenderLanding && !showJeansLanding
 
-  // Old saree fabric URLs → single Sarees listing
   if (redirectSareeFabric) {
     return <Navigate to={`/category/${active}/sarees`} replace />
   }
 
   return (
     <main className="bg-white">
-      {/* Category banner */}
-      <div className="relative h-[26svh] min-h-[160px] overflow-hidden bg-[#3a1018] sm:h-[32svh]">
-        <img
-          src={bannerImage}
-          alt=""
-          className="h-full w-full object-cover object-[center_25%]"
-        />
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#2a0c12]/45 px-4 text-center">
-          <h1 className="font-serif text-4xl tracking-[0.08em] text-[#f7f0e6] uppercase sm:text-5xl">
-            {title}
-          </h1>
-          <p className="mt-2 max-w-xl text-sm text-[#f7f0e6]/80">{blurb}</p>
-        </div>
+      <div className="border-b border-[#eee] bg-[#fafafa] px-3 py-10 text-center sm:px-5 sm:py-12">
+        <h1 className="text-3xl font-extrabold tracking-tight text-[#111] uppercase sm:text-4xl">
+          {title}
+        </h1>
+        <p className="mx-auto mt-2 max-w-lg text-sm text-[#666]">{blurb}</p>
       </div>
 
-      <div className="mx-auto max-w-[1280px] px-3 py-6 sm:px-6 lg:px-10">
-        <nav className="mb-6 text-xs text-[#6b6560]">
-          <Link to="/" className="hover:text-[#6d1f2c]">
+      <div className="mx-auto max-w-[1400px] px-3 py-6 sm:px-5 lg:px-8">
+        <nav className="mb-5 text-xs font-semibold text-[#666]">
+          <Link to="/" className="hover:text-[#e30613]">
             Home
           </Link>
-          <span className="mx-2">|</span>
-          <Link to={`/category/${active}`} className="hover:text-[#6d1f2c]">
+          <span className="mx-2">/</span>
+          <Link to={`/category/${active}`} className="hover:text-[#e30613]">
             {meta.label}
           </Link>
           {subtypeMeta && (
             <>
-              <span className="mx-2">|</span>
-              <span className="text-[#1c1c1c]">{subtypeMeta.label}</span>
+              <span className="mx-2">/</span>
+              <span className="text-[#111]">{subtypeMeta.label}</span>
             </>
           )}
         </nav>
 
         {(isApparel || isGenderShop) && (
-          <div className="mb-8 flex flex-wrap gap-2">
+          <div className="mb-7 flex flex-wrap gap-2">
             <Link
               to={`/category/${active}`}
-              className="pill-tab"
+              className="chip"
               data-active={!subtype}
             >
               All
@@ -182,7 +165,7 @@ export function CategoryPage() {
               <Link
                 key={s.id}
                 to={`/category/${active}/${s.id}`}
-                className="pill-tab"
+                className="chip"
                 data-active={subtype === s.id}
               >
                 {s.label}
@@ -203,17 +186,19 @@ export function CategoryPage() {
                 <Link
                   key={s.id}
                   to={`/category/${active}/${s.id}`}
-                  className="group relative aspect-[3/4] overflow-hidden"
+                  className="group relative aspect-[3/4] overflow-hidden rounded-2xl"
                 >
                   <SafeImage
                     src={s.image}
                     alt={s.label}
-                    className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                    className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
                   <div className="absolute inset-x-0 bottom-0 p-4 text-white">
-                    <h2 className="font-serif text-xl sm:text-2xl">{s.label}</h2>
-                    <p className="mt-1 text-[0.65rem] tracking-[0.14em] uppercase opacity-85">
+                    <h2 className="text-lg font-extrabold uppercase tracking-wide">
+                      {s.label}
+                    </h2>
+                    <p className="mt-1 text-[0.65rem] font-bold tracking-wide uppercase opacity-85">
                       {count} pieces
                     </p>
                   </div>
@@ -239,18 +224,20 @@ export function CategoryPage() {
                 <Link
                   key={c.id}
                   to={`${jeansBase}/${c.id}`}
-                  className="group relative aspect-[3/4] overflow-hidden"
+                  className="group relative aspect-[3/4] overflow-hidden rounded-2xl"
                 >
                   <SafeImage
                     src={c.image}
                     alt={c.label}
-                    className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                    className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
                   <div className="absolute inset-x-0 bottom-0 p-5 text-white">
-                    <h2 className="font-serif text-2xl">{c.label}</h2>
+                    <h2 className="text-xl font-extrabold uppercase">
+                      {c.label}
+                    </h2>
                     <p className="mt-1 text-sm text-white/85">{c.blurb}</p>
-                    <p className="mt-2 text-[0.65rem] tracking-[0.14em] uppercase">
+                    <p className="mt-2 text-[0.65rem] font-bold tracking-wide uppercase">
                       {count} styles
                     </p>
                   </div>
@@ -261,105 +248,49 @@ export function CategoryPage() {
         )}
 
         {(showProductGrid || denimCollection) && (
-          <div className="grid gap-8 lg:grid-cols-[220px_1fr]">
-            {/* Filter sidebar */}
-            <aside className="hidden lg:block">
-              <h2 className="mb-4 font-serif text-2xl text-[#6d1f2c]">Filter</h2>
-              <div className="border-t border-[#e8e1d8] py-4">
-                <p className="mb-3 flex items-center justify-between text-sm font-medium">
-                  Availability <ChevronDown className="size-4" />
-                </p>
-                <label className="mb-2 flex items-center gap-2 text-sm text-[#6b6560]">
-                  <input
-                    type="checkbox"
-                    checked={inStockOnly}
-                    onChange={(e) => setInStockOnly(e.target.checked)}
-                    className="accent-[#6d1f2c]"
-                  />
-                  In stock ({list.length})
-                </label>
-                <label className="flex items-center gap-2 text-sm text-[#6b6560]">
-                  <input type="checkbox" disabled className="accent-[#6d1f2c]" />
-                  Out of stock (0)
-                </label>
-              </div>
-              <div className="border-t border-[#e8e1d8] py-4">
-                <p className="mb-3 flex items-center justify-between text-sm font-medium">
-                  Category <ChevronDown className="size-4" />
-                </p>
-                <div className="space-y-2">
-                  {(isApparel || isGenderShop
-                    ? genderSubtypes
-                    : [{ id: 'all', label: meta.label }]
-                  ).map((s) => (
-                    <Link
-                      key={s.id}
-                      to={
-                        'id' in s && s.id !== 'all'
-                          ? `/category/${active}/${s.id}`
-                          : `/category/${active}`
-                      }
-                      className={`block text-sm ${
-                        subtype === ('id' in s ? s.id : null)
-                          ? 'text-[#6d1f2c]'
-                          : 'text-[#6b6560] hover:text-[#6d1f2c]'
-                      }`}
-                    >
-                      {s.label}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            </aside>
-
-            <div>
-              <div className="mb-5 flex items-center justify-between gap-3 border-b border-[#e8e1d8] pb-4">
-                <p className="text-sm text-[#6b6560]">{list.length} items</p>
-                <label className="flex items-center gap-2 text-sm text-[#6b6560]">
-                  Sort by
-                  <select
-                    value={sort}
-                    onChange={(e) => setSort(e.target.value)}
-                    className="border border-[#e8e1d8] bg-white px-2 py-1.5 text-sm text-[#1c1c1c] outline-none"
-                  >
-                    <option value="featured">Featured</option>
-                    <option value="new">New</option>
-                    <option value="price-asc">Price, low to high</option>
-                    <option value="price-desc">Price, high to low</option>
-                  </select>
-                </label>
-              </div>
-
-              {list.length === 0 ? (
-                <EmptyState />
-              ) : (
-                <div className="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-3 lg:gap-x-6">
-                  {list.map((p) => (
-                    <ProductCard key={p.id} product={p} />
-                  ))}
-                </div>
-              )}
+          <>
+            <div className="mb-5 flex items-center justify-between gap-3 border-b border-[#eee] pb-4">
+              <p className="text-sm font-semibold text-[#666]">
+                {list.length} items
+              </p>
+              <label className="flex items-center gap-2 text-sm font-semibold text-[#666]">
+                Sort
+                <select
+                  value={sort}
+                  onChange={(e) => setSort(e.target.value)}
+                  className="rounded-full border border-[#ddd] bg-white px-3 py-1.5 text-sm font-semibold text-[#111] outline-none"
+                >
+                  <option value="featured">Featured</option>
+                  <option value="new">New</option>
+                  <option value="price-asc">Price, low to high</option>
+                  <option value="price-desc">Price, high to low</option>
+                </select>
+              </label>
             </div>
-          </div>
+
+            {list.length === 0 ? (
+              <div className="rounded-2xl border border-dashed border-[#ddd] px-6 py-20 text-center">
+                <p className="text-2xl font-extrabold uppercase text-[#111]">
+                  Coming soon
+                </p>
+                <p className="mx-auto mt-3 max-w-md text-sm text-[#666]">
+                  We&apos;re stocking this collection. Browse other categories
+                  meanwhile.
+                </p>
+                <Link to="/category/women" className="btn-primary mt-8 inline-flex">
+                  Shop women
+                </Link>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-4 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-5">
+                {list.map((p) => (
+                  <ProductCard key={p.id} product={p} />
+                ))}
+              </div>
+            )}
+          </>
         )}
       </div>
     </main>
-  )
-}
-
-function EmptyState() {
-  return (
-    <div className="border border-dashed border-[#e8e1d8] px-6 py-20 text-center">
-      <p className="font-serif text-3xl text-[#6d1f2c]">Coming soon</p>
-      <p className="mx-auto mt-3 max-w-md text-sm text-[#6b6560]">
-        We&apos;re stocking this collection. Browse other categories meanwhile.
-      </p>
-      <Link
-        to="/category/women"
-        className="mt-8 inline-flex border border-[#6d1f2c] px-6 py-3 text-xs tracking-[0.16em] text-[#6d1f2c] uppercase"
-      >
-        Shop women
-      </Link>
-    </div>
   )
 }

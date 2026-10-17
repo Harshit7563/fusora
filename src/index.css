@@ -1,29 +1,29 @@
 @import 'tailwindcss';
 
 @theme {
-  /* Taneira-inspired ethnic commerce */
-  --font-sans: 'Source Sans 3', system-ui, sans-serif;
-  --font-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  /* The Bear House–inspired modern commerce */
+  --font-sans: 'Montserrat', system-ui, sans-serif;
+  --font-serif: 'Montserrat', system-ui, sans-serif;
 
-  --color-bb-blue: #6d1f2c;
-  --color-bb-blue-dark: #541822;
-  --color-bb-blue-deep: #3a1018;
-  --color-bb-yellow: #d4af77;
-  --color-bb-link: #6d1f2c;
-  --color-bb-gray: #f5f1eb;
-  --color-bb-border: #e8e1d8;
-  --color-bb-text: #1c1c1c;
-  --color-bb-muted: #6b6560;
-  --color-bb-price: #1c1c1c;
-  --color-bb-save: #6d1f2c;
+  --color-bb-blue: #e30613;
+  --color-bb-blue-dark: #c10510;
+  --color-bb-blue-deep: #8f040c;
+  --color-bb-yellow: #111111;
+  --color-bb-link: #e30613;
+  --color-bb-gray: #f5f5f5;
+  --color-bb-border: #e5e5e5;
+  --color-bb-text: #111111;
+  --color-bb-muted: #666666;
+  --color-bb-price: #111111;
+  --color-bb-save: #e30613;
 
-  --color-fusora-wine: #6d1f2c;
-  --color-fusora-wine-soft: #8a2e3d;
-  --color-fusora-cream: #faf7f2;
-  --color-fusora-ivory: #faf7f2;
-  --color-fusora-gold: #d4af77;
-  --color-fusora-sand: #f5f1eb;
-  --color-fusora-brown: #5c4033;
+  --color-fusora-wine: #e30613;
+  --color-fusora-wine-soft: #ff3b45;
+  --color-fusora-cream: #ffffff;
+  --color-fusora-ivory: #fafafa;
+  --color-fusora-gold: #111111;
+  --color-fusora-sand: #f5f5f5;
+  --color-fusora-brown: #333333;
 }
 
 @layer base {
@@ -40,8 +40,8 @@
     margin: 0;
     min-height: 100svh;
     font-family: var(--font-sans);
-    font-weight: 400;
-    color: rgba(28, 28, 28, 0.9);
+    font-weight: 500;
+    color: #111111;
     background: #ffffff;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
@@ -69,137 +69,97 @@
   h2,
   h3,
   .font-serif {
-    font-family: var(--font-serif);
-    font-weight: 500;
+    font-family: var(--font-sans);
+    font-weight: 700;
   }
 }
 
 @layer utilities {
-  .text-display {
-    font-family: var(--font-serif);
-    font-weight: 500;
-    letter-spacing: 0.02em;
-  }
-
-  .btn-shop {
+  .btn-primary {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: 999px;
-    background: #f7f0e6;
-    color: #1c1c1c;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    font-weight: 600;
-    padding: 0.8rem 1.9rem;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
-    transition: background 0.2s ease, transform 0.2s ease;
-  }
-
-  .btn-shop:hover {
-    background: #fff;
-    transform: translateY(-1px);
-  }
-
-  .btn-shop-dark {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 999px;
-    background: #6d1f2c;
+    background: #e30613;
     color: #fff;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+    border-radius: 999px;
     font-size: 0.75rem;
-    font-weight: 600;
-    padding: 0.8rem 1.9rem;
-    transition: background 0.2s ease, transform 0.2s ease;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.85rem 1.75rem;
+    transition: background 0.2s ease, transform 0.15s ease;
   }
 
-  .btn-shop-dark:hover {
-    background: #541822;
+  .btn-primary:hover {
+    background: #c10510;
     transform: translateY(-1px);
+  }
+
+  .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid #111;
+    color: #111;
+    background: #fff;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.8rem 1.6rem;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  .btn-outline:hover {
+    background: #111;
+    color: #fff;
   }
 
   .btn-outline-light {
-    border: 1px solid #fff;
+    border: 1.5px solid #fff;
     color: #fff;
     background: transparent;
     border-radius: 999px;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     font-size: 0.75rem;
-    font-weight: 600;
-    padding: 0.8rem 1.9rem;
-    transition: background 0.25s ease, color 0.25s ease;
+    font-weight: 700;
+    padding: 0.8rem 1.6rem;
+    transition: background 0.2s ease, color 0.2s ease;
   }
 
   .btn-outline-light:hover {
     background: #fff;
-    color: #6d1f2c;
+    color: #111;
   }
 
-  .pill-tab {
-    border: 1px solid #e8e1d8;
-    color: #1c1c1c;
-    background: #fff;
-    border-radius: 999px;
-    padding: 0.5rem 1.2rem;
-    font-size: 0.78rem;
-    font-weight: 500;
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     white-space: nowrap;
-    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    border: 1px solid #ddd;
+    background: #fff;
+    color: #333;
+    border-radius: 999px;
+    padding: 0.55rem 1.1rem;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
   }
 
-  .pill-tab:hover {
-    border-color: #6d1f2c;
-    color: #6d1f2c;
+  .chip:hover {
+    border-color: #e30613;
+    color: #e30613;
   }
 
-  .pill-tab[data-active='true'] {
-    background: #6d1f2c;
-    border-color: #6d1f2c;
+  .chip[data-active='true'] {
+    background: #e30613;
+    border-color: #e30613;
     color: #fff;
-  }
-
-  /* Cream diamond motif band — Taneira-like */
-  .motif-border {
-    height: 14px;
-    background-color: #6d1f2c;
-    background-image: repeating-linear-gradient(
-        45deg,
-        transparent 0,
-        transparent 5px,
-        rgba(247, 240, 230, 0.35) 5px,
-        rgba(247, 240, 230, 0.35) 6px
-      ),
-      repeating-linear-gradient(
-        -45deg,
-        transparent 0,
-        transparent 5px,
-        rgba(212, 175, 119, 0.45) 5px,
-        rgba(212, 175, 119, 0.45) 6px
-      );
-  }
-
-  .festive-glow {
-    background-color: #6d1f2c;
-    background-image: radial-gradient(
-        circle at 20% 30%,
-        rgba(212, 175, 119, 0.14) 0%,
-        transparent 42%
-      ),
-      radial-gradient(
-        circle at 80% 20%,
-        rgba(212, 175, 119, 0.1) 0%,
-        transparent 38%
-      ),
-      radial-gradient(
-        circle at 50% 80%,
-        rgba(255, 255, 255, 0.04) 0%,
-        transparent 45%
-      );
   }
 
   .hide-scrollbar {

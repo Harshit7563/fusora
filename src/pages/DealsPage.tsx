@@ -22,43 +22,31 @@ export function DealsPage() {
 
   return (
     <main className="bg-white">
-      <div className="relative h-[26svh] min-h-[170px] overflow-hidden bg-[#3a1018] sm:h-[32svh]">
-        <img
-          src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=2000&q=80"
-          alt=""
-          className="h-full w-full object-cover object-[center_25%]"
-        />
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-[#2a0c12]/45 px-4 text-center">
-          <h1 className="font-serif text-4xl tracking-[0.08em] text-[#f7f0e6] uppercase sm:text-5xl">
-            {title}
-          </h1>
-          <p className="mt-2 text-sm text-[#f7f0e6]/80">{list.length} items</p>
-        </div>
+      <div className="border-b border-[#eee] bg-[#fafafa] px-3 py-10 text-center sm:px-5 sm:py-12">
+        <h1 className="text-3xl font-extrabold tracking-tight text-[#111] uppercase sm:text-4xl">
+          {title}
+        </h1>
+        <p className="mt-2 text-sm font-medium text-[#666]">{list.length} items</p>
       </div>
 
-      <div className="mx-auto max-w-[1280px] px-3 py-8 sm:px-6 lg:px-10">
-        <nav className="mb-6 text-xs text-[#6b6560]">
-          <Link to="/" className="hover:text-[#6d1f2c]">
+      <div className="mx-auto max-w-[1400px] px-3 py-8 sm:px-5 lg:px-8">
+        <nav className="mb-6 text-xs font-semibold text-[#666]">
+          <Link to="/" className="hover:text-[#e30613]">
             Home
           </Link>
-          <span className="mx-2">|</span>
-          <span className="text-[#1c1c1c]">{title}</span>
+          <span className="mx-2">/</span>
+          <span className="text-[#111]">{title}</span>
         </nav>
 
-        <div className="mb-6 flex items-center justify-between gap-3 border-b border-[#e8e1d8] pb-4">
-          <p className="text-sm text-[#6b6560]">{list.length} items</p>
-          <p className="text-sm text-[#6b6560]">Sort by: Featured</p>
-        </div>
-
         {list.length === 0 ? (
-          <p className="border border-dashed border-[#e8e1d8] px-6 py-16 text-center text-[#6b6560]">
+          <p className="rounded-2xl border border-dashed border-[#ddd] px-6 py-16 text-center text-[#666]">
             No products found.{' '}
-            <Link to="/deals" className="text-[#6d1f2c] underline">
+            <Link to="/deals" className="font-bold text-[#e30613] underline">
               Clear search
             </Link>
           </p>
         ) : (
-          <div className="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-3 lg:gap-x-6">
+          <div className="grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-4 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-5">
             {list.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}

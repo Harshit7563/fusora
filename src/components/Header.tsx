@@ -1,25 +1,29 @@
-import {
-  Heart,
-  Menu,
-  Search,
-  ShoppingBag,
-  User,
-  X,
-} from 'lucide-react'
+import { Heart, Menu, Search, ShoppingBag, User, X } from 'lucide-react'
 import { useEffect, useState, type FormEvent } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useStore } from '../context/StoreContext'
 import { FusoraLogo } from './FusoraLogo'
 
 const nav = [
+  { label: 'Shop All', to: '/deals' },
+  { label: 'Sarees', to: '/category/women/sarees' },
+  { label: 'Women', to: '/category/women' },
+  { label: 'Men', to: '/category/men' },
+  { label: 'T-shirts', to: '/category/men/tshirts' },
+  { label: 'Shirts', to: '/category/men/shirts' },
+  { label: 'Jeans', to: '/category/men/jeans' },
+  { label: 'Jewellery', to: '/category/jewelry-eyewear-watches' },
+]
+
+const chips = [
+  { label: 'New Arrivals', to: '/deals' },
+  { label: 'Bestsellers', to: '/deals' },
+  { label: 'Sale', to: '/deals' },
   { label: 'Sarees', to: '/category/women/sarees' },
   { label: 'Women', to: '/category/women' },
   { label: 'Men', to: '/category/men' },
   { label: 'Jeans', to: '/category/men/jeans' },
   { label: 'Jewellery', to: '/category/jewelry-eyewear-watches' },
-  { label: 'New Arrivals', to: '/deals' },
-  { label: 'Sale', to: '/deals' },
-  { label: 'Our Story', to: '/about' },
 ]
 
 export function Header() {
@@ -49,76 +53,92 @@ export function Header() {
   }
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 bg-white/95 shadow-[0_1px_0_rgba(0,0,0,0.04)] backdrop-blur-md">
-      <div className="bg-[#6d1f2c] text-center">
-        <p className="truncate px-3 py-[0.45rem] text-[0.7rem] tracking-[0.04em] text-white sm:text-[0.75rem]">
-          Free shipping within India · Fresh weaves, added daily
+    <header className="fixed inset-x-0 top-0 z-50 bg-white">
+      <div className="bg-[#e30613] text-center">
+        <p className="truncate px-3 py-2 text-[0.68rem] font-semibold tracking-[0.08em] text-white uppercase sm:text-[0.72rem]">
+          Express delivery across India · Fresh styles every week
         </p>
       </div>
 
-      <div className="border-b border-[#efe9e1]">
-        <div className="mx-auto grid h-14 max-w-[1280px] grid-cols-[auto_1fr_auto] items-center gap-3 px-3 sm:h-[3.85rem] sm:gap-6 sm:px-5 lg:px-8">
-          <div className="flex items-center gap-1">
-            <button
-              type="button"
-              className="grid size-9 place-items-center text-[#1c1c1c] lg:hidden"
-              aria-label="Menu"
-              onClick={() => setMenuOpen(true)}
-            >
-              <Menu className="size-5" strokeWidth={1.5} />
-            </button>
-            <FusoraLogo compact className="shrink-0" />
-          </div>
-
-          <form
-            onSubmit={onSearch}
-            className="mx-auto hidden w-full max-w-[34rem] items-center rounded-full bg-[#f3efe8] px-4 py-2.5 lg:flex"
+      <div className="border-b border-[#eee]">
+        <div className="mx-auto flex h-14 max-w-[1400px] items-center gap-3 px-3 sm:h-16 sm:px-5 lg:px-8">
+          <button
+            type="button"
+            className="grid size-9 place-items-center lg:hidden"
+            aria-label="Menu"
+            onClick={() => setMenuOpen(true)}
           >
-            <input
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-              placeholder="Search for festive sarees"
-              className="min-w-0 flex-1 bg-transparent text-[0.9rem] text-[#1c1c1c] outline-none placeholder:text-[#8a847c]"
-            />
-            <button type="submit" aria-label="Search" className="text-[#6d1f2c]">
-              <Search className="size-[1.1rem]" strokeWidth={1.7} />
-            </button>
-          </form>
+            <Menu className="size-5" strokeWidth={2} />
+          </button>
 
-          <div className="flex items-center justify-end gap-0.5 sm:gap-1">
+          <FusoraLogo compact className="shrink-0" />
+
+          <nav className="ml-4 hidden flex-1 items-center justify-center gap-5 xl:gap-6 lg:flex">
+            {nav.map((item) => (
+              <Link
+                key={item.to + item.label}
+                to={item.to}
+                className="text-[0.72rem] font-bold tracking-[0.06em] text-[#111] uppercase transition hover:text-[#e30613]"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+
+          <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
+            <form
+              onSubmit={onSearch}
+              className="hidden items-center overflow-hidden rounded-full border border-[#ddd] bg-white sm:flex"
+            >
+              <input
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                placeholder="Search"
+                className="w-28 bg-transparent px-3 py-2 text-sm outline-none placeholder:text-[#999] md:w-40"
+              />
+              <button
+                type="submit"
+                aria-label="Search"
+                className="m-0.5 grid size-8 place-items-center rounded-full bg-[#e30613] text-white"
+              >
+                <Search className="size-3.5" strokeWidth={2.5} />
+              </button>
+            </form>
             <button
               type="button"
-              className="grid size-9 place-items-center text-[#1c1c1c] lg:hidden"
+              className="grid size-9 place-items-center sm:hidden"
               aria-label="Search"
               onClick={() => navigate('/deals')}
             >
-              <Search className="size-[1.1rem]" strokeWidth={1.5} />
+              <Search className="size-[1.15rem]" strokeWidth={2} />
             </button>
             <Link
               to="/account"
-              className="grid size-9 place-items-center text-[#1c1c1c] transition hover:text-[#6d1f2c]"
+              className="hidden size-9 place-items-center sm:grid"
               aria-label="Account"
             >
-              <User className="size-[1.1rem]" strokeWidth={1.5} />
+              <User className="size-[1.15rem]" strokeWidth={2} />
             </Link>
             <Link
               to="/wishlist"
-              className="relative grid size-9 place-items-center text-[#1c1c1c] transition hover:text-[#6d1f2c]"
+              className="relative grid size-9 place-items-center"
               aria-label="Wishlist"
             >
-              <Heart className="size-[1.1rem]" strokeWidth={1.5} />
-              <span className="absolute top-0.5 right-0 flex min-w-[1rem] items-center justify-center rounded-full bg-[#6d1f2c] px-1 text-[0.55rem] font-semibold leading-none text-white">
-                {wishlist.size}
-              </span>
+              <Heart className="size-[1.15rem]" strokeWidth={2} />
+              {wishlist.size > 0 && (
+                <span className="absolute top-0 right-0 flex min-w-4 items-center justify-center rounded-full bg-[#e30613] px-1 text-[0.55rem] font-bold text-white">
+                  {wishlist.size}
+                </span>
+              )}
             </Link>
             <button
               type="button"
               onClick={openCart}
-              className="relative grid size-9 place-items-center text-[#1c1c1c] transition hover:text-[#6d1f2c]"
+              className="relative grid size-9 place-items-center"
               aria-label="Cart"
             >
-              <ShoppingBag className="size-[1.1rem]" strokeWidth={1.5} />
-              <span className="absolute top-0.5 right-0 flex min-w-[1rem] items-center justify-center rounded-full bg-[#6d1f2c] px-1 text-[0.55rem] font-semibold leading-none text-white">
+              <ShoppingBag className="size-[1.15rem]" strokeWidth={2} />
+              <span className="absolute top-0 right-0 flex min-w-4 items-center justify-center rounded-full bg-[#e30613] px-1 text-[0.55rem] font-bold text-white">
                 {cartCount}
               </span>
             </button>
@@ -126,20 +146,23 @@ export function Header() {
         </div>
       </div>
 
-      <nav className="hidden border-b border-[#efe9e1] lg:block">
-        <ul className="mx-auto flex max-w-[1280px] items-center justify-center gap-7 px-4 py-2.5 xl:gap-9">
-          {nav.map((item) => (
-            <li key={item.to + item.label}>
-              <Link
-                to={item.to}
-                className="text-[0.8rem] font-medium tracking-[0.02em] text-[#2a2a2a] transition hover:text-[#6d1f2c]"
-              >
-                {item.label}
-              </Link>
-            </li>
+      <div className="border-b border-[#eee] bg-white">
+        <div className="hide-scrollbar mx-auto flex max-w-[1400px] gap-2 overflow-x-auto px-3 py-2.5 sm:px-5 lg:justify-center lg:px-8">
+          {chips.map((c, i) => (
+            <Link
+              key={c.label}
+              to={c.to}
+              className="chip"
+              data-active={
+                i === 0 &&
+                (location.pathname === '/deals' || location.pathname === '/')
+              }
+            >
+              {c.label}
+            </Link>
           ))}
-        </ul>
-      </nav>
+        </div>
+      </div>
 
       {menuOpen && (
         <div className="fixed inset-0 z-[60] lg:hidden">
@@ -150,38 +173,23 @@ export function Header() {
             onClick={() => setMenuOpen(false)}
           />
           <div className="absolute inset-y-0 left-0 flex w-[min(100%,19rem)] flex-col bg-white safe-pb">
-            <div className="flex h-14 items-center justify-between border-b border-[#e8e1d8] px-4">
+            <div className="flex h-14 items-center justify-between border-b border-[#eee] px-4">
               <FusoraLogo compact />
               <button
                 type="button"
                 onClick={() => setMenuOpen(false)}
                 className="grid size-9 place-items-center"
               >
-                <X className="size-5" strokeWidth={1.4} />
+                <X className="size-5" strokeWidth={2} />
               </button>
             </div>
-            <form
-              onSubmit={(e) => {
-                onSearch(e)
-                setMenuOpen(false)
-              }}
-              className="mx-3 mt-3 flex items-center rounded-full bg-[#f3efe8] px-3 py-2.5"
-            >
-              <input
-                value={q}
-                onChange={(e) => setQ(e.target.value)}
-                placeholder="Search sarees…"
-                className="min-w-0 flex-1 bg-transparent text-sm outline-none"
-              />
-              <Search className="size-4 text-[#6d1f2c]" strokeWidth={1.6} />
-            </form>
-            <div className="mt-3 flex gap-2 border-b border-[#e8e1d8] px-4 pb-3">
+            <div className="flex gap-2 border-b border-[#eee] px-4 py-3">
               {isLoggedIn ? (
                 <>
                   <Link
                     to="/account"
                     onClick={() => setMenuOpen(false)}
-                    className="rounded-full bg-[#6d1f2c] px-4 py-2 text-[0.68rem] tracking-wide text-white uppercase"
+                    className="rounded-full bg-[#e30613] px-4 py-2 text-[0.68rem] font-bold tracking-wide text-white uppercase"
                   >
                     Account
                   </Link>
@@ -191,7 +199,7 @@ export function Header() {
                       signOut()
                       setMenuOpen(false)
                     }}
-                    className="rounded-full border border-[#e8e1d8] px-4 py-2 text-[0.68rem] tracking-wide uppercase"
+                    className="rounded-full border border-[#ddd] px-4 py-2 text-[0.68rem] font-bold tracking-wide uppercase"
                   >
                     Log out
                   </button>
@@ -200,7 +208,7 @@ export function Header() {
                 <Link
                   to="/account"
                   onClick={() => setMenuOpen(false)}
-                  className="rounded-full bg-[#6d1f2c] px-4 py-2 text-[0.68rem] tracking-wide text-white uppercase"
+                  className="rounded-full bg-[#e30613] px-4 py-2 text-[0.68rem] font-bold tracking-wide text-white uppercase"
                 >
                   Log in
                 </Link>
@@ -212,7 +220,7 @@ export function Header() {
                   <Link
                     to={item.to}
                     onClick={() => setMenuOpen(false)}
-                    className="block px-5 py-3.5 text-sm"
+                    className="block px-5 py-3.5 text-sm font-semibold uppercase tracking-wide"
                   >
                     {item.label}
                   </Link>

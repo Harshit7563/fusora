@@ -9,48 +9,50 @@ type Props = {
   showAdd?: boolean
 }
 
+/** Bear House–style card: clean image, bold price, heart */
 export function ProductCard({ product: p }: Props) {
   const { wishlist, toggleWish } = useStore()
+  const onSale = p.was > p.price
 
   return (
     <article className="group">
-      <div className="relative mb-3 overflow-hidden rounded-xl bg-[#f5f1eb]">
+      <div className="relative mb-2.5 overflow-hidden rounded-xl bg-[#f5f5f5]">
         <Link to={`/product/${p.id}`}>
           <SafeImage
             src={p.image}
             alt={p.name}
-            className="aspect-[3/4] w-full object-cover transition duration-500 group-hover:scale-[1.035]"
+            className="aspect-[3/4] w-full object-cover transition duration-500 group-hover:scale-[1.03]"
           />
         </Link>
         <button
           type="button"
           onClick={() => toggleWish(p.id)}
-          className="absolute top-2.5 right-2.5 grid size-8 place-items-center rounded-full bg-white/95 text-[#1c1c1c] shadow-sm transition hover:scale-105 hover:bg-white"
+          className="absolute top-2.5 right-2.5 grid size-8 place-items-center rounded-full bg-white text-[#111] shadow-sm transition hover:scale-105"
           aria-label="Wishlist"
         >
           <Heart
             className={`size-[0.95rem] ${
-              wishlist.has(p.id) ? 'fill-[#6d1f2c] text-[#6d1f2c]' : ''
+              wishlist.has(p.id) ? 'fill-[#e30613] text-[#e30613]' : ''
             }`}
-            strokeWidth={1.5}
+            strokeWidth={2}
           />
         </button>
-        {p.was > p.price && (
-          <span className="absolute top-2.5 left-2.5 rounded-full bg-[#6d1f2c] px-2 py-0.5 text-[0.6rem] font-semibold tracking-wide text-white uppercase">
+        {onSale && (
+          <span className="absolute top-2.5 left-2.5 rounded-full bg-[#e30613] px-2 py-0.5 text-[0.58rem] font-bold tracking-wide text-white uppercase">
             Sale
           </span>
         )}
       </div>
       <Link to={`/product/${p.id}`} className="block px-0.5">
-        <p className="line-clamp-2 min-h-[2.4em] text-[0.8rem] leading-snug text-[#2a2a2a] transition group-hover:text-[#6d1f2c]">
+        <p className="line-clamp-2 min-h-[2.35em] text-[0.78rem] font-medium leading-snug text-[#222]">
           {p.name}
         </p>
         <div className="mt-1.5 flex flex-wrap items-baseline gap-2">
-          <p className="text-[0.9rem] font-semibold text-[#1c1c1c]">
+          <p className="text-[0.92rem] font-bold text-[#111]">
             {formatMoney(p.price)}
           </p>
-          {p.was > p.price && (
-            <p className="text-xs text-[#6b6560] line-through">
+          {onSale && (
+            <p className="text-xs font-medium text-[#888] line-through">
               {formatMoney(p.was)}
             </p>
           )}

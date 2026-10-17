@@ -61,10 +61,10 @@ export function ProductPage() {
   if (!product || !details) {
     return (
       <main className="mx-auto max-w-[900px] px-4 py-20 text-center">
-        <h1 className="font-serif text-3xl text-[#6d1f2c]">Product not found</h1>
+        <h1 className="text-3xl text-[#e30613]">Product not found</h1>
         <Link
           to="/deals"
-          className="mt-4 inline-block text-sm tracking-wide text-[#6d1f2c] uppercase hover:underline"
+          className="mt-4 inline-block text-sm tracking-wide text-[#e30613] uppercase hover:underline"
         >
           Back to shop
         </Link>
@@ -112,14 +112,14 @@ export function ProductPage() {
   return (
     <main className="bg-white pb-28 lg:pb-0">
       <div className="mx-auto max-w-[1280px] px-3 py-5 sm:px-6 lg:px-10 lg:py-10">
-        <nav className="mb-6 text-xs text-[#6b6560]">
-          <Link to="/" className="hover:text-[#6d1f2c]">
+        <nav className="mb-6 text-xs text-[#666666]">
+          <Link to="/" className="hover:text-[#e30613]">
             Home
           </Link>
           <span className="mx-2">|</span>
           <Link
             to={`/category/${product.tab}`}
-            className="hover:text-[#6d1f2c]"
+            className="hover:text-[#e30613]"
           >
             {category.label}
           </Link>
@@ -128,14 +128,14 @@ export function ProductPage() {
               <span className="mx-2">|</span>
               <Link
                 to={`/category/${product.tab}/${product.subtype}`}
-                className="hover:text-[#6d1f2c] capitalize"
+                className="hover:text-[#e30613] capitalize"
               >
                 {product.subtype}
               </Link>
             </>
           )}
           <span className="mx-2">|</span>
-          <span className="text-[#1c1c1c]">{product.name}</span>
+          <span className="text-[#111111]">{product.name}</span>
         </nav>
 
         <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 xl:gap-16">
@@ -143,14 +143,14 @@ export function ProductPage() {
           <section
             className={
               gallery.length === 1
-                ? 'overflow-hidden bg-[#f5f1eb]'
+                ? 'overflow-hidden bg-[#f5f5f5]'
                 : 'grid grid-cols-2 gap-2 sm:gap-3'
             }
           >
             {gallery.slice(0, 4).map((src, i) => (
               <div
                 key={`${src}-${i}`}
-                className="overflow-hidden bg-[#f5f1eb]"
+                className="overflow-hidden bg-[#f5f5f5]"
               >
                 <SafeImage
                   src={src}
@@ -164,27 +164,27 @@ export function ProductPage() {
 
           {/* Buy box */}
           <section className="lg:sticky lg:top-28 lg:self-start">
-            <h1 className="font-serif text-2xl leading-snug tracking-wide text-[#6d1f2c] uppercase sm:text-3xl lg:text-[2rem]">
+            <h1 className="text-2xl leading-snug tracking-wide text-[#e30613] uppercase sm:text-3xl lg:text-[2rem]">
               {product.name}
             </h1>
 
             <div className="mt-5 flex flex-wrap items-baseline gap-3">
-              <p className="text-xl font-medium text-[#1c1c1c] sm:text-2xl">
+              <p className="text-xl font-medium text-[#111111] sm:text-2xl">
                 {formatMoney(product.price)}
               </p>
               {saveAmt > 0 && (
                 <>
-                  <p className="text-sm text-[#6b6560] line-through">
+                  <p className="text-sm text-[#666666] line-through">
                     {formatMoney(product.was)}
                   </p>
-                  <p className="text-sm text-[#6d1f2c]">
+                  <p className="text-sm text-[#e30613]">
                     Save {formatMoney(saveAmt)}
                   </p>
                 </>
               )}
             </div>
 
-            <p className="mt-3 text-xs tracking-[0.08em] text-[#6b6560]">
+            <p className="mt-3 text-xs tracking-[0.08em] text-[#666666]">
               SKU: {details.sku}
             </p>
 
@@ -194,15 +194,15 @@ export function ProductPage() {
                 id="product-size"
                 className={`mt-7 scroll-mt-28 ${
                   sizeHint && !selectedSize
-                    ? 'rounded ring-2 ring-[#6d1f2c]/30 ring-offset-2'
+                    ? 'rounded ring-2 ring-[#e30613]/30 ring-offset-2'
                     : ''
                 }`}
               >
                 <div className="mb-3 flex items-center justify-between gap-3">
-                  <p className="text-sm font-medium text-[#1c1c1c]">
+                  <p className="text-sm font-medium text-[#111111]">
                     Size
                     {selectedSize ? (
-                      <span className="ml-2 font-normal text-[#6b6560]">
+                      <span className="ml-2 font-normal text-[#666666]">
                         · {selectedSize}
                       </span>
                     ) : null}
@@ -216,7 +216,7 @@ export function ProductPage() {
                           .getElementById('pdp-accordions')
                           ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
                       }}
-                      className="inline-flex items-center gap-1.5 text-xs tracking-[0.12em] text-[#6d1f2c] uppercase hover:underline"
+                      className="inline-flex items-center gap-1.5 text-xs tracking-[0.12em] text-[#e30613] uppercase hover:underline"
                     >
                       <Ruler className="size-3.5" />
                       Size chart
@@ -236,8 +236,8 @@ export function ProductPage() {
                         }}
                         className={`min-h-11 min-w-12 touch-manipulation border px-3.5 py-2.5 text-sm transition ${
                           active
-                            ? 'border-[#6d1f2c] bg-[#6d1f2c] text-white'
-                            : 'border-[#e8e1d8] bg-white text-[#1c1c1c] hover:border-[#6d1f2c]'
+                            ? 'border-[#e30613] bg-[#e30613] text-white'
+                            : 'border-[#dddddd] bg-white text-[#111111] hover:border-[#e30613]'
                         }`}
                       >
                         {size}
@@ -246,7 +246,7 @@ export function ProductPage() {
                   })}
                 </div>
                 {sizeHint && !selectedSize && (
-                  <p className="mt-2 text-xs font-medium text-[#6d1f2c]">
+                  <p className="mt-2 text-xs font-medium text-[#e30613]">
                     Please select a size to continue.
                   </p>
                 )}
@@ -254,11 +254,11 @@ export function ProductPage() {
             )}
 
             <div className="mt-7 flex items-center gap-3">
-              <span className="text-sm text-[#6b6560]">Quantity</span>
-              <div className="inline-flex items-center border border-[#e8e1d8]">
+              <span className="text-sm text-[#666666]">Quantity</span>
+              <div className="inline-flex items-center border border-[#dddddd]">
                 <button
                   type="button"
-                  className="grid size-10 place-items-center text-[#1c1c1c]"
+                  className="grid size-10 place-items-center text-[#111111]"
                   onClick={() => setQty((q) => Math.max(1, q - 1))}
                   aria-label="Decrease quantity"
                 >
@@ -267,7 +267,7 @@ export function ProductPage() {
                 <span className="w-9 text-center text-sm">{qty}</span>
                 <button
                   type="button"
-                  className="grid size-10 place-items-center text-[#1c1c1c]"
+                  className="grid size-10 place-items-center text-[#111111]"
                   onClick={() => setQty((q) => Math.min(8, q + 1))}
                   aria-label="Increase quantity"
                 >
@@ -282,17 +282,17 @@ export function ProductPage() {
                 onClick={() => {
                   if (addQty()) openCart()
                 }}
-                className="hidden flex-1 touch-manipulation border border-[#6d1f2c] bg-white py-3.5 text-xs font-medium tracking-[0.16em] text-[#6d1f2c] uppercase transition hover:bg-[#6d1f2c] hover:text-white sm:block"
+                className="btn-outline hidden flex-1 touch-manipulation sm:block"
               >
                 Add to cart
               </button>
               <button
                 type="button"
                 onClick={() => toggleWish(product.id)}
-                className="hidden flex-1 touch-manipulation border border-[#e8e1d8] bg-white py-3.5 text-xs font-medium tracking-[0.16em] text-[#1c1c1c] uppercase transition hover:border-[#6d1f2c] sm:inline-flex sm:items-center sm:justify-center sm:gap-2"
+                className="hidden flex-1 touch-manipulation border border-[#dddddd] bg-white py-3.5 text-xs font-medium tracking-[0.16em] text-[#111111] uppercase transition hover:border-[#e30613] sm:inline-flex sm:items-center sm:justify-center sm:gap-2"
               >
                 <Heart
-                  className={`size-4 ${saved ? 'fill-[#6d1f2c] text-[#6d1f2c]' : ''}`}
+                  className={`size-4 ${saved ? 'fill-[#e30613] text-[#e30613]' : ''}`}
                   strokeWidth={1.4}
                 />
                 {saved ? 'Wishlisted' : 'Add to wishlist'}
@@ -304,7 +304,7 @@ export function ProductPage() {
               onClick={() => {
                 if (addQty()) navigate('/cart')
               }}
-              className="mt-3 hidden w-full touch-manipulation bg-[#6d1f2c] py-3.5 text-xs font-medium tracking-[0.16em] text-white uppercase transition hover:bg-[#541822] sm:block"
+              className="btn-primary mt-3 hidden w-full touch-manipulation sm:block"
             >
               Buy it now
             </button>
@@ -319,20 +319,20 @@ export function ProductPage() {
                   void navigator.clipboard?.writeText(url)
                 }
               }}
-              className="mt-4 inline-flex items-center gap-2 text-xs tracking-[0.12em] text-[#6b6560] uppercase hover:text-[#6d1f2c]"
+              className="mt-4 inline-flex items-center gap-2 text-xs tracking-[0.12em] text-[#666666] uppercase hover:text-[#e30613]"
             >
               <Share2 className="size-3.5" />
               Share
             </button>
 
             {/* Accordion */}
-            <div id="pdp-accordions" className="mt-10 scroll-mt-24 border-t border-[#e8e1d8]">
+            <div id="pdp-accordions" className="mt-10 scroll-mt-24 border-t border-[#dddddd]">
               <Accordion
                 title="Description"
                 open={openAccordions.has('description')}
                 onToggle={() => toggleAccordion('description')}
               >
-                <p className="text-sm leading-relaxed text-[#6b6560]">
+                <p className="text-sm leading-relaxed text-[#666666]">
                   {details.overview}
                 </p>
                 {details.highlights.length > 0 && (
@@ -340,9 +340,9 @@ export function ProductPage() {
                     {details.highlights.map((h) => (
                       <li
                         key={h}
-                        className="flex gap-2 text-sm text-[#6b6560]"
+                        className="flex gap-2 text-sm text-[#666666]"
                       >
-                        <Check className="mt-0.5 size-3.5 shrink-0 text-[#6d1f2c]" />
+                        <Check className="mt-0.5 size-3.5 shrink-0 text-[#e30613]" />
                         {h}
                       </li>
                     ))}
@@ -358,29 +358,29 @@ export function ProductPage() {
                 <dl className="space-y-2 text-sm">
                   {details.specs.map((row) => (
                     <div key={row.label} className="flex gap-3">
-                      <dt className="w-28 shrink-0 font-medium text-[#1c1c1c]">
+                      <dt className="w-28 shrink-0 font-medium text-[#111111]">
                         {row.label}
                       </dt>
-                      <dd className="text-[#6b6560]">{row.value}</dd>
+                      <dd className="text-[#666666]">{row.value}</dd>
                     </div>
                   ))}
                   <div className="flex gap-3">
-                    <dt className="w-28 shrink-0 font-medium text-[#1c1c1c]">
+                    <dt className="w-28 shrink-0 font-medium text-[#111111]">
                       Brand
                     </dt>
-                    <dd className="text-[#6b6560]">{product.brand}</dd>
+                    <dd className="text-[#666666]">{product.brand}</dd>
                   </div>
                   <div className="flex gap-3">
-                    <dt className="w-28 shrink-0 font-medium text-[#1c1c1c]">
+                    <dt className="w-28 shrink-0 font-medium text-[#111111]">
                       Color
                     </dt>
-                    <dd className="text-[#6b6560]">{details.color}</dd>
+                    <dd className="text-[#666666]">{details.color}</dd>
                   </div>
                   <div className="flex gap-3">
-                    <dt className="w-28 shrink-0 font-medium text-[#1c1c1c]">
+                    <dt className="w-28 shrink-0 font-medium text-[#111111]">
                       Material
                     </dt>
-                    <dd className="text-[#6b6560]">{details.material}</dd>
+                    <dd className="text-[#666666]">{details.material}</dd>
                   </div>
                 </dl>
               </Accordion>
@@ -391,17 +391,17 @@ export function ProductPage() {
                   open={openAccordions.has('sizechart')}
                   onToggle={() => toggleAccordion('sizechart')}
                 >
-                  <p className="mb-3 text-xs text-[#6b6560]">
+                  <p className="mb-3 text-xs text-[#666666]">
                     Measurements in {details.sizeChart.unit}
                   </p>
                   <div className="overflow-x-auto">
                     <table className="w-full min-w-[400px] text-left text-sm">
                       <thead>
-                        <tr className="border-b border-[#e8e1d8]">
+                        <tr className="border-b border-[#dddddd]">
                           {details.sizeChart.headers.map((h) => (
                             <th
                               key={h}
-                              className="px-2 py-2 text-xs font-medium tracking-wide text-[#1c1c1c] uppercase"
+                              className="px-2 py-2 text-xs font-medium tracking-wide text-[#111111] uppercase"
                             >
                               {h}
                             </th>
@@ -419,8 +419,8 @@ export function ProductPage() {
                                 key={`${row[0]}-${idx}`}
                                 className={`px-2 py-2.5 ${
                                   idx === 0
-                                    ? 'font-medium text-[#1c1c1c]'
-                                    : 'text-[#6b6560]'
+                                    ? 'font-medium text-[#111111]'
+                                    : 'text-[#666666]'
                                 }`}
                               >
                                 {cell}
@@ -431,7 +431,7 @@ export function ProductPage() {
                       </tbody>
                     </table>
                   </div>
-                  <p className="mt-3 text-sm leading-relaxed text-[#6b6560]">
+                  <p className="mt-3 text-sm leading-relaxed text-[#666666]">
                     {details.sizeChart.note}
                   </p>
                 </Accordion>
@@ -446,9 +446,9 @@ export function ProductPage() {
                   {details.care.map((c) => (
                     <li
                       key={c}
-                      className="flex gap-2 text-sm text-[#6b6560]"
+                      className="flex gap-2 text-sm text-[#666666]"
                     >
-                      <Check className="mt-0.5 size-3.5 shrink-0 text-[#6d1f2c]" />
+                      <Check className="mt-0.5 size-3.5 shrink-0 text-[#e30613]" />
                       {c}
                     </li>
                   ))}
@@ -460,19 +460,19 @@ export function ProductPage() {
                 open={openAccordions.has('shipping')}
                 onToggle={() => toggleAccordion('shipping')}
               >
-                <ul className="space-y-2 text-sm text-[#6b6560]">
+                <ul className="space-y-2 text-sm text-[#666666]">
                   {details.protection.map((p) => (
                     <li key={p} className="flex gap-2">
-                      <Check className="mt-0.5 size-3.5 shrink-0 text-[#6d1f2c]" />
+                      <Check className="mt-0.5 size-3.5 shrink-0 text-[#e30613]" />
                       {p}
                     </li>
                   ))}
                   <li className="flex gap-2">
-                    <Check className="mt-0.5 size-3.5 shrink-0 text-[#6d1f2c]" />
+                    <Check className="mt-0.5 size-3.5 shrink-0 text-[#e30613]" />
                     Delivery in 2–5 business days
                   </li>
                   <li className="flex gap-2">
-                    <Check className="mt-0.5 size-3.5 shrink-0 text-[#6d1f2c]" />
+                    <Check className="mt-0.5 size-3.5 shrink-0 text-[#e30613]" />
                     Easy returns within 15 days with receipt
                   </li>
                 </ul>
@@ -483,8 +483,8 @@ export function ProductPage() {
 
         {/* Related */}
         {related.length > 0 && (
-          <section className="mt-16 border-t border-[#e8e1d8] pt-12 sm:mt-20">
-            <h2 className="mb-8 text-center font-serif text-3xl tracking-wide text-[#6d1f2c] sm:text-4xl">
+          <section className="mt-16 border-t border-[#dddddd] pt-12 sm:mt-20">
+            <h2 className="mb-8 text-center text-3xl tracking-wide text-[#e30613] sm:text-4xl">
               You may also like
             </h2>
             <div className="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-4 lg:gap-x-6">
@@ -497,7 +497,7 @@ export function ProductPage() {
       </div>
 
       {/* Mobile sticky bar */}
-      <div className="fixed inset-x-0 bottom-0 z-50 border-t border-[#e8e1d8] bg-white/98 px-3 pt-2.5 shadow-[0_-8px_24px_rgba(42,28,26,0.08)] backdrop-blur safe-pb lg:hidden">
+      <div className="fixed inset-x-0 bottom-0 z-50 border-t border-[#dddddd] bg-white/98 px-3 pt-2.5 shadow-[0_-8px_24px_rgba(42,28,26,0.08)] backdrop-blur safe-pb lg:hidden">
         <div className="mx-auto max-w-[1280px]">
           {needsSize && (
             <div className="-mx-1 mb-2 flex gap-1.5 overflow-x-auto px-1 pb-0.5">
@@ -513,8 +513,8 @@ export function ProductPage() {
                     }}
                     className={`min-h-9 shrink-0 touch-manipulation border px-3 text-xs font-medium ${
                       active
-                        ? 'border-[#6d1f2c] bg-[#6d1f2c] text-white'
-                        : 'border-[#e8e1d8] bg-white text-[#1c1c1c]'
+                        ? 'border-[#e30613] bg-[#e30613] text-white'
+                        : 'border-[#dddddd] bg-white text-[#111111]'
                     }`}
                   >
                     {size}
@@ -524,7 +524,7 @@ export function ProductPage() {
             </div>
           )}
           {sizeHint && needsSize && !selectedSize && (
-            <p className="mb-2 text-center text-[0.7rem] font-medium text-[#6d1f2c]">
+            <p className="mb-2 text-center text-[0.7rem] font-medium text-[#e30613]">
               Select a size above, then tap Buy
             </p>
           )}
@@ -532,11 +532,11 @@ export function ProductPage() {
             <button
               type="button"
               onClick={() => toggleWish(product.id)}
-              className="grid size-11 shrink-0 place-items-center border border-[#e8e1d8]"
+              className="grid size-11 shrink-0 place-items-center border border-[#dddddd]"
               aria-label="Wishlist"
             >
               <Heart
-                className={`size-4 ${saved ? 'fill-[#6d1f2c] text-[#6d1f2c]' : ''}`}
+                className={`size-4 ${saved ? 'fill-[#e30613] text-[#e30613]' : ''}`}
                 strokeWidth={1.4}
               />
             </button>
@@ -545,7 +545,7 @@ export function ProductPage() {
               onClick={() => {
                 if (addQty()) openCart()
               }}
-              className="min-h-11 flex-1 touch-manipulation border border-[#6d1f2c] bg-white px-3 py-3 text-[0.65rem] font-medium tracking-[0.12em] text-[#6d1f2c] uppercase"
+              className="min-h-11 flex-1 touch-manipulation border border-[#e30613] bg-white px-3 py-3 text-[0.65rem] font-medium tracking-[0.12em] text-[#e30613] uppercase"
             >
               Add to cart
             </button>
@@ -554,7 +554,7 @@ export function ProductPage() {
               onClick={() => {
                 if (addQty()) navigate('/cart')
               }}
-              className="min-h-11 flex-1 touch-manipulation bg-[#6d1f2c] px-3 py-3 text-[0.65rem] font-medium tracking-[0.12em] text-white uppercase"
+              className="min-h-11 flex-1 touch-manipulation bg-[#e30613] px-3 py-3 text-[0.65rem] font-medium tracking-[0.12em] text-white uppercase"
             >
               Buy now
             </button>
@@ -577,17 +577,17 @@ function Accordion({
   children: ReactNode
 }) {
   return (
-    <div className="border-b border-[#e8e1d8]">
+    <div className="border-b border-[#dddddd]">
       <button
         type="button"
         onClick={onToggle}
         className="flex w-full items-center justify-between py-4 text-left"
       >
-        <span className="text-sm font-medium tracking-wide text-[#1c1c1c]">
+        <span className="text-sm font-medium tracking-wide text-[#111111]">
           {title}
         </span>
         <ChevronDown
-          className={`size-4 text-[#6b6560] transition ${open ? 'rotate-180' : ''}`}
+          className={`size-4 text-[#666666] transition ${open ? 'rotate-180' : ''}`}
         />
       </button>
       {open && <div className="pb-5">{children}</div>}
