@@ -18,7 +18,7 @@ type Slide = {
 const slides: Slide[] = [
   {
     id: 'sarees',
-    image: '/heroes/ai-saree.jpg',
+    image: '/heroes/ai-saree.jpg?v=2',
     position: 'object-[center_30%]',
     eyebrow: 'New season',
     title: 'Saree Edit',
@@ -29,7 +29,7 @@ const slides: Slide[] = [
   },
   {
     id: 'wedding',
-    image: '/heroes/ai-wedding.jpg',
+    image: '/heroes/ai-wedding.jpg?v=2',
     position: 'object-[center_25%]',
     eyebrow: 'Occasion wear',
     title: 'Wedding Edit',
@@ -40,7 +40,7 @@ const slides: Slide[] = [
   },
   {
     id: 'men',
-    image: '/heroes/ai-men.jpg',
+    image: '/heroes/ai-men.jpg?v=2',
     position: 'object-[center_22%]',
     eyebrow: 'For him',
     title: 'Men’s Drop',
@@ -51,7 +51,7 @@ const slides: Slide[] = [
   },
   {
     id: 'sale',
-    image: '/heroes/ai-sale.jpg',
+    image: '/heroes/ai-sale.jpg?v=2',
     position: 'object-[center_28%]',
     eyebrow: 'Limited time',
     title: 'Sale Live',

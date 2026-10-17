@@ -88,8 +88,22 @@ function writeJson(key: string, value: unknown) {
   window.dispatchEvent(new Event('fusora-catalog-change'))
 }
 
+function isUnrealProduct(p: Product): boolean {
+  if (PURGED_ADMIN_PRODUCT_IDS.has(p.id)) return true
+  const img = String(p.image || '')
+  // Stock / dummy photos — look local & unreal on the storefront
+  if (/unsplash\.com|pexels\.com|picsum\.photos|bbassets\.com/i.test(img)) {
+    return true
+  }
+  // Known demo / junk name patterns
+  if (/yahweh|fusora classic cotton|pack of 3 solid/i.test(p.name || '')) {
+    return true
+  }
+  return false
+}
+
 function cleanProducts(list: Product[]): Product[] {
-  return list.filter((p) => !PURGED_ADMIN_PRODUCT_IDS.has(p.id))
+  return list.filter((p) => !isUnrealProduct(p))
 }
 
 /** Kick off IndexedDB hydrate (safe to call many times). */
