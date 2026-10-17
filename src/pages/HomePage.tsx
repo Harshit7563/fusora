@@ -231,7 +231,7 @@ export function HomePage() {
       {/* Promo strip */}
       <section className="relative min-h-[38svh] overflow-hidden sm:min-h-[44svh]">
         <img
-          src="/heroes/saree-blue.jpg"
+          src="/heroes/ai-wedding.jpg"
           alt=""
           className="absolute inset-0 h-full w-full object-cover object-[center_25%]"
         />

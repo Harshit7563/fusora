@@ -18,44 +18,44 @@ type Slide = {
 const slides: Slide[] = [
   {
     id: 'sarees',
-    image: '/heroes/saree-outdoor.jpg',
-    position: 'object-[center_35%]',
+    image: '/heroes/ai-saree.jpg',
+    position: 'object-[center_30%]',
     eyebrow: 'New season',
     title: 'Saree Edit',
-    line: 'Outdoor weaves. Festive colour. Everyday grace.',
+    line: 'Silk, zari and festive drapes — curated for every celebration.',
     cta: 'Shop Sarees',
     to: '/category/women/sarees',
     align: 'left',
   },
   {
     id: 'wedding',
-    image: '/heroes/saree-portrait.jpg',
-    position: 'object-[center_20%]',
+    image: '/heroes/ai-wedding.jpg',
+    position: 'object-[center_25%]',
     eyebrow: 'Occasion wear',
     title: 'Wedding Edit',
-    line: 'Rich tones and heritage drapes for big days.',
+    line: 'Bridal reds and gold weaves made for the big day.',
     cta: 'Shop Now',
     to: '/category/women',
     align: 'right',
   },
   {
     id: 'men',
-    image: '/heroes/men-suit.jpg',
-    position: 'object-[center_25%]',
+    image: '/heroes/ai-men.jpg',
+    position: 'object-[center_22%]',
     eyebrow: 'For him',
     title: 'Men’s Drop',
-    line: 'Sharp fits — shirts, tees & denim that move with you.',
+    line: 'Sharp shirts, tees and denim for everyday polish.',
     cta: 'Shop Men',
     to: '/category/men',
     align: 'left',
   },
   {
     id: 'sale',
-    image: '/heroes/fashion-street.jpg',
-    position: 'object-[center_30%]',
+    image: '/heroes/ai-sale.jpg',
+    position: 'object-[center_28%]',
     eyebrow: 'Limited time',
     title: 'Sale Live',
-    line: 'Fresh markdowns across sarees, apparel & more.',
+    line: 'Fresh markdowns across sarees, apparel and more.',
     cta: 'Shop Sale',
     to: '/deals',
     align: 'right',
@@ -93,21 +93,20 @@ export function Hero() {
           <motion.img
             src={slide.image}
             alt=""
-            initial={{ scale: 1.06 }}
+            initial={{ scale: 1.05 }}
             animate={{ scale: 1 }}
             transition={{ duration: 6.5, ease: 'linear' }}
             className={`absolute inset-0 h-full w-full object-cover ${slide.position || 'object-center'}`}
           />
 
-          {/* Readable gradient — keep photo alive */}
           <div
             className={`absolute inset-0 ${
               alignRight
-                ? 'bg-gradient-to-l from-black/70 via-black/25 to-transparent'
-                : 'bg-gradient-to-r from-black/70 via-black/25 to-transparent'
+                ? 'bg-gradient-to-l from-black/65 via-black/20 to-transparent'
+                : 'bg-gradient-to-r from-black/65 via-black/20 to-transparent'
             }`}
           />
-          <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/50 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/45 to-transparent" />
 
           <div
             className={`absolute inset-0 z-[1] flex flex-col justify-end px-5 pb-16 sm:px-10 sm:pb-20 lg:px-16 ${
