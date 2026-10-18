@@ -140,11 +140,11 @@ export function ProductPage() {
           <span className="text-[#111111]">{product.name}</span>
         </nav>
 
-        <div className="grid gap-8 lg:grid-cols-2 lg:gap-10 xl:gap-14">
+        <div className="grid items-start gap-8 lg:grid-cols-2 lg:gap-10 xl:gap-14">
           {/* Left thumbs + center main image */}
-          <section className="flex gap-2.5 sm:gap-3">
+          <section className="flex w-full items-start gap-2.5 self-start sm:gap-3">
             {gallery.length > 1 && (
-              <div className="hide-scrollbar flex max-h-[min(72svh,640px)] w-[4.25rem] shrink-0 flex-col gap-2 overflow-y-auto sm:w-20 md:w-[5.5rem]">
+              <div className="hide-scrollbar flex max-h-[min(100%,36rem)] w-[4.25rem] shrink-0 flex-col gap-2 overflow-y-auto sm:w-20 md:max-h-[40rem] md:w-[5.5rem]">
                 {gallery.map((src, i) => (
                   <button
                     key={`${src}-${i}`}
@@ -152,7 +152,7 @@ export function ProductPage() {
                     onClick={() => setActiveImage(i)}
                     aria-label={`View image ${i + 1}`}
                     aria-current={activeImage === i}
-                    className={`overflow-hidden border bg-[#f1efec] transition ${
+                    className={`shrink-0 overflow-hidden border bg-[#f1efec] transition ${
                       activeImage === i
                         ? 'border-[#cf2028] ring-1 ring-[#cf2028]'
                         : 'border-transparent hover:border-[#d9d9d9]'
@@ -161,18 +161,18 @@ export function ProductPage() {
                     <SafeImage
                       src={src}
                       alt=""
-                      className="aspect-square w-full object-cover"
+                      className="aspect-square h-auto w-full object-cover"
                       loading={i < 4 ? 'eager' : 'lazy'}
                     />
                   </button>
                 ))}
               </div>
             )}
-            <div className="min-w-0 flex-1 overflow-hidden border border-[#e9e1db] bg-[#f1efec]">
+            <div className="relative aspect-square min-w-0 flex-1 overflow-hidden border border-[#e9e1db] bg-[#f1efec]">
               <SafeImage
                 src={gallery[Math.min(activeImage, gallery.length - 1)] || product.image}
                 alt={product.name}
-                className="aspect-square w-full object-cover"
+                className="absolute inset-0 h-full w-full object-contain"
                 loading="eager"
               />
             </div>
