@@ -60,7 +60,7 @@ export function Header() {
       </div>
 
       <div className="border-b border-[#e9e1db] bg-[#f8f6ee]">
-        <div className="mx-auto flex h-14 max-w-[1200px] items-center gap-3 px-3 sm:h-16 sm:px-5 lg:px-4">
+        <div className="mx-auto flex h-16 max-w-[1200px] items-center gap-3 px-3 sm:h-[4.5rem] sm:px-5 lg:px-4">
           <button
             type="button"
             className="grid size-9 place-items-center lg:hidden"

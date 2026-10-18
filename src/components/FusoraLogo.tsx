@@ -7,7 +7,7 @@ type Props = {
   centered?: boolean
 }
 
-const LOGO_SRC = '/fusora-logo.png?v=3'
+const LOGO_SRC = '/fusora-logo.png?v=4'
 
 export function FusoraLogo({
   className = '',
@@ -16,8 +16,8 @@ export function FusoraLogo({
   centered = false,
 }: Props) {
   const sizeClass = compact
-    ? 'h-8 w-auto max-w-[8.5rem] sm:h-9 sm:max-w-[9.5rem]'
-    : 'h-9 w-auto max-w-[10rem] sm:h-11'
+    ? 'h-11 w-auto max-w-[11rem] sm:h-12 sm:max-w-[13rem] lg:h-[3.25rem] lg:max-w-[14.5rem]'
+    : 'h-12 w-auto max-w-[13rem] sm:h-14 sm:max-w-[16rem]'
 
   return (
     <Link
@@ -30,8 +30,8 @@ export function FusoraLogo({
       <img
         src={LOGO_SRC}
         alt="Fusora"
-        className={`${sizeClass} object-contain object-center ${
-          onDark ? 'brightness-0 invert' : ''
+        className={`${sizeClass} object-contain object-center contrast-125 brightness-[0.92] saturate-150 ${
+          onDark ? 'brightness-0 invert contrast-100 saturate-100' : ''
         }`}
         decoding="async"
       />

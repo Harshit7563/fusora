@@ -14,7 +14,7 @@ export function Layout() {
     <div id="top" className="min-h-svh bg-[#f8f6ee]">
       <Header />
       {/* promo + header + chip row */}
-      <div className="pt-[8.25rem] sm:pt-[8.75rem] lg:pt-[9.25rem]">
+      <div className="pt-[8.75rem] sm:pt-[9.5rem] lg:pt-[10rem]">
         <Outlet />
       </div>
       <Footer />
