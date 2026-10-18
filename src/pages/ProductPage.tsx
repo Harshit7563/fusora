@@ -188,6 +188,18 @@ export function ProductPage() {
               SKU: {details.sku}
             </p>
 
+            {product.tab === 'jewelry-eyewear-watches' && (
+              <div className="mt-4 border border-[#cf2028] bg-[#fff5f5] px-3 py-3 text-sm leading-snug text-[#070001]">
+                <p className="font-heading text-base tracking-wide text-[#cf2028]">
+                  Artificial jewellery
+                </p>
+                <p className="mt-1 text-xs sm:text-sm">
+                  Yeh real gold / diamond nahi hai — fashion / imitation jewellery
+                  only. Plated finish aur imitation stones ho sakte hain.
+                </p>
+              </div>
+            )}
+
             {needsSize && (
               <div
                 ref={sizeSectionRef}

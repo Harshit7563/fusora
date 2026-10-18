@@ -42,12 +42,22 @@ export function ProductCard({ product: p }: Props) {
             Sale
           </span>
         )}
+        {p.tab === 'jewelry-eyewear-watches' && (
+          <span className="absolute bottom-2.5 left-2.5 bg-[#070001]/85 px-2 py-0.5 text-[0.58rem] font-bold tracking-wide text-white uppercase">
+            Artificial
+          </span>
+        )}
       </div>
       <div className="flex flex-1 flex-col items-center gap-2 px-3 py-3 text-center">
         <Link to={`/product/${p.id}`} className="block w-full">
           <p className="line-clamp-2 min-h-[2.4em] text-[0.8rem] font-medium leading-snug text-[#070001]">
             {p.name}
           </p>
+          {p.tab === 'jewelry-eyewear-watches' && (
+            <p className="mt-1 text-[0.65rem] font-semibold tracking-wide text-[#cf2028] uppercase">
+              Not real gold / diamond
+            </p>
+          )}
           <div className="mt-1.5 flex flex-wrap items-baseline justify-center gap-2">
             <p className="font-heading text-xl leading-none text-[#070001]">
               {formatMoney(p.price)}

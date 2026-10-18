@@ -128,18 +128,19 @@ const byCategory: Partial<Record<CategoryId, CategoryMeta>> = {
   },
   'jewelry-eyewear-watches': {
     highlights: [
-      'Statement jewellery pieces',
-      'Gift-ready packaging styles',
-      'Plated and stone accents',
-      'Adjustable fits on many SKUs',
+      'Artificial / fashion jewellery only',
+      'Not real gold or diamond',
+      'Plated / imitation finish as pictured',
+      'Style wear for daily & festive looks',
     ],
     specs: [
-      { label: 'Category', value: 'Jewelry, Eyewear & Watches' },
-      { label: 'Finish', value: 'As pictured' },
-      { label: 'Occasion', value: 'Daily / festive' },
-      { label: 'Care', value: 'Wipe clean; avoid water soak' },
+      { label: 'Category', value: 'Artificial Jewellery' },
+      { label: 'Metal', value: 'Not real gold — imitation / plated' },
+      { label: 'Stones', value: 'Not real diamond — CZ / imitation' },
+      { label: 'Care', value: 'Wipe clean; avoid water, perfume & chemicals' },
     ],
-    overview: 'Jewellery and wearable accessories to complete any look.',
+    overview:
+      'Artificial fashion jewellery only. These pieces are not real gold, not real diamond, and not precious metal — made for style and occasions.',
   },
   'parents-kids-toys': {
     highlights: [
@@ -509,8 +510,13 @@ function pickSizeProfile(product: Product): {
     return {
       sizes,
       chart: buildProductSizeChart(product, sizes, 'jewellery'),
-      material: 'Plated metal / stones as pictured',
-      care: ['Keep dry', 'Wipe with soft cloth', 'Store in pouch'],
+      material:
+        'Artificial jewellery — not real gold / not real diamond (plated metal & imitation stones as pictured)',
+      care: [
+        'Artificial fashion jewellery only',
+        'Keep dry; avoid perfume & chemicals',
+        'Wipe with soft cloth; store in pouch',
+      ],
     }
   }
   if (product.tab === 'luggage-bags-cases' || /bag|luggage|duffel|suitcase|pouch/.test(name)) {

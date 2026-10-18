@@ -11,7 +11,7 @@ const nav = [
   { label: 'Women', to: '/category/women' },
   { label: 'Men', to: '/category/men' },
   { label: 'Jeans', to: '/category/men/jeans' },
-  { label: 'Jewellery', to: '/category/jewelry-eyewear-watches' },
+  { label: 'Artificial Jewellery', to: '/category/jewelry-eyewear-watches' },
   { label: 'Sale', to: '/deals' },
 ]
 

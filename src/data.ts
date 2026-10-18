@@ -7,6 +7,7 @@ import {
 import dyntraSarees from './data/dyntraSarees.json'
 import modcartProducts from './data/modcartProducts.json'
 import denimforgeProducts from './data/denimforgeProducts.json'
+import saltyJewellery from './data/saltyJewellery.json'
 import { type ApparelSubtype } from './data/apparel'
 import { loadAdminProducts } from './lib/adminCatalog'
 
@@ -229,11 +230,46 @@ function dedupeByImage(list: Product[]): Product[] {
   return out
 }
 
+const jewelleryCatalog: Product[] = (
+  saltyJewellery as Array<Record<string, unknown>>
+).map((p, i) => {
+  const image = String(p.image || '')
+  const images = uniqueImages(
+    image,
+    Array.isArray(p.images) ? (p.images as string[]) : undefined,
+  )
+  const disclaimer =
+    'Artificial / fashion jewellery only — not real gold, not real diamond, not precious metal.'
+  const rawDesc = p.description ? String(p.description) : ''
+  const description = /artificial|not real gold/i.test(rawDesc)
+    ? rawDesc
+    : `${disclaimer} ${rawDesc}`.trim()
+  return {
+    id: String(p.id),
+    rank: Number(p.rank) || i + 1,
+    name: String(p.name),
+    price: Number(p.price),
+    was: Number(p.was) || Number(p.price),
+    topDeal: Boolean(p.topDeal),
+    tab: 'jewelry-eyewear-watches' as CategoryId,
+    gender: 'women' as ProductGender,
+    categoryName: p.productType ? String(p.productType) : 'Artificial Jewellery',
+    categorySlug: 'artificial-jewellery',
+    brand: 'Fusora',
+    image: images[0] || image,
+    images,
+    description,
+    sku: p.sku ? String(p.sku) : undefined,
+    source: 'salty',
+  }
+})
+
 /** Real supplier catalogues only — no demo tees / stock photos / BB leftovers. */
 export const staticProducts: Product[] = dedupeByImage([
   ...sareeProducts,
   ...denimforgeCatalog,
   ...modcartCatalog,
+  ...jewelleryCatalog,
 ])
 
 /** Built-in catalog + products created in /admin (IndexedDB cache). */

@@ -28,7 +28,7 @@ const tabs: {
   { id: 'jeans', label: 'Jeans', filter: (p) => p.subtype === 'jeans' },
   {
     id: 'jewellery',
-    label: 'Jewellery',
+    label: 'Artificial Jewellery',
     filter: (p) => p.tab === 'jewelry-eyewear-watches',
   },
 ]
