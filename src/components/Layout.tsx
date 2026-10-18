@@ -11,7 +11,7 @@ export function Layout() {
     useStore()
 
   return (
-    <div id="top" className="min-h-svh bg-white">
+    <div id="top" className="min-h-svh bg-[#f8f6ee]">
       <Header />
       {/* promo + header + chip row */}
       <div className="pt-[8.25rem] sm:pt-[8.75rem] lg:pt-[9.25rem]">
@@ -28,7 +28,7 @@ export function Layout() {
       <LocationModal />
       <NewsletterPopup />
       {toast && (
-        <div className="fixed bottom-[max(6.5rem,calc(env(safe-area-inset-bottom)+5.5rem))] left-1/2 z-[70] max-w-[calc(100vw-2rem)] -translate-x-1/2 truncate rounded-full bg-[#e30613] px-5 py-2.5 text-sm font-semibold tracking-wide text-white shadow-lg lg:bottom-[max(1.5rem,env(safe-area-inset-bottom))]">
+        <div className="fixed bottom-[max(6.5rem,calc(env(safe-area-inset-bottom)+5.5rem))] left-1/2 z-[70] max-w-[calc(100vw-2rem)] -translate-x-1/2 truncate bg-[#cf2028] px-5 py-2.5 text-sm font-semibold tracking-wide text-white shadow-lg lg:bottom-[max(1.5rem,env(safe-area-inset-bottom))]">
           {toast}
         </div>
       )}

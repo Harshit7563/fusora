@@ -44,26 +44,26 @@ const cols = [
 
 export function Footer() {
   return (
-    <footer className="border-t border-[#eee] bg-[#111] text-white">
-      <div className="mx-auto max-w-[1400px] px-4 py-12 sm:px-6 lg:px-8 lg:py-14">
+    <footer className="bbb-red-band border-t border-[#600b02]">
+      <div className="mx-auto max-w-[1200px] px-4 py-12 sm:px-6 lg:px-4 lg:py-14">
         <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-4">
           <div>
             <div className="brightness-0 invert">
               <FusoraLogo compact />
             </div>
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/65">
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/75">
               Sarees, apparel & jewellery from {COMPANY_NAME}.
             </p>
             <a
               href={SUPPORT_MAILTO}
-              className="mt-3 inline-block text-sm font-semibold text-white hover:text-[#e30613]"
+              className="mt-3 inline-block text-sm font-semibold text-[#ffc462] hover:text-white"
             >
               {SUPPORT_EMAIL}
             </a>
           </div>
           {cols.map((col) => (
             <div key={col.title}>
-              <h3 className="mb-4 text-[0.72rem] font-extrabold tracking-[0.12em] uppercase">
+              <h3 className="mb-4 font-heading text-lg tracking-[0.08em] text-[#ffc462]">
                 {col.title}
               </h3>
               <ul className="space-y-2.5">
@@ -71,7 +71,7 @@ export function Footer() {
                   <li key={l.to + l.label}>
                     <Link
                       to={l.to}
-                      className="text-sm text-white/65 transition hover:text-white"
+                      className="text-sm text-white/75 transition hover:text-white"
                     >
                       {l.label}
                     </Link>
@@ -83,7 +83,7 @@ export function Footer() {
         </div>
       </div>
       <div className="border-t border-white/10">
-        <div className="mx-auto flex max-w-[1400px] flex-col gap-2 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-[1200px] flex-col gap-2 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-4">
           <p className="text-[0.7rem] text-white/50">
             © {new Date().getFullYear()} {COMPANY_NAME}. Fusora (
             <a href={SITE_URL} className="hover:text-white">

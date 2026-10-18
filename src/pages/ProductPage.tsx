@@ -61,10 +61,10 @@ export function ProductPage() {
   if (!product || !details) {
     return (
       <main className="mx-auto max-w-[900px] px-4 py-20 text-center">
-        <h1 className="text-3xl text-[#e30613]">Product not found</h1>
+        <h1 className="text-3xl text-[#cf2028]">Product not found</h1>
         <Link
           to="/deals"
-          className="mt-4 inline-block text-sm tracking-wide text-[#e30613] uppercase hover:underline"
+          className="mt-4 inline-block text-sm tracking-wide text-[#cf2028] uppercase hover:underline"
         >
           Back to shop
         </Link>
@@ -110,16 +110,16 @@ export function ProductPage() {
   }
 
   return (
-    <main className="bg-white pb-28 lg:pb-0">
-      <div className="mx-auto max-w-[1280px] px-3 py-5 sm:px-6 lg:px-10 lg:py-10">
-        <nav className="mb-6 text-xs text-[#666666]">
-          <Link to="/" className="hover:text-[#e30613]">
+    <main className="bg-[#f8f6ee] pb-28 lg:pb-0">
+      <div className="mx-auto max-w-[1200px] px-3 py-5 sm:px-6 lg:px-4 lg:py-10">
+        <nav className="mb-6 text-xs text-[#6a6667]">
+          <Link to="/" className="hover:text-[#cf2028]">
             Home
           </Link>
           <span className="mx-2">|</span>
           <Link
             to={`/category/${product.tab}`}
-            className="hover:text-[#e30613]"
+            className="hover:text-[#cf2028]"
           >
             {category.label}
           </Link>
@@ -128,7 +128,7 @@ export function ProductPage() {
               <span className="mx-2">|</span>
               <Link
                 to={`/category/${product.tab}/${product.subtype}`}
-                className="hover:text-[#e30613] capitalize"
+                className="hover:text-[#cf2028] capitalize"
               >
                 {product.subtype}
               </Link>
@@ -164,12 +164,12 @@ export function ProductPage() {
 
           {/* Buy box */}
           <section className="lg:sticky lg:top-28 lg:self-start">
-            <h1 className="text-2xl leading-snug tracking-wide text-[#e30613] uppercase sm:text-3xl lg:text-[2rem]">
+            <h1 className="font-display text-3xl leading-none tracking-[0.06em] text-[#cf2028] sm:text-4xl lg:text-[2.75rem]">
               {product.name}
             </h1>
 
             <div className="mt-5 flex flex-wrap items-baseline gap-3">
-              <p className="text-xl font-medium text-[#111111] sm:text-2xl">
+              <p className="font-heading text-2xl text-[#070001] sm:text-3xl">
                 {formatMoney(product.price)}
               </p>
               {saveAmt > 0 && (
@@ -177,7 +177,7 @@ export function ProductPage() {
                   <p className="text-sm text-[#666666] line-through">
                     {formatMoney(product.was)}
                   </p>
-                  <p className="text-sm text-[#e30613]">
+                  <p className="text-sm text-[#cf2028]">
                     Save {formatMoney(saveAmt)}
                   </p>
                 </>
@@ -194,7 +194,7 @@ export function ProductPage() {
                 id="product-size"
                 className={`mt-7 scroll-mt-28 ${
                   sizeHint && !selectedSize
-                    ? 'rounded ring-2 ring-[#e30613]/30 ring-offset-2'
+                    ? 'rounded ring-2 ring-[#cf2028]/30 ring-offset-2'
                     : ''
                 }`}
               >
@@ -216,7 +216,7 @@ export function ProductPage() {
                           .getElementById('pdp-accordions')
                           ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
                       }}
-                      className="inline-flex items-center gap-1.5 text-xs tracking-[0.12em] text-[#e30613] uppercase hover:underline"
+                      className="inline-flex items-center gap-1.5 text-xs tracking-[0.12em] text-[#cf2028] uppercase hover:underline"
                     >
                       <Ruler className="size-3.5" />
                       Size chart
@@ -236,8 +236,8 @@ export function ProductPage() {
                         }}
                         className={`min-h-11 min-w-12 touch-manipulation border px-3.5 py-2.5 text-sm transition ${
                           active
-                            ? 'border-[#e30613] bg-[#e30613] text-white'
-                            : 'border-[#dddddd] bg-white text-[#111111] hover:border-[#e30613]'
+                            ? 'border-[#cf2028] bg-[#cf2028] text-white'
+                            : 'border-[#dddddd] bg-white text-[#111111] hover:border-[#cf2028]'
                         }`}
                       >
                         {size}
@@ -246,7 +246,7 @@ export function ProductPage() {
                   })}
                 </div>
                 {sizeHint && !selectedSize && (
-                  <p className="mt-2 text-xs font-medium text-[#e30613]">
+                  <p className="mt-2 text-xs font-medium text-[#cf2028]">
                     Please select a size to continue.
                   </p>
                 )}
@@ -289,10 +289,10 @@ export function ProductPage() {
               <button
                 type="button"
                 onClick={() => toggleWish(product.id)}
-                className="hidden flex-1 touch-manipulation border border-[#dddddd] bg-white py-3.5 text-xs font-medium tracking-[0.16em] text-[#111111] uppercase transition hover:border-[#e30613] sm:inline-flex sm:items-center sm:justify-center sm:gap-2"
+                className="hidden flex-1 touch-manipulation border border-[#dddddd] bg-white py-3.5 text-xs font-medium tracking-[0.16em] text-[#111111] uppercase transition hover:border-[#cf2028] sm:inline-flex sm:items-center sm:justify-center sm:gap-2"
               >
                 <Heart
-                  className={`size-4 ${saved ? 'fill-[#e30613] text-[#e30613]' : ''}`}
+                  className={`size-4 ${saved ? 'fill-[#cf2028] text-[#cf2028]' : ''}`}
                   strokeWidth={1.4}
                 />
                 {saved ? 'Wishlisted' : 'Add to wishlist'}
@@ -304,7 +304,7 @@ export function ProductPage() {
               onClick={() => {
                 if (addQty()) navigate('/cart')
               }}
-              className="btn-primary mt-3 hidden w-full touch-manipulation sm:block"
+              className="btn-primary-solid mt-3 hidden w-full touch-manipulation sm:block"
             >
               Buy it now
             </button>
@@ -319,7 +319,7 @@ export function ProductPage() {
                   void navigator.clipboard?.writeText(url)
                 }
               }}
-              className="mt-4 inline-flex items-center gap-2 text-xs tracking-[0.12em] text-[#666666] uppercase hover:text-[#e30613]"
+              className="mt-4 inline-flex items-center gap-2 text-xs tracking-[0.12em] text-[#666666] uppercase hover:text-[#cf2028]"
             >
               <Share2 className="size-3.5" />
               Share
@@ -342,7 +342,7 @@ export function ProductPage() {
                         key={h}
                         className="flex gap-2 text-sm text-[#666666]"
                       >
-                        <Check className="mt-0.5 size-3.5 shrink-0 text-[#e30613]" />
+                        <Check className="mt-0.5 size-3.5 shrink-0 text-[#cf2028]" />
                         {h}
                       </li>
                     ))}
@@ -448,7 +448,7 @@ export function ProductPage() {
                       key={c}
                       className="flex gap-2 text-sm text-[#666666]"
                     >
-                      <Check className="mt-0.5 size-3.5 shrink-0 text-[#e30613]" />
+                      <Check className="mt-0.5 size-3.5 shrink-0 text-[#cf2028]" />
                       {c}
                     </li>
                   ))}
@@ -463,16 +463,16 @@ export function ProductPage() {
                 <ul className="space-y-2 text-sm text-[#666666]">
                   {details.protection.map((p) => (
                     <li key={p} className="flex gap-2">
-                      <Check className="mt-0.5 size-3.5 shrink-0 text-[#e30613]" />
+                      <Check className="mt-0.5 size-3.5 shrink-0 text-[#cf2028]" />
                       {p}
                     </li>
                   ))}
                   <li className="flex gap-2">
-                    <Check className="mt-0.5 size-3.5 shrink-0 text-[#e30613]" />
+                    <Check className="mt-0.5 size-3.5 shrink-0 text-[#cf2028]" />
                     Delivery in 2–5 business days
                   </li>
                   <li className="flex gap-2">
-                    <Check className="mt-0.5 size-3.5 shrink-0 text-[#e30613]" />
+                    <Check className="mt-0.5 size-3.5 shrink-0 text-[#cf2028]" />
                     Easy returns within 15 days with receipt
                   </li>
                 </ul>
@@ -484,10 +484,10 @@ export function ProductPage() {
         {/* Related */}
         {related.length > 0 && (
           <section className="mt-16 border-t border-[#dddddd] pt-12 sm:mt-20">
-            <h2 className="mb-8 text-center text-3xl tracking-wide text-[#e30613] sm:text-4xl">
+            <h2 className="section-title mb-8 text-[#cf2028]">
               You may also like
             </h2>
-            <div className="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-4 lg:gap-x-6">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
               {related.map((p) => (
                 <ProductCard key={p.id} product={p} />
               ))}
@@ -497,8 +497,8 @@ export function ProductPage() {
       </div>
 
       {/* Mobile sticky bar */}
-      <div className="fixed inset-x-0 bottom-0 z-50 border-t border-[#dddddd] bg-white/98 px-3 pt-2.5 shadow-[0_-8px_24px_rgba(42,28,26,0.08)] backdrop-blur safe-pb lg:hidden">
-        <div className="mx-auto max-w-[1280px]">
+      <div className="fixed inset-x-0 bottom-0 z-50 border-t border-[#e9e1db] bg-[#f8f6ee]/98 px-3 pt-2.5 shadow-[0_-8px_24px_rgba(42,28,26,0.08)] backdrop-blur safe-pb lg:hidden">
+        <div className="mx-auto max-w-[1200px]">
           {needsSize && (
             <div className="-mx-1 mb-2 flex gap-1.5 overflow-x-auto px-1 pb-0.5">
               {details.sizes.map((size) => {
@@ -513,7 +513,7 @@ export function ProductPage() {
                     }}
                     className={`min-h-9 shrink-0 touch-manipulation border px-3 text-xs font-medium ${
                       active
-                        ? 'border-[#e30613] bg-[#e30613] text-white'
+                        ? 'border-[#cf2028] bg-[#cf2028] text-white'
                         : 'border-[#dddddd] bg-white text-[#111111]'
                     }`}
                   >
@@ -524,7 +524,7 @@ export function ProductPage() {
             </div>
           )}
           {sizeHint && needsSize && !selectedSize && (
-            <p className="mb-2 text-center text-[0.7rem] font-medium text-[#e30613]">
+            <p className="mb-2 text-center text-[0.7rem] font-medium text-[#cf2028]">
               Select a size above, then tap Buy
             </p>
           )}
@@ -536,7 +536,7 @@ export function ProductPage() {
               aria-label="Wishlist"
             >
               <Heart
-                className={`size-4 ${saved ? 'fill-[#e30613] text-[#e30613]' : ''}`}
+                className={`size-4 ${saved ? 'fill-[#cf2028] text-[#cf2028]' : ''}`}
                 strokeWidth={1.4}
               />
             </button>
@@ -545,7 +545,7 @@ export function ProductPage() {
               onClick={() => {
                 if (addQty()) openCart()
               }}
-              className="min-h-11 flex-1 touch-manipulation border border-[#e30613] bg-white px-3 py-3 text-[0.65rem] font-medium tracking-[0.12em] text-[#e30613] uppercase"
+              className="min-h-11 flex-1 touch-manipulation border border-[#cf2028] bg-white px-3 py-3 text-[0.65rem] font-medium tracking-[0.12em] text-[#cf2028] uppercase"
             >
               Add to cart
             </button>
@@ -554,7 +554,7 @@ export function ProductPage() {
               onClick={() => {
                 if (addQty()) navigate('/cart')
               }}
-              className="min-h-11 flex-1 touch-manipulation bg-[#e30613] px-3 py-3 text-[0.65rem] font-medium tracking-[0.12em] text-white uppercase"
+              className="min-h-11 flex-1 touch-manipulation bg-[#cf2028] px-3 py-3 text-[0.65rem] font-medium tracking-[0.12em] text-white uppercase"
             >
               Buy now
             </button>

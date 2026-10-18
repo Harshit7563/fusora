@@ -127,27 +127,27 @@ export function CategoryPage() {
   }
 
   return (
-    <main className="bg-white">
-      <div className="border-b border-[#eee] bg-[#fafafa] px-3 py-10 text-center sm:px-5 sm:py-12">
-        <h1 className="text-3xl font-extrabold tracking-tight text-[#111] uppercase sm:text-4xl">
+    <main className="bg-[#f8f6ee]">
+      <div className="bbb-red-band px-3 py-12 text-center sm:px-5 sm:py-14">
+        <h1 className="font-display text-5xl tracking-[0.1em] text-[#ffc462] sm:text-6xl">
           {title}
         </h1>
-        <p className="mx-auto mt-2 max-w-lg text-sm text-[#666]">{blurb}</p>
+        <p className="mx-auto mt-2 max-w-lg text-sm text-white/80">{blurb}</p>
       </div>
 
-      <div className="mx-auto max-w-[1400px] px-3 py-6 sm:px-5 lg:px-8">
-        <nav className="mb-5 text-xs font-semibold text-[#666]">
-          <Link to="/" className="hover:text-[#e30613]">
+      <div className="mx-auto max-w-[1200px] px-3 py-6 sm:px-5 lg:px-4">
+        <nav className="mb-5 text-xs font-semibold text-[#6a6667]">
+          <Link to="/" className="hover:text-[#cf2028]">
             Home
           </Link>
           <span className="mx-2">/</span>
-          <Link to={`/category/${active}`} className="hover:text-[#e30613]">
+          <Link to={`/category/${active}`} className="hover:text-[#cf2028]">
             {meta.label}
           </Link>
           {subtypeMeta && (
             <>
               <span className="mx-2">/</span>
-              <span className="text-[#111]">{subtypeMeta.label}</span>
+              <span className="text-[#070001]">{subtypeMeta.label}</span>
             </>
           )}
         </nav>
@@ -186,16 +186,16 @@ export function CategoryPage() {
                 <Link
                   key={s.id}
                   to={`/category/${active}/${s.id}`}
-                  className="group relative aspect-[3/4] overflow-hidden rounded-2xl"
+                  className="group relative aspect-[3/4] overflow-hidden"
                 >
                   <SafeImage
                     src={s.image}
                     alt={s.label}
                     className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#070001]/75 via-transparent to-transparent" />
                   <div className="absolute inset-x-0 bottom-0 p-4 text-white">
-                    <h2 className="text-lg font-extrabold uppercase tracking-wide">
+                    <h2 className="font-heading text-xl tracking-wide">
                       {s.label}
                     </h2>
                     <p className="mt-1 text-[0.65rem] font-bold tracking-wide uppercase opacity-85">
@@ -224,16 +224,16 @@ export function CategoryPage() {
                 <Link
                   key={c.id}
                   to={`${jeansBase}/${c.id}`}
-                  className="group relative aspect-[3/4] overflow-hidden rounded-2xl"
+                  className="group relative aspect-[3/4] overflow-hidden"
                 >
                   <SafeImage
                     src={c.image}
                     alt={c.label}
                     className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#070001]/75 via-transparent to-transparent" />
                   <div className="absolute inset-x-0 bottom-0 p-5 text-white">
-                    <h2 className="text-xl font-extrabold uppercase">
+                    <h2 className="font-heading text-2xl tracking-wide">
                       {c.label}
                     </h2>
                     <p className="mt-1 text-sm text-white/85">{c.blurb}</p>
@@ -249,16 +249,16 @@ export function CategoryPage() {
 
         {(showProductGrid || denimCollection) && (
           <>
-            <div className="mb-5 flex items-center justify-between gap-3 border-b border-[#eee] pb-4">
-              <p className="text-sm font-semibold text-[#666]">
+            <div className="mb-5 flex items-center justify-between gap-3 border-b border-[#e9e1db] pb-4">
+              <p className="text-sm font-semibold text-[#6a6667]">
                 {list.length} items
               </p>
-              <label className="flex items-center gap-2 text-sm font-semibold text-[#666]">
+              <label className="flex items-center gap-2 text-sm font-semibold text-[#6a6667]">
                 Sort
                 <select
                   value={sort}
                   onChange={(e) => setSort(e.target.value)}
-                  className="rounded-full border border-[#ddd] bg-white px-3 py-1.5 text-sm font-semibold text-[#111] outline-none"
+                  className="border border-[#d9d9d9] bg-white px-3 py-1.5 text-sm font-semibold text-[#070001] outline-none"
                 >
                   <option value="featured">Featured</option>
                   <option value="new">New</option>
@@ -269,20 +269,23 @@ export function CategoryPage() {
             </div>
 
             {list.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-[#ddd] px-6 py-20 text-center">
-                <p className="text-2xl font-extrabold uppercase text-[#111]">
+              <div className="border border-dashed border-[#d9d9d9] bg-white px-6 py-20 text-center">
+                <p className="font-display text-4xl tracking-wide text-[#070001]">
                   Coming soon
                 </p>
-                <p className="mx-auto mt-3 max-w-md text-sm text-[#666]">
+                <p className="mx-auto mt-3 max-w-md text-sm text-[#6a6667]">
                   We&apos;re stocking this collection. Browse other categories
                   meanwhile.
                 </p>
-                <Link to="/category/women" className="btn-primary mt-8 inline-flex">
+                <Link
+                  to="/category/women"
+                  className="btn-primary-solid mt-8 inline-flex"
+                >
                   Shop women
                 </Link>
               </div>
             ) : (
-              <div className="grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-4 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-5">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
                 {list.map((p) => (
                   <ProductCard key={p.id} product={p} />
                 ))}

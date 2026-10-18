@@ -6,24 +6,23 @@ import { FusoraLogo } from './FusoraLogo'
 
 const nav = [
   { label: 'Shop All', to: '/deals' },
+  { label: 'New Arrivals', to: '/deals' },
   { label: 'Sarees', to: '/category/women/sarees' },
   { label: 'Women', to: '/category/women' },
   { label: 'Men', to: '/category/men' },
-  { label: 'T-shirts', to: '/category/men/tshirts' },
-  { label: 'Shirts', to: '/category/men/shirts' },
   { label: 'Jeans', to: '/category/men/jeans' },
   { label: 'Jewellery', to: '/category/jewelry-eyewear-watches' },
+  { label: 'Sale', to: '/deals' },
 ]
 
 const chips = [
   { label: 'New Arrivals', to: '/deals' },
-  { label: 'Bestsellers', to: '/deals' },
-  { label: 'Sale', to: '/deals' },
   { label: 'Sarees', to: '/category/women/sarees' },
   { label: 'Women', to: '/category/women' },
   { label: 'Men', to: '/category/men' },
+  { label: 'Gift Sets', to: '/deals' },
   { label: 'Jeans', to: '/category/men/jeans' },
-  { label: 'Jewellery', to: '/category/jewelry-eyewear-watches' },
+  { label: 'Sale', to: '/deals' },
 ]
 
 export function Header() {
@@ -53,15 +52,15 @@ export function Header() {
   }
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 bg-white">
-      <div className="bg-[#e30613] text-center">
-        <p className="truncate px-3 py-2 text-[0.68rem] font-semibold tracking-[0.08em] text-white uppercase sm:text-[0.72rem]">
-          Express delivery across India · Fresh styles every week
+    <header className="fixed inset-x-0 top-0 z-50">
+      <div className="sticky top-0 z-30 bg-[#cf2028] text-center">
+        <p className="truncate px-3 py-2 font-heading text-[0.95rem] tracking-[0.12em] text-white sm:text-[1.05rem]">
+          Free shipping on orders above ₹999 · Fresh drops every week
         </p>
       </div>
 
-      <div className="border-b border-[#eee]">
-        <div className="mx-auto flex h-14 max-w-[1400px] items-center gap-3 px-3 sm:h-16 sm:px-5 lg:px-8">
+      <div className="border-b border-[#e9e1db] bg-[#f8f6ee]">
+        <div className="mx-auto flex h-14 max-w-[1200px] items-center gap-3 px-3 sm:h-16 sm:px-5 lg:px-4">
           <button
             type="button"
             className="grid size-9 place-items-center lg:hidden"
@@ -78,7 +77,7 @@ export function Header() {
               <Link
                 key={item.to + item.label}
                 to={item.to}
-                className="text-[0.72rem] font-bold tracking-[0.06em] text-[#111] uppercase transition hover:text-[#e30613]"
+                className="font-heading text-[1.05rem] tracking-[0.06em] text-[#070001] transition hover:text-[#cf2028]"
               >
                 {item.label}
               </Link>
@@ -88,18 +87,18 @@ export function Header() {
           <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
             <form
               onSubmit={onSearch}
-              className="hidden items-center overflow-hidden rounded-full border border-[#ddd] bg-white sm:flex"
+              className="hidden items-center overflow-hidden rounded-sm border border-[#d9d9d9] bg-white sm:flex"
             >
               <input
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
                 placeholder="Search"
-                className="w-28 bg-transparent px-3 py-2 text-sm outline-none placeholder:text-[#999] md:w-40"
+                className="w-28 bg-transparent px-3 py-2 text-sm outline-none placeholder:text-[#96938b] md:w-40"
               />
               <button
                 type="submit"
                 aria-label="Search"
-                className="m-0.5 grid size-8 place-items-center rounded-full bg-[#e30613] text-white"
+                className="m-0.5 grid size-8 place-items-center bg-[#cf2028] text-white"
               >
                 <Search className="size-3.5" strokeWidth={2.5} />
               </button>
@@ -126,7 +125,7 @@ export function Header() {
             >
               <Heart className="size-[1.15rem]" strokeWidth={2} />
               {wishlist.size > 0 && (
-                <span className="absolute top-0 right-0 flex min-w-4 items-center justify-center rounded-full bg-[#e30613] px-1 text-[0.55rem] font-bold text-white">
+                <span className="absolute top-0 right-0 flex min-w-4 items-center justify-center rounded-full bg-[#cf2028] px-1 text-[0.55rem] font-bold text-white">
                   {wishlist.size}
                 </span>
               )}
@@ -138,7 +137,7 @@ export function Header() {
               aria-label="Cart"
             >
               <ShoppingBag className="size-[1.15rem]" strokeWidth={2} />
-              <span className="absolute top-0 right-0 flex min-w-4 items-center justify-center rounded-full bg-[#e30613] px-1 text-[0.55rem] font-bold text-white">
+              <span className="absolute top-0 right-0 flex min-w-4 items-center justify-center rounded-full bg-[#cf2028] px-1 text-[0.55rem] font-bold text-white">
                 {cartCount}
               </span>
             </button>
@@ -146,8 +145,8 @@ export function Header() {
         </div>
       </div>
 
-      <div className="border-b border-[#eee] bg-white">
-        <div className="hide-scrollbar mx-auto flex max-w-[1400px] gap-2 overflow-x-auto px-3 py-2.5 sm:px-5 lg:justify-center lg:px-8">
+      <div className="border-b border-[#e9e1db] bg-white">
+        <div className="hide-scrollbar mx-auto flex max-w-[1200px] gap-2 overflow-x-auto px-3 py-2.5 sm:px-5 lg:justify-center lg:px-4">
           {chips.map((c, i) => (
             <Link
               key={c.label}
@@ -172,8 +171,8 @@ export function Header() {
             aria-label="Close"
             onClick={() => setMenuOpen(false)}
           />
-          <div className="absolute inset-y-0 left-0 flex w-[min(100%,19rem)] flex-col bg-white safe-pb">
-            <div className="flex h-14 items-center justify-between border-b border-[#eee] px-4">
+          <div className="absolute inset-y-0 left-0 flex w-[min(100%,19rem)] flex-col bg-[#f8f6ee] safe-pb">
+            <div className="flex h-14 items-center justify-between border-b border-[#e9e1db] px-4">
               <FusoraLogo compact />
               <button
                 type="button"
@@ -183,13 +182,13 @@ export function Header() {
                 <X className="size-5" strokeWidth={2} />
               </button>
             </div>
-            <div className="flex gap-2 border-b border-[#eee] px-4 py-3">
+            <div className="flex gap-2 border-b border-[#e9e1db] px-4 py-3">
               {isLoggedIn ? (
                 <>
                   <Link
                     to="/account"
                     onClick={() => setMenuOpen(false)}
-                    className="rounded-full bg-[#e30613] px-4 py-2 text-[0.68rem] font-bold tracking-wide text-white uppercase"
+                    className="bg-[#cf2028] px-4 py-2 font-heading text-[0.95rem] tracking-wide text-white"
                   >
                     Account
                   </Link>
@@ -199,7 +198,7 @@ export function Header() {
                       signOut()
                       setMenuOpen(false)
                     }}
-                    className="rounded-full border border-[#ddd] px-4 py-2 text-[0.68rem] font-bold tracking-wide uppercase"
+                    className="border border-[#d9d9d9] px-4 py-2 font-heading text-[0.95rem] tracking-wide"
                   >
                     Log out
                   </button>
@@ -208,7 +207,7 @@ export function Header() {
                 <Link
                   to="/account"
                   onClick={() => setMenuOpen(false)}
-                  className="rounded-full bg-[#e30613] px-4 py-2 text-[0.68rem] font-bold tracking-wide text-white uppercase"
+                  className="bg-[#cf2028] px-4 py-2 font-heading text-[0.95rem] tracking-wide text-white"
                 >
                   Log in
                 </Link>
@@ -220,7 +219,7 @@ export function Header() {
                   <Link
                     to={item.to}
                     onClick={() => setMenuOpen(false)}
-                    className="block px-5 py-3.5 text-sm font-semibold uppercase tracking-wide"
+                    className="block px-5 py-3.5 font-heading text-lg tracking-wide"
                   >
                     {item.label}
                   </Link>

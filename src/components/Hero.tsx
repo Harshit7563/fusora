@@ -12,7 +12,6 @@ type Slide = {
   line: string
   cta: string
   to: string
-  align?: 'left' | 'right'
 }
 
 const slides: Slide[] = [
@@ -20,45 +19,41 @@ const slides: Slide[] = [
     id: 'sarees',
     image: '/heroes/ai-saree.jpg?v=2',
     position: 'object-[center_30%]',
-    eyebrow: 'New season',
-    title: 'Saree Edit',
-    line: 'Silk, zari and festive drapes — curated for every celebration.',
+    eyebrow: 'Festive edit',
+    title: 'Saree Drop',
+    line: 'Silk, zari & celebration drapes',
     cta: 'Shop Sarees',
     to: '/category/women/sarees',
-    align: 'left',
   },
   {
     id: 'wedding',
     image: '/heroes/ai-wedding.jpg?v=2',
     position: 'object-[center_25%]',
-    eyebrow: 'Occasion wear',
+    eyebrow: 'Big day looks',
     title: 'Wedding Edit',
-    line: 'Bridal reds and gold weaves made for the big day.',
+    line: 'Reds, golds & occasion wear',
     cta: 'Shop Now',
     to: '/category/women',
-    align: 'right',
   },
   {
     id: 'men',
     image: '/heroes/ai-men.jpg?v=2',
     position: 'object-[center_22%]',
     eyebrow: 'For him',
-    title: 'Men’s Drop',
-    line: 'Sharp shirts, tees and denim for everyday polish.',
+    title: "Men's Deck",
+    line: 'Shirts, tees & denim essentials',
     cta: 'Shop Men',
     to: '/category/men',
-    align: 'left',
   },
   {
     id: 'sale',
     image: '/heroes/ai-sale.jpg?v=2',
     position: 'object-[center_28%]',
     eyebrow: 'Limited time',
-    title: 'Sale Live',
-    line: 'Fresh markdowns across sarees, apparel and more.',
+    title: 'Deal Live',
+    line: 'Markdowns across the store',
     cta: 'Shop Sale',
     to: '/deals',
-    align: 'right',
   },
 ]
 
@@ -77,87 +72,79 @@ export function Hero() {
     setIndex((i) => (i + dir + slides.length) % slides.length)
   }
 
-  const alignRight = slide.align === 'right'
-
   return (
-    <section className="relative h-[min(78svh,700px)] min-h-[420px] overflow-hidden bg-[#111]">
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={slide.id}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.55 }}
-          className="absolute inset-0"
-        >
-          <motion.img
-            src={slide.image}
-            alt=""
-            initial={{ scale: 1.05 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 6.5, ease: 'linear' }}
-            className={`absolute inset-0 h-full w-full object-cover ${slide.position || 'object-center'}`}
-          />
-
-          <div
-            className={`absolute inset-0 ${
-              alignRight
-                ? 'bg-gradient-to-l from-black/65 via-black/20 to-transparent'
-                : 'bg-gradient-to-r from-black/65 via-black/20 to-transparent'
-            }`}
-          />
-          <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/45 to-transparent" />
-
-          <div
-            className={`absolute inset-0 z-[1] flex flex-col justify-end px-5 pb-16 sm:px-10 sm:pb-20 lg:px-16 ${
-              alignRight ? 'items-end text-right' : 'items-start text-left'
-            }`}
+    <section className="relative overflow-hidden bg-[#3a0505]">
+      <div className="relative aspect-[4/5] w-full sm:aspect-[16/9] lg:aspect-[21/9] lg:max-h-[720px]">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={slide.id}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.55 }}
+            className="absolute inset-0"
           >
-            <p className="mb-2 text-[0.7rem] font-bold tracking-[0.2em] text-white/85 uppercase">
-              {slide.eyebrow}
-            </p>
-            <h1 className="max-w-xl text-4xl font-extrabold leading-[1.05] tracking-tight text-white uppercase sm:text-5xl md:text-6xl lg:text-7xl">
-              {slide.title}
-            </h1>
-            <p className="mt-3 max-w-md text-sm leading-relaxed text-white/90 sm:text-base">
-              {slide.line}
-            </p>
-            <Link to={slide.to} className="btn-primary mt-6">
-              {slide.cta}
-            </Link>
-          </div>
-        </motion.div>
-      </AnimatePresence>
+            <motion.img
+              src={slide.image}
+              alt=""
+              initial={{ scale: 1.07 }}
+              animate={{ scale: 1.13 }}
+              transition={{ duration: 18, ease: 'easeInOut' }}
+              className={`absolute inset-0 h-full w-full object-cover ${slide.position || 'object-center'}`}
+            />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(60,5,5,0.15)_0%,rgba(7,0,1,0.55)_70%)]" />
+            <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-[#3a0505] to-transparent" />
 
-      <button
-        type="button"
-        aria-label="Previous"
-        onClick={() => go(-1)}
-        className="absolute top-1/2 left-3 z-[2] grid size-10 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-[#111] shadow-md transition hover:bg-white sm:left-5"
-      >
-        <ChevronLeft className="size-5" strokeWidth={2.2} />
-      </button>
-      <button
-        type="button"
-        aria-label="Next"
-        onClick={() => go(1)}
-        className="absolute top-1/2 right-3 z-[2] grid size-10 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-[#111] shadow-md transition hover:bg-white sm:right-5"
-      >
-        <ChevronRight className="size-5" strokeWidth={2.2} />
-      </button>
+            <div className="absolute inset-0 z-[1] flex flex-col items-center justify-center px-5 text-center">
+              <p className="font-display text-sm tracking-[0.45em] text-[#f3dcb0] sm:text-lg">
+                {slide.eyebrow}
+              </p>
+              <h1 className="mt-2 font-display text-[3.5rem] leading-none tracking-[0.12em] text-[#ffc462] sm:text-7xl md:text-[5.5rem] lg:text-[6rem]">
+                {slide.title}
+              </h1>
+              <p className="mt-2 font-display text-[0.8rem] tracking-[0.35em] text-[#f3dcb0] sm:text-base">
+                {slide.line}
+              </p>
+              <Link
+                to={slide.to}
+                className="btn-primary mt-7 pointer-events-auto"
+              >
+                {slide.cta}
+              </Link>
+            </div>
+          </motion.div>
+        </AnimatePresence>
 
-      <div className="absolute inset-x-0 bottom-5 z-[2] flex justify-center gap-2">
-        {slides.map((s, i) => (
-          <button
-            key={s.id}
-            type="button"
-            aria-label={`Slide ${i + 1}`}
-            onClick={() => setIndex(i)}
-            className={`h-2 rounded-full transition-all ${
-              i === index ? 'w-7 bg-[#e30613]' : 'w-2 bg-white/75 hover:bg-white'
-            }`}
-          />
-        ))}
+        <button
+          type="button"
+          aria-label="Previous"
+          onClick={() => go(-1)}
+          className="absolute top-1/2 left-2 z-[2] grid size-11 -translate-y-1/2 place-items-center bg-[#f8f6ee]/90 text-[#070001] transition hover:bg-white sm:left-4"
+        >
+          <ChevronLeft className="size-5" strokeWidth={2.2} />
+        </button>
+        <button
+          type="button"
+          aria-label="Next"
+          onClick={() => go(1)}
+          className="absolute top-1/2 right-2 z-[2] grid size-11 -translate-y-1/2 place-items-center bg-[#f8f6ee]/90 text-[#070001] transition hover:bg-white sm:right-4"
+        >
+          <ChevronRight className="size-5" strokeWidth={2.2} />
+        </button>
+
+        <div className="absolute inset-x-0 bottom-5 z-[2] flex justify-center gap-2.5">
+          {slides.map((s, i) => (
+            <button
+              key={s.id}
+              type="button"
+              aria-label={`Slide ${i + 1}`}
+              onClick={() => setIndex(i)}
+              className={`h-1.5 rounded-full transition-all ${
+                i === index ? 'w-6 scale-125 bg-white' : 'w-1.5 bg-white/50'
+              }`}
+            />
+          ))}
+        </div>
       </div>
     </section>
   )
