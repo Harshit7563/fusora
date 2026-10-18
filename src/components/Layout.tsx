@@ -5,6 +5,7 @@ import { Footer } from './Footer'
 import { Header } from './Header'
 import { LocationModal } from './LocationModal'
 import { NewsletterPopup } from './NewsletterPopup'
+import { ScamAlert } from './ScamAlert'
 
 export function Layout() {
   const { cart, cartOpen, closeCart, setQty, removeFromCart, toast } =
@@ -17,6 +18,7 @@ export function Layout() {
       <div className="pt-[8.75rem] sm:pt-[9.5rem] lg:pt-[10rem]">
         <Outlet />
       </div>
+      <ScamAlert />
       <Footer />
       <CartDrawer
         open={cartOpen}
