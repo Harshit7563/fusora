@@ -48,9 +48,7 @@ export function Footer() {
       <div className="mx-auto max-w-[1200px] px-4 py-12 sm:px-6 lg:px-4 lg:py-14">
         <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-4">
           <div>
-            <div className="brightness-0 invert">
-              <FusoraLogo compact />
-            </div>
+            <FusoraLogo compact onDark />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/75">
               Sarees, apparel & jewellery from {COMPANY_NAME}.
             </p>

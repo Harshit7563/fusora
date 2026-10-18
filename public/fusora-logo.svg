@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 120" fill="none" role="img" aria-label="Fusora">
+  <title>Fusora</title>
+  <!-- Red mark -->
+  <rect x="0" y="10" width="100" height="100" rx="12" fill="#CF2028"/>
+  <!-- White F -->
+  <path fill="#FFFFFF" d="M32 30h52v15H49v13h30v15H49v32H32V30z"/>
+  <!-- Gold sash -->
+  <path d="M14 80c30-24 62-12 84 6" stroke="#FFC462" stroke-width="5.5" stroke-linecap="round"/>
+  <!-- FUSORA wordmark (bold condensed) -->
+  <g fill="#CF2028" transform="translate(118,22)">
+    <!-- F -->
+    <path d="M0 0h46v14H16v18h26v14H16v30H0V0z"/>
+    <!-- U -->
+    <path d="M58 0h16v52c0 14 8 22 22 22s22-8 22-22V0h16v52c0 24-16 38-38 38S58 76 58 52V0z"/>
+    <!-- S -->
+    <path d="M158 18c0-12 10-18 26-18 14 0 24 5 30 14l-12 8c-4-5-10-8-18-8-6 0-10 2-10 6s4 6 14 8c18 4 32 10 32 28 0 16-12 24-32 24-18 0-30-7-36-18l12-8c4 7 12 12 24 12 8 0 14-3 14-8s-5-7-16-10c-18-4-32-11-32-28z"/>
+    <!-- O -->
+    <path d="M230 38c0-24 18-40 42-40s42 16 42 40-18 40-42 40-42-16-42-40zm16 0c0 15 10 26 26 26s26-11 26-26-10-26-26-26-26 11-26 26z"/>
+    <!-- R -->
+    <path d="M332 0h34c22 0 36 12 36 30 0 14-8 24-20 28l24 18h-20l-20-16h-18v16h-16V0zm16 14v30h18c10 0 18-6 18-15s-8-15-18-15h-18z"/>
+    <!-- A -->
+    <path d="M420 76L446 0h18l26 76h-17l-5-16h-26l-5 16h-17zm22-30h18l-9-28-9 28z"/>
+  </g>
+</svg>

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" role="img" aria-label="Fusora">
+  <title>Fusora</title>
+  <rect width="120" height="120" rx="14" fill="#CF2028"/>
+  <path d="M38 28h52v16H58v14h28v16H58v30H38V28z" fill="#FFFFFF"/>
+  <path d="M20 88c34-26 70-12 92 6" stroke="#FFC462" stroke-width="6" stroke-linecap="round" fill="none"/>
+</svg>
