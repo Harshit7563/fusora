@@ -68,7 +68,6 @@ export function HomePage() {
   const { products } = useCatalog()
   const [tab, setTab] = useState('all')
   const [visible, setVisible] = useState(PAGE)
-  const [dealIndex, setDealIndex] = useState(0)
 
   const filtered = useMemo(() => {
     const t = tabs.find((x) => x.id === tab) ?? tabs[0]
@@ -77,17 +76,16 @@ export function HomePage() {
 
   const shown = filtered.slice(0, visible)
 
-  const deals = useMemo(
-    () => products.filter((p) => p.topDeal || p.was > p.price).slice(0, 8),
-    [products],
-  )
+  const deals = useMemo(() => {
+    const onSale = products.filter((p) => p.topDeal || p.was > p.price)
+    const pool = onSale.length >= 4 ? onSale : products
+    return pool.slice(0, 4)
+  }, [products])
 
   const founderPicks = useMemo(
     () => products.filter((p) => p.subtype === 'sarees').slice(0, 8),
     [products],
   )
-
-  const activeDeal = deals[dealIndex % Math.max(deals.length, 1)]
 
   return (
     <main className="bg-[#f8f6ee]">
@@ -119,52 +117,47 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* Deal of the Day */}
-      {activeDeal && (
+      {/* Deal of the Day — 4 hot picks */}
+      {deals.length > 0 && (
         <section className="bbb-red-band px-4 py-12 sm:py-16">
           <div className="mx-auto max-w-[1200px]">
             <h2 className="section-title text-[#ffc462]">Deal of the Day</h2>
             <div className="mx-auto mt-2 grid w-max place-items-center bg-[#ffc462] px-3 py-1 font-heading text-lg text-[#7f1714]">
               Hot pick
             </div>
-            <div className="mx-auto mt-8 max-w-sm border border-[#d9d9d9] bg-white text-[#070001] shadow-[0_3px_13px_#00000024]">
-              <Link to={`/product/${activeDeal.id}`}>
-                <img
-                  src={activeDeal.image}
-                  alt={activeDeal.name}
-                  className="aspect-square w-full object-cover"
-                />
-              </Link>
-              <div className="flex flex-col items-center gap-2 px-4 py-4 text-center">
-                <p className="line-clamp-2 text-sm font-medium">{activeDeal.name}</p>
-                <p className="font-heading text-2xl">{formatMoney(activeDeal.price)}</p>
-                {activeDeal.was > activeDeal.price && (
-                  <p className="text-xs text-[#6a6667] line-through">
-                    {formatMoney(activeDeal.was)}
-                  </p>
-                )}
-                <Link to={`/product/${activeDeal.id}`} className="btn-outline mt-1">
-                  Buy
-                </Link>
-              </div>
+            <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+              {deals.map((deal) => (
+                <article
+                  key={deal.id}
+                  className="flex flex-col border border-[#d9d9d9] bg-white text-[#070001] shadow-[0_3px_13px_#00000024]"
+                >
+                  <Link to={`/product/${deal.id}`}>
+                    <img
+                      src={deal.image}
+                      alt={deal.name}
+                      className="aspect-square w-full object-cover"
+                    />
+                  </Link>
+                  <div className="flex flex-1 flex-col items-center gap-2 px-3 py-3 text-center sm:px-4 sm:py-4">
+                    <p className="line-clamp-2 text-sm font-medium">{deal.name}</p>
+                    <p className="font-heading text-xl sm:text-2xl">
+                      {formatMoney(deal.price)}
+                    </p>
+                    {deal.was > deal.price && (
+                      <p className="text-xs text-[#6a6667] line-through">
+                        {formatMoney(deal.was)}
+                      </p>
+                    )}
+                    <Link
+                      to={`/product/${deal.id}`}
+                      className="btn-outline mt-auto w-full max-w-[9rem]"
+                    >
+                      Buy
+                    </Link>
+                  </div>
+                </article>
+              ))}
             </div>
-            {deals.length > 1 && (
-              <div className="mt-6 flex justify-center gap-2">
-                {deals.slice(0, 5).map((_, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    aria-label={`Deal ${i + 1}`}
-                    onClick={() => setDealIndex(i)}
-                    className={`h-1.5 rounded-full transition-all ${
-                      i === dealIndex % deals.length
-                        ? 'w-5 bg-white'
-                        : 'w-1.5 bg-white/40'
-                    }`}
-                  />
-                ))}
-              </div>
-            )}
           </div>
         </section>
       )}
