@@ -29,7 +29,7 @@ const intro = (title: string) =>
 export const policies: PolicyDoc[] = [
   {
     slug: 'terms-and-conditions',
-    title: 'Terms and Conditions',
+    title: 'Terms & Conditions',
     sections: [
       {
         heading: '1. Acceptance of Terms',
@@ -365,7 +365,7 @@ export const policies: PolicyDoc[] = [
   },
   {
     slug: 'return-refund-policy',
-    title: 'Return & Refund Policy',
+    title: 'Return & Refund',
     sections: [
       {
         heading: '1. Overview',
@@ -453,7 +453,7 @@ export const policies: PolicyDoc[] = [
   },
   {
     slug: 'shipping-policy',
-    title: 'Shipping Policy',
+    title: 'Shipping & Delivery',
     sections: [
       {
         heading: '1. Overview',

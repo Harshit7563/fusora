@@ -35,9 +35,10 @@ const cols = [
     title: 'More',
     links: [
       { label: 'Privacy Policy', to: '/policies/privacy-policy' },
-      { label: 'Shipping', to: '/policies/shipping-policy' },
-      { label: 'Returns', to: '/policies/return-refund-policy' },
-      { label: 'Terms', to: '/policies/terms-and-conditions' },
+      { label: 'Terms & Conditions', to: '/policies/terms-and-conditions' },
+      { label: 'Shipping & Delivery', to: '/policies/shipping-policy' },
+      { label: 'Return & Refund', to: '/policies/return-refund-policy' },
+      { label: 'Disclaimer', to: '/policies/disclaimer' },
     ],
   },
 ]
