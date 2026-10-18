@@ -194,8 +194,8 @@ export function ProductPage() {
                   Artificial jewellery
                 </p>
                 <p className="mt-1 text-xs sm:text-sm">
-                  Yeh real gold / diamond nahi hai — fashion / imitation jewellery
-                  only. Plated finish aur imitation stones ho sakte hain.
+                  This is not real gold or diamond — fashion / imitation jewellery
+                  only. Plated finish and imitation stones may be used.
                 </p>
               </div>
             )}
