@@ -7,40 +7,40 @@ type Props = {
   centered?: boolean
 }
 
+/** Souled Store–style bold rounded sticker wordmark */
 export function FusoraLogo({
   className = '',
   compact = false,
   onDark = false,
   centered = false,
 }: Props) {
-  const mark = compact ? 'h-9 w-9 sm:h-10 sm:w-10' : 'h-10 w-10 sm:h-11 sm:w-11'
+  const pad = compact
+    ? 'px-3 py-1.5 sm:px-3.5 sm:py-2'
+    : 'px-3.5 py-2 sm:px-4 sm:py-2.5'
   const word = compact
-    ? 'text-[1.55rem] sm:text-[1.75rem] tracking-[0.12em]'
-    : 'text-[1.8rem] sm:text-[2rem] tracking-[0.12em]'
+    ? 'text-[1.15rem] sm:text-[1.35rem] tracking-[0.08em]'
+    : 'text-[1.35rem] sm:text-[1.55rem] tracking-[0.08em]'
 
   return (
     <Link
       to="/"
-      className={`inline-flex max-w-full items-center gap-2.5 leading-none ${
+      className={`inline-flex max-w-full items-center leading-none ${
         centered ? 'justify-center' : 'justify-start'
       } ${className}`}
       aria-label="Fusora home"
     >
-      <img
-        src="/fusora-mark.svg?v=6"
-        alt=""
-        aria-hidden
-        className={`${mark} shrink-0 object-contain ${
-          onDark ? 'brightness-0 invert' : ''
-        }`}
-        decoding="async"
-      />
       <span
-        className={`translate-y-[1px] font-display font-normal uppercase leading-none ${word} ${
-          onDark ? 'text-white' : 'text-[#cf2028]'
+        className={`inline-flex items-center rounded-2xl border-[3px] border-white shadow-[0_0_0_2px_#cf2028] ${pad} ${
+          onDark
+            ? 'bg-white text-[#cf2028] shadow-[0_0_0_2px_#ffffff]'
+            : 'bg-[#cf2028] text-white'
         }`}
       >
-        Fusora
+        <span
+          className={`font-logo font-extrabold uppercase leading-none ${word}`}
+        >
+          Fusora
+        </span>
       </span>
     </Link>
   )
