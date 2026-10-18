@@ -654,8 +654,10 @@ function buildReviews(product: Product, rating: number, count: number): {
 export function getProductDetails(product: Product): ProductDetails {
   const meta = byCategory[product.tab] ?? defaultMeta
   const colorMatch = product.name.match(
-    /(Silver|Black|White|Grey|Gray|Nude|Yellow|Red|Blue|Green|Titanium|Natural|Carbon|Maroon|Pink|Navy|Ivory|Cream|Olive|Beige|Brown|Purple|Orange)[^,]*/i,
+    /(Silver|Black|White|Grey|Gray|Nude|Yellow|Red|Blue|Green|Titanium|Natural|Carbon|Maroon|Pink|Navy|Ivory|Cream|Olive|Beige|Brown|Purple|Orange|Rust|Turquoise|French Beige|Midnight Blue|Foggy Grey|Slate Grey|Dark Blue|Brownish|Firefly|Mid Grey|Spanish Green|Pearl Bush|Cavern Pink)[^,]*/i,
   )
+  const colorLabel =
+    product.color?.trim() || colorMatch?.[0]?.trim() || 'As pictured'
   const profile = pickSizeProfile(product)
   const rating = product.topDeal ? 4.7 : 4.2 + (hashSeed(product.id) % 6) / 10
   const reviewCount = 48 + (hashSeed(product.id) % 220) + product.rank * 3
@@ -667,7 +669,7 @@ export function getProductDetails(product: Product): ProductDetails {
     ...(profile.sizes.length
       ? [{ label: 'Available sizes', value: profile.sizes.join(', ') }]
       : []),
-    { label: 'Colour', value: colorMatch?.[0]?.trim() || 'As pictured' },
+    { label: 'Colour', value: colorLabel },
   ]
 
   return {
@@ -675,7 +677,7 @@ export function getProductDetails(product: Product): ProductDetails {
     rating: Math.round(rating * 10) / 10,
     reviewCount,
     model: `${product.brand} ${product.id.toUpperCase()}`,
-    color: colorMatch?.[0]?.trim() || 'Standard',
+    color: colorLabel === 'As pictured' ? 'Standard' : colorLabel,
     highlights: meta.highlights,
     specs,
     overview: `${product.brand} — ${product.description || meta.overview}`,

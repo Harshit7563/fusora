@@ -8,6 +8,7 @@ import dyntraSarees from './data/dyntraSarees.json'
 import modcartProducts from './data/modcartProducts.json'
 import denimforgeProducts from './data/denimforgeProducts.json'
 import saltyJewellery from './data/saltyJewellery.json'
+import tenaxTshirts from './data/tenaxTshirts.json'
 import { type ApparelSubtype } from './data/apparel'
 import { loadAdminProducts } from './lib/adminCatalog'
 
@@ -44,6 +45,8 @@ export type Product = {
   fabric?: string
   sku?: string
   source?: string
+  /** Verified colour name when product is colour-split */
+  color?: string
 }
 
 /** Strip supplier brand prefixes from product titles (Dyntra / Denim Forge). */
@@ -264,12 +267,45 @@ const jewelleryCatalog: Product[] = (
   }
 })
 
+const tshirtCatalog: Product[] = (
+  tenaxTshirts as Array<Record<string, unknown>>
+).map((p, i) => {
+  const image = String(p.image || '')
+  const images = uniqueImages(
+    image,
+    Array.isArray(p.images) ? (p.images as string[]) : undefined,
+  )
+  return {
+    id: String(p.id),
+    rank: Number(p.rank) || i + 1,
+    name: String(p.name),
+    price: Number(p.price),
+    was: Number(p.was) || Number(p.price),
+    topDeal: Boolean(p.topDeal),
+    tab: 'apparel-accessories' as CategoryId,
+    subtype: 'tshirts' as ApparelSubtype,
+    gender: 'men' as ProductGender,
+    collection: 'mens-tshirts',
+    categoryName: p.categoryName ? String(p.categoryName) : 'T-Shirts',
+    categorySlug: 'mens-tshirts',
+    brand: 'Fusora',
+    image: images[0] || image,
+    images,
+    description: p.description ? String(p.description) : undefined,
+    sizes: Array.isArray(p.sizes) ? (p.sizes as string[]).map(String) : undefined,
+    sku: p.sku ? String(p.sku) : undefined,
+    color: p.color ? String(p.color) : undefined,
+    source: 'tenaxtees',
+  }
+})
+
 /** Real supplier catalogues only — no demo tees / stock photos / BB leftovers. */
 export const staticProducts: Product[] = dedupeByImage([
   ...sareeProducts,
   ...denimforgeCatalog,
   ...modcartCatalog,
   ...jewelleryCatalog,
+  ...tshirtCatalog,
 ])
 
 /** Built-in catalog + products created in /admin (IndexedDB cache). */
