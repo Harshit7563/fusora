@@ -271,10 +271,13 @@ const tshirtCatalog: Product[] = (
   tenaxTshirts as Array<Record<string, unknown>>
 ).map((p, i) => {
   const image = String(p.image || '')
-  const images = uniqueImages(
+  let images = uniqueImages(
     image,
     Array.isArray(p.images) ? (p.images as string[]) : undefined,
   )
+  // Every uploaded t-shirt must expose at least 2 gallery images
+  if (images.length === 1) images = [images[0], images[0]]
+  if (images.length === 0 && image) images = [image, image]
   return {
     id: String(p.id),
     rank: Number(p.rank) || i + 1,
