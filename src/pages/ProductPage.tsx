@@ -34,6 +34,7 @@ export function ProductPage() {
   const [qty, setQty] = useState(1)
   const [selectedSize, setSelectedSize] = useState<string | null>(null)
   const [sizeHint, setSizeHint] = useState(false)
+  const [activeImage, setActiveImage] = useState(0)
   const [openAccordions, setOpenAccordions] = useState<Set<string>>(
     () => new Set(['description']),
   )
@@ -49,6 +50,7 @@ export function ProductPage() {
   useEffect(() => {
     setQty(1)
     setSizeHint(false)
+    setActiveImage(0)
     setOpenAccordions(new Set(['description']))
     if (!product) {
       setSelectedSize(null)
@@ -138,28 +140,42 @@ export function ProductPage() {
           <span className="text-[#111111]">{product.name}</span>
         </nav>
 
-        <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 xl:gap-16">
-          {/* Multi-image gallery */}
-          <section
-            className={
-              gallery.length === 1
-                ? 'overflow-hidden bg-[#f5f5f5]'
-                : 'grid grid-cols-2 gap-2 sm:gap-3'
-            }
-          >
-            {gallery.slice(0, 4).map((src, i) => (
-              <div
-                key={`${src}-${i}`}
-                className="overflow-hidden bg-[#f5f5f5]"
-              >
-                <SafeImage
-                  src={src}
-                  alt={`${product.name} ${i + 1}`}
-                  className="aspect-[3/4] w-full object-cover"
-                  loading={i === 0 ? 'eager' : 'lazy'}
-                />
+        <div className="grid gap-8 lg:grid-cols-2 lg:gap-10 xl:gap-14">
+          {/* Left thumbs + center main image */}
+          <section className="flex gap-2.5 sm:gap-3">
+            {gallery.length > 1 && (
+              <div className="hide-scrollbar flex max-h-[min(72svh,640px)] w-[4.25rem] shrink-0 flex-col gap-2 overflow-y-auto sm:w-20 md:w-[5.5rem]">
+                {gallery.map((src, i) => (
+                  <button
+                    key={`${src}-${i}`}
+                    type="button"
+                    onClick={() => setActiveImage(i)}
+                    aria-label={`View image ${i + 1}`}
+                    aria-current={activeImage === i}
+                    className={`overflow-hidden border bg-[#f1efec] transition ${
+                      activeImage === i
+                        ? 'border-[#cf2028] ring-1 ring-[#cf2028]'
+                        : 'border-transparent hover:border-[#d9d9d9]'
+                    }`}
+                  >
+                    <SafeImage
+                      src={src}
+                      alt=""
+                      className="aspect-square w-full object-cover"
+                      loading={i < 4 ? 'eager' : 'lazy'}
+                    />
+                  </button>
+                ))}
               </div>
-            ))}
+            )}
+            <div className="min-w-0 flex-1 overflow-hidden border border-[#e9e1db] bg-[#f1efec]">
+              <SafeImage
+                src={gallery[Math.min(activeImage, gallery.length - 1)] || product.image}
+                alt={product.name}
+                className="aspect-square w-full object-cover"
+                loading="eager"
+              />
+            </div>
           </section>
 
           {/* Buy box */}
