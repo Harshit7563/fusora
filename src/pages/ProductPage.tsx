@@ -193,7 +193,7 @@ export function ProductPage() {
                 <p className="font-heading text-base tracking-wide text-[#cf2028]">
                   Artificial jewellery
                 </p>
-                <p className="mt-1 text-xs sm:text-sm">
+                <p className="mt-1 text-xs uppercase tracking-wide sm:text-sm">
                   This is not real gold or diamond — fashion / imitation jewellery
                   only. Plated finish and imitation stones may be used.
                 </p>
