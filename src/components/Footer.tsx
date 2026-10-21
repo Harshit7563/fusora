@@ -75,7 +75,7 @@ export function Footer() {
         </p>
       </div>
       <p className="px-4 pt-8 text-center text-3xl font-light text-[#262626] sm:text-5xl">
-        Delivering Smiles <span className="font-bold">Across India</span>
+        Your Style. <span className="font-bold">Delivered Nationwide.</span>
       </p>
 
       <div className="mx-auto max-w-[1280px] px-4 pt-10 sm:px-6">
