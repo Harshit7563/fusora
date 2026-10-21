@@ -123,28 +123,6 @@ export function Footer() {
           <FusoraLogo compact centered />
         </div>
 
-        {/* Who we are */}
-        <details className="group mt-10 border border-[#dcdcdc] bg-white">
-          <summary className="flex cursor-pointer list-none items-center justify-between px-4 py-3.5 text-sm font-bold text-[#cf2028] [&::-webkit-details-marker]:hidden">
-            Who we are
-            <span className="text-xl leading-none transition group-open:rotate-45">
-              +
-            </span>
-          </summary>
-          <div className="border-t border-[#eee] px-4 py-4 text-sm leading-relaxed text-[#3d3d3d]">
-            <p>
-              Fusora is an Indian fashion destination for sarees, everyday
-              apparel and artificial jewellery — run by {COMPANY_NAME}. We work
-              with our own curated collections and independent resellers on
-              “Sell on Fusora” to bring honest prices, secure Razorpay payments
-              and delivery in 1–7 days across India.
-            </p>
-            <p className="mt-3 text-xs font-bold text-[#262626]">
-              CIN: {COMPANY_CIN} · GSTIN: {COMPANY_GSTIN}
-            </p>
-          </div>
-        </details>
-
         {/* Payments row */}
         <div className="mt-8 flex flex-col items-center justify-center gap-2 border-t border-[#e0e0e0] pt-5 text-center text-xs text-[#6a6667] sm:flex-row sm:gap-6">
           <p>
@@ -164,6 +142,9 @@ export function Footer() {
       <div className="mt-6 border-t border-[#e0e0e0] py-4 text-center">
         <p className="px-4 text-xs font-bold text-[#262626]">
           © {new Date().getFullYear()} {COMPANY_NAME}. All rights reserved.
+        </p>
+        <p className="mt-1 px-4 text-[0.65rem] font-semibold text-[#6a6667]">
+          CIN: {COMPANY_CIN} · GSTIN: {COMPANY_GSTIN}
         </p>
       </div>
     </footer>
