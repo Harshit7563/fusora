@@ -9,6 +9,7 @@ import {
 } from '../data/apparel'
 import { type CategoryId } from '../data'
 import { ProductCard } from '../components/ProductCard'
+import { CategorySlider } from '../components/CategorySlider'
 import { useCatalog } from '../hooks/useCatalog'
 import { usePageTitle } from '../hooks/usePageTitle'
 import { getProductGender, matchesGender, type Gender } from '../lib/gender'
@@ -124,12 +125,24 @@ export function CategoryPage() {
 
   return (
     <main className="bg-[#f8f6ee]">
-      <div className="bbb-red-band px-3 py-12 text-center sm:px-5 sm:py-14">
-        <h1 className="font-display text-5xl tracking-[0.1em] text-[#ffc462] sm:text-6xl">
-          {title}
-        </h1>
-        <p className="mx-auto mt-2 max-w-lg text-sm text-white/80">{blurb}</p>
-      </div>
+      {list.length >= 4 ? (
+        <CategorySlider
+          title={title}
+          products={list}
+          labels={
+            isApparel || isGenderShop
+              ? genderSubtypes.map((s) => s.label)
+              : [meta.label]
+          }
+        />
+      ) : (
+        <div className="bbb-red-band px-3 py-12 text-center sm:px-5 sm:py-14">
+          <h1 className="font-display text-5xl tracking-[0.1em] text-[#ffc462] sm:text-6xl">
+            {title}
+          </h1>
+          <p className="mx-auto mt-2 max-w-lg text-sm text-white/80">{blurb}</p>
+        </div>
+      )}
 
       <div className="mx-auto max-w-[1200px] px-3 py-6 sm:px-5 lg:px-4">
         <nav className="mb-5 text-xs font-semibold text-[#6a6667]">
