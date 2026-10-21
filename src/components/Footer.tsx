@@ -155,14 +155,12 @@ export function Footer() {
                 {label}
               </span>
             ))}
+            <span className="mx-1 hidden h-4 w-px bg-[#cfcaca] sm:block" />
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#dcdcdc] bg-white px-3 py-1.5 font-semibold text-[#3d3d3d]">
+              <Truck className="size-3.5 text-[#cf2028]" />
+              Delivery: 1–7 days across India
+            </span>
           </div>
-          <p className="mt-3 text-center text-xs text-[#6a6667]">
-            <span className="inline-flex items-center gap-1.5 font-bold text-[#262626]">
-              <Truck className="size-4 text-[#cf2028]" />
-              Delivery:
-            </span>{' '}
-            1–7 days across India
-          </p>
         </div>
       </div>
 
