@@ -1,5 +1,5 @@
 import { useMemo, useState, type ReactNode } from 'react'
-import { RotateCcw, ShieldCheck, Truck } from 'lucide-react'
+import { BadgePercent, RotateCcw, Truck } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { usePageTitle } from '../hooks/usePageTitle'
 import { Hero } from '../components/Hero'
@@ -163,40 +163,41 @@ export function HomePage() {
     <main className="bg-white">
       <Hero />
 
-      {/* Trust strip */}
-      <section className="bg-[#e9f5f6]">
-        <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-3 px-4 py-4 text-center sm:grid-cols-3 sm:px-5">
+      {/* Trust strip — Fusora style */}
+      <section className="border-y border-[#f0e7da] bg-[#f8f6ee]">
+        <div className="mx-auto grid max-w-[1280px] grid-cols-1 gap-3 px-4 py-6 sm:grid-cols-3 sm:px-5">
           {[
             {
-              Icon: ShieldCheck,
+              Icon: BadgePercent,
               head: 'Extra 5% Off',
-              sub: 'on prepaid Razorpay orders',
+              sub: 'On prepaid Razorpay orders',
             },
             {
               Icon: RotateCcw,
               head: '7-Day Easy Returns',
-              sub: '& quick refunds',
+              sub: 'No-question returns & quick refunds',
             },
             {
               Icon: Truck,
               head: 'Free & Fast Shipping',
-              sub: 'on orders above ₹999',
+              sub: 'On all orders above ₹999',
             },
           ].map(({ Icon, head, sub }) => (
             <div
               key={head}
-              className="flex items-center justify-center gap-3 text-left"
+              className="flex items-center gap-3.5 rounded-2xl border border-[#eee3d3] bg-white px-4 py-3.5 shadow-[0_2px_10px_rgba(0,0,0,0.04)]"
             >
-              <Icon
-                className="size-8 shrink-0 text-[#141414]"
-                strokeWidth={1.5}
-              />
-              <p className="text-sm leading-tight font-bold text-[#141414]">
-                {head}
-                <span className="block text-xs font-medium text-[#4c5a5c]">
+              <span className="grid size-11 shrink-0 place-items-center rounded-full bg-[#cf2028]/10 text-[#cf2028]">
+                <Icon className="size-5" strokeWidth={1.9} />
+              </span>
+              <span>
+                <span className="block font-heading text-lg leading-none tracking-wide text-[#141414] uppercase">
+                  {head}
+                </span>
+                <span className="mt-1 block text-xs font-medium text-[#6a6667]">
                   {sub}
                 </span>
-              </p>
+              </span>
             </div>
           ))}
         </div>
