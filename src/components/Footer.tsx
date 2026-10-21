@@ -1,12 +1,47 @@
 import { Link } from 'react-router-dom'
-import {
-  Facebook,
-  IndianRupee,
-  Instagram,
-  RotateCcw,
-  Twitter,
-  Youtube,
-} from 'lucide-react'
+import { IndianRupee, RotateCcw } from 'lucide-react'
+import type { SVGProps } from 'react'
+
+function FacebookIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+      <path d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.7c0-.9.3-1.6 1.6-1.6h1.6V4.2c-.3 0-1.2-.1-2.3-.1-2.3 0-3.9 1.4-3.9 4v2.7H7.8V14h2.7v8h3z" />
+    </svg>
+  )
+}
+
+function InstagramIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      aria-hidden="true"
+      {...props}
+    >
+      <rect x="3" y="3" width="18" height="18" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17.2" cy="6.8" r="0.6" fill="currentColor" />
+    </svg>
+  )
+}
+
+function XIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+      <path d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3l-4.9-6.4L6.4 22H3.2l7.3-8.3L1 2h6.5l4.4 5.9L18.9 2zm-1.1 18h1.7L7.4 3.9H5.6L17.8 20z" />
+    </svg>
+  )
+}
+
+function YoutubeIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+      <path d="M23 12s0-3.3-.4-4.8c-.2-.9-.9-1.6-1.8-1.8C19.3 5 12 5 12 5s-7.3 0-8.8.4c-.9.2-1.6.9-1.8 1.8C1 8.7 1 12 1 12s0 3.3.4 4.8c.2.9.9 1.6 1.8 1.8C4.7 19 12 19 12 19s7.3 0 8.8-.4c-.9-.2 1.6-.9 1.8-1.8.4-1.5.4-4.8.4-4.8zM9.8 15.5v-7l6 3.5-6 3.5z" />
+    </svg>
+  )
+}
 import {
   COMPANY_CIN,
   COMPANY_GSTIN,
@@ -65,10 +100,10 @@ const cols = [
 ]
 
 const socials = [
-  { label: 'Facebook', Icon: Facebook, bg: 'bg-[#1877f2]' },
-  { label: 'Instagram', Icon: Instagram, bg: 'bg-[#e1306c]' },
-  { label: 'Twitter', Icon: Twitter, bg: 'bg-[#141414]' },
-  { label: 'YouTube', Icon: Youtube, bg: 'bg-[#ff0000]' },
+  { label: 'Facebook', Icon: FacebookIcon, bg: 'bg-[#1877f2]' },
+  { label: 'Instagram', Icon: InstagramIcon, bg: 'bg-[#e1306c]' },
+  { label: 'X', Icon: XIcon, bg: 'bg-[#141414]' },
+  { label: 'YouTube', Icon: YoutubeIcon, bg: 'bg-[#ff0000]' },
 ]
 
 export function Footer() {
@@ -143,7 +178,7 @@ export function Footer() {
                 aria-label={label}
                 className={`grid size-9 place-items-center rounded-full text-white transition hover:scale-110 ${bg}`}
               >
-                <Icon className="size-4" strokeWidth={2} />
+                <Icon className="size-4" />
               </Link>
             ))}
           </div>
