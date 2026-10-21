@@ -71,7 +71,7 @@ export function Footer() {
       {/* Brand band */}
       <div className="bg-[#cf2028] px-4 py-3.5 text-center">
         <p className="font-heading text-2xl tracking-[0.08em] text-white uppercase sm:text-4xl">
-          Proudly Homegrown Indian Brand
+          Born in India. Worn with Pride.
         </p>
       </div>
       <p className="px-4 pt-8 text-center text-3xl font-light text-[#262626] sm:text-5xl">
