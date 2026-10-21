@@ -487,10 +487,10 @@ export const policies: PolicyDoc[] = [
       {
         heading: '7. Refund Process & Timelines',
         body: [
-          'After we receive the returned Product and it passes QC, refunds are initiated to the original payment method where technically feasible.',
-          'Typical initiation timeline after successful QC: five (5) to ten (10) business days. Actual credit to your bank / UPI / card wallet may take additional time depending on your bank or payment provider.',
-          'For prepaid Orders, refunds are processed through the Payment Gateway (Razorpay) to the original source account / card / UPI VPA used for payment, in accordance with RBI and gateway norms. Refunds ordinarily reflect within three (3) to seven (7) business days after approval, depending on your bank and payment method; the Payment ID helps us trace the transaction faster.',
-          'Refund status stages are: (a) Approved \u2014 refund initiated to the Payment Gateway; (b) Processed \u2014 gateway has sent the refund to your bank; and (c) Credited \u2014 your bank has credited the source account. Delays after the \'Processed\' stage lie with the issuing bank. We will share the refund reference number (ARN / gateway refund id) on request to help your bank trace the credit.',
+          'Every refund follows the same three steps, in this order: (1) Quality Check (QC) — after the returned Product reaches us, we check it against Section 4 above; (2) Refund initiation — once the Product passes QC, we initiate the refund within five (5) to ten (10) business days; (3) Bank credit — after initiation, your bank / UPI / card provider credits the amount within a further three (3) to seven (7) business days. In most cases the full amount is back with you within about two to three weeks of the return reaching us.',
+          'So that there is no ambiguity: the five-to-ten business day period above is the time we take to initiate the refund after successful QC, and the three-to-seven business day period is the additional time your bank or payment provider takes to credit it after initiation. The two periods run one after the other, not side by side.',
+          'For prepaid Orders, refunds are processed through the Payment Gateway (Razorpay) to the original source account / card / UPI VPA used for payment, in accordance with RBI and gateway norms. The Razorpay Payment ID helps us trace the transaction faster if you contact us.',
+          'Refund status stages are: (a) Approved — QC passed and refund approved; (b) Initiated / Processed — we have initiated the refund and the gateway has sent it to your bank; and (c) Credited — your bank has credited the source account. Delays after the \'Processed\' stage lie with the issuing bank. We will share the refund reference number (ARN / gateway refund id) on request to help your bank trace the credit.',
           'Partial refunds (for example, where only part of an Order is returned or cancelled) are computed on the price actually paid for the affected item(s), after applying any proportionate discount, and are issued to the same source account.',
           'For COD Orders, refunds may be issued via UPI / bank transfer to details you provide, or as store credit, as mutually agreed in writing by email.',
           'Refund amount generally covers the Product price paid. Shipping charges are refunded only when the return is due to our error or a defective/wrong Product, unless mandatory law requires otherwise.',
@@ -660,7 +660,7 @@ export const policies: PolicyDoc[] = [
         heading: '5. Refunds on Cancellation',
         body: [
           'For prepaid Orders cancelled before dispatch and approved by us, a full refund of the Product amount (and shipping charges if collected and not incurred) is generally issued.',
-          'Refund initiation typically takes five (5) to ten (10) business days after cancellation approval. Banks/UPI providers may take additional time to reflect the credit.',
+          'The timeline is the same two steps as in our Return & Refund Policy: (1) Refund initiation — we initiate the refund within five (5) to ten (10) business days after cancellation approval; (2) Bank credit — your bank / UPI provider then credits the amount within a further three (3) to seven (7) business days.',
           'For COD Orders cancelled before dispatch, no payment is collected; hence no refund is due.',
           'If cancellation is requested after dispatch and the shipment returns as RTO due to customer refusal, refund (if any) will follow receipt of the shipment and deduction of applicable logistics costs as communicated.',
         ],

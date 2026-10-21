@@ -175,7 +175,7 @@ export function HomePage() {
             {
               Icon: RotateCcw,
               head: '7-Day Easy Returns',
-              sub: 'No-question returns & quick refunds',
+              sub: '7-day returns on eligible items',
             },
             {
               Icon: Truck,

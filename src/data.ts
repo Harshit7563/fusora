@@ -129,9 +129,24 @@ export function uniqueImages(...groups: Array<string | string[] | undefined>): s
 
 export type CartItem = Product & { qty: number; selectedSize?: string }
 
+/** Junk supplier rows (size charts, placeholders) must never become products. */
+const JUNK_LISTING_NAME = /size\s*chart|placeholder|dummy\s+product|test\s+product/i
+
+/** Blouses / petticoats / ethnic sets are their own subcategories, not "Sarees". */
+function ethnicSubtype(name: string): ApparelSubtype | null {
+  const n = name.toLowerCase()
+  if (/petticoat/.test(n)) return 'petticoats'
+  if (/blouse|blouese/.test(n)) return 'blouses'
+  if (/kurta|kurti|suit\s*set|salwar|lehenga|ethnic\s*set/.test(n))
+    return 'ethnic-sets'
+  return null
+}
+
 const sareeProducts: Product[] = (
   dyntraSarees as Array<Record<string, unknown>>
-).map((p, i) => {
+)
+  .filter((p) => !JUNK_LISTING_NAME.test(String(p.name || '')))
+  .map((p, i) => {
   const image = String(p.image || '')
   return {
     id: String(p.id),
@@ -141,7 +156,7 @@ const sareeProducts: Product[] = (
     was: Number(p.was) || Number(p.price),
     topDeal: Boolean(p.topDeal),
     tab: 'apparel-accessories' as CategoryId,
-    subtype: 'sarees' as ApparelSubtype,
+    subtype: ethnicSubtype(String(p.name || '')) ?? 'sarees',
     gender: 'women',
     collection: p.categorySlug ? String(p.categorySlug) : undefined,
     categoryName: p.categoryName ? String(p.categoryName) : undefined,
@@ -186,7 +201,10 @@ const modcartCatalog: Product[] = (
     was: Number(p.was) || Number(p.price),
     topDeal: Boolean(p.topDeal),
     tab: (String(p.tab) || 'apparel-accessories') as CategoryId,
-    subtype: (p.subtype as ApparelSubtype | undefined) || undefined,
+    subtype:
+      (p.subtype as ApparelSubtype | undefined) ||
+      ethnicSubtype(name) ||
+      undefined,
     gender,
     brand: String(p.brand || 'Modcart'),
     image: images[0] || image,
@@ -415,6 +433,11 @@ export const staticProducts: Product[] = dedupeByImage([
   ...tshirtCatalog,
   ...fusoraDressesCatalog,
 ])
+  // Junk rows can also slip in via admin/seller imports — never list them.
+  .filter((p) => !JUNK_LISTING_NAME.test(p.name))
+  // BESTSELLER is an editorial badge: only the top-3 ranked items of each
+  // supplier list may carry it (it was previously flagged on 1,200+ items).
+  .map((p) => ({ ...p, topDeal: Boolean(p.topDeal && (p.rank ?? 999) <= 3) }))
 
 /** Built-in catalog + admin (IndexedDB) + marketplace seller listings. */
 export function getProducts(): Product[] {

@@ -2,7 +2,15 @@ import denimforgeCategories from './denimforgeCategories.json'
 import dyntraCategories from './dyntraCategories.json'
 
 /** Apparel & Clothes subtypes */
-export type ApparelSubtype = 'tshirts' | 'shirts' | 'sarees' | 'jeans' | 'dresses'
+export type ApparelSubtype =
+  | 'tshirts'
+  | 'shirts'
+  | 'sarees'
+  | 'jeans'
+  | 'dresses'
+  | 'blouses'
+  | 'petticoats'
+  | 'ethnic-sets'
 
 export const apparelSubtypes: {
   id: ApparelSubtype
@@ -44,6 +52,27 @@ export const apparelSubtypes: {
     blurb: 'A-line, fit & flare, wrap and maxi dresses for every day.',
     image: '/products/dresses/scarlet-maxi.jpg',
   },
+  {
+    id: 'blouses',
+    label: 'Blouses',
+    blurb: 'Readymade saree blouses — padded, princess-cut and stretch fits.',
+    image:
+      'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=900&q=80',
+  },
+  {
+    id: 'petticoats',
+    label: 'Petticoats',
+    blurb: 'Cotton saree petticoats and inskirts in everyday colours.',
+    image:
+      'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=900&q=80',
+  },
+  {
+    id: 'ethnic-sets',
+    label: 'Ethnic Sets',
+    blurb: 'Kurta sets, salwar suits and festive ethnic co-ords.',
+    image:
+      'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=900&q=80',
+  },
 ]
 
 export const denimCollections = (
@@ -84,4 +113,7 @@ export const ALL_APPAREL_SUBTYPES: ApparelSubtype[] = [
   'sarees',
   'jeans',
   'dresses',
+  'blouses',
+  'petticoats',
+  'ethnic-sets',
 ]

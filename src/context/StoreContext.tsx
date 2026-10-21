@@ -18,6 +18,9 @@ export type StoreLocation = {
   state: string
   lat: number
   lng: number
+  address?: string
+  phone?: string
+  pickup?: string
 }
 
 /** User's real GPS + reverse-geocoded place */
@@ -33,14 +36,19 @@ export type UserLocation = {
 }
 
 export const STORES: StoreLocation[] = [
-  { id: 'mumbai', name: 'Mumbai Hub', city: 'Mumbai', state: 'MH', lat: 19.076, lng: 72.8777 },
-  { id: 'delhi', name: 'Delhi NCR Hub', city: 'Delhi', state: 'DL', lat: 28.6139, lng: 77.209 },
-  { id: 'bengaluru', name: 'Bengaluru Hub', city: 'Bengaluru', state: 'KA', lat: 12.9716, lng: 77.5946 },
-  { id: 'hyderabad', name: 'Hyderabad Hub', city: 'Hyderabad', state: 'TS', lat: 17.385, lng: 78.4867 },
-  { id: 'pune', name: 'Pune Hub', city: 'Pune', state: 'MH', lat: 18.5204, lng: 73.8567 },
-  { id: 'chennai', name: 'Chennai Hub', city: 'Chennai', state: 'TN', lat: 13.0827, lng: 80.2707 },
-  { id: 'kolkata', name: 'Kolkata Hub', city: 'Kolkata', state: 'WB', lat: 22.5726, lng: 88.3639 },
-  { id: 'ahmedabad', name: 'Ahmedabad Hub', city: 'Ahmedabad', state: 'GJ', lat: 23.0225, lng: 72.5714 },
+  {
+    id: 'mh-fulfilment',
+    name: 'Fusora Fulfilment Centre',
+    city: 'Maharashtra',
+    state: 'MH',
+    lat: 19.7515,
+    lng: 75.7139,
+    address:
+      'All orders are dispatched from our Maharashtra fulfilment centre (FUSEFOLD MULTITRADE PRIVATE LIMITED, GSTIN 27AAGCF7300K1ZL). The full dispatch address is printed on your order invoice.',
+    phone: '',
+    pickup:
+      'We are an online-first store: orders are delivered to your doorstep in 1–7 days across India. Walk-in pickup is not available at the fulfilment centre.',
+  },
 ]
 
 const USER_LOC_KEY = 'fusora-user-location'
@@ -306,7 +314,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       const raw = localStorage.getItem(STORE_KEY)
       if (!raw) return null
       const parsed = JSON.parse(raw) as StoreLocation
-      return STORES.find((s) => s.id === parsed.id) ?? parsed
+      return STORES.find((s) => s.id === parsed.id) ?? STORES[0]
     } catch {
       return null
     }

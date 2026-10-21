@@ -13,16 +13,24 @@ import { policies } from '../policies'
 
 const faqs = [
   {
-    q: 'How does store pickup work?',
-    a: 'Order online at fusora.shop, pick a Fusora hub, and collect in as little as 1 hour when inventory is available.',
+    q: 'How long will my order take to arrive?',
+    a: 'Orders are dispatched from our Maharashtra fulfilment centre and typically arrive within 1–7 days depending on your pincode. You will receive tracking details by email and SMS as soon as your order ships, and you can follow it any time from Order status.',
   },
   {
     q: 'How do I verify my email?',
-    a: 'On Create account or Sign in, enter your email and tap Send OTP. We email a one-time code via EmailJS. Enter the OTP to verify, then continue.',
+    a: 'On Create account or Sign in, enter your email and tap Send OTP. We email you a one-time code — enter it to verify and continue. No password to remember, nothing to reset.',
   },
   {
-    q: 'How do returns work?',
-    a: 'See our Return & Refund Policy. Most unused items can be returned within the stated window with invoice. Questions? Write to shopsupportfusora@gmail.com.',
+    q: 'How do returns and refunds work?',
+    a: 'Eligible items can be returned within 7 days of delivery: email us your Order ID at shopsupportfusora@gmail.com and keep the item unused with tags intact. Once the returned item reaches us and passes quality check (QC), we initiate your refund within 5–10 business days; your bank or payment account is then credited within a further 3–7 business days.',
+  },
+  {
+    q: 'How can I pay?',
+    a: 'Pay securely online with UPI, cards or net banking via Razorpay. Cash on Delivery (COD) is available on orders of ₹2,000 and above.',
+  },
+  {
+    q: 'Need help with a size or fabric?',
+    a: 'Every product page lists its fabric, colour and what is included. Still unsure? Email us the product name and your usual size at shopsupportfusora@gmail.com and we will help you choose.',
   },
 ]
 
@@ -31,7 +39,8 @@ export function SupportPage() {
     <main className="mx-auto max-w-[900px] px-4 py-10 lg:px-6">
       <h1 className="text-3xl font-bold">Support & Services</h1>
       <p className="mt-2 text-bb-muted">
-        We’re here for setup help, repairs, and order questions on{' '}
+        Questions about an order, a size, a delivery or a return? We&rsquo;re
+        here to help on{' '}
         <span className="font-semibold text-bb-text">{SITE_DOMAIN}</span> —
         operated by {COMPANY_NAME}.
       </p>
@@ -44,7 +53,7 @@ export function SupportPage() {
           <div>
             <p className="font-bold text-bb-text">Email support</p>
             <p className="text-sm text-bb-muted">
-              We usually reply within 24 hours.
+              Mon–Sat, 9 AM – 6 PM · we usually reply within 24 hours.
             </p>
           </div>
         </div>
@@ -61,13 +70,13 @@ export function SupportPage() {
         {[
           {
             title: 'Order status',
-            to: '/cart',
-            body: 'Track or update your cart & pickup',
+            to: '/orders',
+            body: 'Track your orders & delivery status',
           },
           {
-            title: 'Find a store',
-            to: '/stores',
-            body: 'Hours, inventory, and directions',
+            title: 'Delivery & returns',
+            to: '/policies/returns-refunds',
+            body: '7-day returns on eligible items',
           },
           {
             title: 'Account help',

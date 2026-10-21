@@ -108,7 +108,12 @@ export function CategoryPage() {
   const genderSubtypes = useMemo(() => {
     if (active === 'men')
       return apparelSubtypes.filter(
-        (s) => s.id !== 'sarees' && s.id !== 'dresses',
+        (s) =>
+          s.id !== 'sarees' &&
+          s.id !== 'dresses' &&
+          s.id !== 'blouses' &&
+          s.id !== 'petticoats' &&
+          s.id !== 'ethnic-sets',
       )
     return apparelSubtypes
   }, [active])
