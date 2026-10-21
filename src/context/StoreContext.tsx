@@ -214,6 +214,8 @@ type StoreContextValue = {
   clearCart: () => void
   wishlist: Set<string>
   toggleWish: (id: string) => void
+  wishToast: { id: string; added: boolean; key: number } | null
+  dismissWishToast: () => void
   toast: string | null
 }
 
@@ -337,6 +339,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     }
   })
   const [toast, setToast] = useState<string | null>(null)
+  const [wishToast, setWishToast] = useState<{
+    id: string
+    added: boolean
+    key: number
+  } | null>(null)
   const startedRef = useRef(false)
 
   useEffect(() => {
@@ -470,6 +477,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     startedRef.current = true
     if (userLocation) setLocationStatus('ready')
   }, [userLocation])
+
+  useEffect(() => {
+    if (!wishToast) return
+    const t = window.setTimeout(() => setWishToast(null), 3000)
+    return () => window.clearTimeout(t)
+  }, [wishToast])
 
   useEffect(() => {
     if (!toast) return
@@ -800,13 +813,18 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       ),
     clearCart: () => setCart([]),
     wishlist,
-    toggleWish: (id) =>
+    toggleWish: (id) => {
+      const added = !wishlist.has(id)
       setWishlist((prev) => {
         const next = new Set(prev)
         if (next.has(id)) next.delete(id)
         else next.add(id)
         return next
-      }),
+      })
+      setWishToast({ id, added, key: Date.now() })
+    },
+    wishToast,
+    dismissWishToast: () => setWishToast(null),
     toast,
   }
 
