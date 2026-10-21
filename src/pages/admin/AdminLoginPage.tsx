@@ -13,9 +13,13 @@ export function AdminLoginPage() {
     return <Navigate to="/admin" replace />
   }
 
-  const onSubmit = (e: FormEvent) => {
+  const [busy, setBusy] = useState(false)
+
+  const onSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    const result = adminLogin(password)
+    setBusy(true)
+    const result = await adminLogin(password)
+    setBusy(false)
     if (!result.ok) {
       setError(result.message)
       return
@@ -43,9 +47,10 @@ export function AdminLoginPage() {
           {error && <p className="text-sm text-red-500">{error}</p>}
           <button
             type="submit"
+            disabled={busy}
             className="h-11 w-full rounded-full bg-[#1a1a1a] font-semibold text-white disabled:opacity-50"
           >
-            Sign In
+            {busy ? 'Signing in…' : 'Sign In'}
           </button>
         </form>
       </div>

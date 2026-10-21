@@ -1,0 +1,12 @@
+# Fusora seller API — block data dumps, allow uploads as static files
+Options -Indexes
+
+<FilesMatch "^(sellers|products)\.json$">
+  Require all denied
+</FilesMatch>
+
+<IfModule mod_authz_core.c>
+  <Files "_lib.php">
+    Require all denied
+  </Files>
+</IfModule>

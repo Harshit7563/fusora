@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from 'react'
 import type { CartItem, Product } from '../data'
+import { fetchMyServerOrders, syncOrderToServer } from '../lib/ordersApi'
 
 export type StoreLocation = {
   id: string
@@ -74,6 +75,7 @@ export type OrderItem = {
   price: number
   qty: number
   selectedSize?: string
+  sellerId?: string
 }
 
 export type Order = {
@@ -82,6 +84,12 @@ export type Order = {
   createdAt: number
   status: OrderStatus
   payment: 'cod' | 'upi' | 'card' | 'netbanking'
+  /** Razorpay payment id once verified on the server */
+  paymentId?: string
+  /** UPI transaction reference submitted by customer */
+  utr?: string
+  /** UPI payments wait for manual verification */
+  paymentPending?: boolean
   total: number
   name: string
   phone: string
@@ -191,6 +199,8 @@ type StoreContextValue = {
     email: string
     address: string
     payment: 'cod' | 'upi' | 'card' | 'netbanking'
+    utr?: string
+    paymentId?: string
   }) => Order | null
   getOrder: (id: string) => Order | undefined
   cart: CartItem[]
@@ -340,6 +350,34 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     localStorage.setItem(ORDERS_KEY, JSON.stringify(orders))
   }, [orders])
+
+  // Merge server-side orders for the signed-in user (cross-device history)
+  useEffect(() => {
+    if (!user) return
+    let cancelled = false
+    fetchMyServerOrders({ email: user.email, phone: user.phone })
+      .then((serverOrders) => {
+        if (cancelled || serverOrders.length === 0) return
+        setOrders((prev) => {
+          const byId = new Map(prev.map((o) => [o.id, o]))
+          for (const so of serverOrders) {
+            const local = byId.get(so.id)
+            byId.set(so.id, {
+              ...so,
+              userEmail: local?.userEmail || so.email || user.email,
+              locationLabel: local?.locationLabel || '',
+              // Server status wins — admin may have shipped/delivered it
+              status: so.status,
+            })
+          }
+          return [...byId.values()].sort((a, b) => b.createdAt - a.createdAt)
+        })
+      })
+      .catch(() => {})
+    return () => {
+      cancelled = true
+    }
+  }, [user])
 
   const setStore = useCallback((next: StoreLocation) => {
     setStoreState(next)
@@ -657,14 +695,20 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       email: string
       address: string
       payment: 'cod' | 'upi' | 'card' | 'netbanking'
+      utr?: string
+      paymentId?: string
     }): Order | null => {
       if (!user || cart.length === 0) return null
+      const utr = input.utr?.replace(/\s+/g, '').toUpperCase() || undefined
       const order: Order = {
         id: `FUS${Date.now().toString().slice(-8)}`,
         userEmail: user.email,
         createdAt: Date.now(),
         status: 'placed',
         payment: input.payment,
+        paymentId: input.paymentId,
+        utr: input.payment === 'upi' ? utr : undefined,
+        paymentPending: input.payment === 'upi' && !input.paymentId,
         total: cart.reduce((s, i) => s + i.price * i.qty, 0),
         name: input.name.trim(),
         phone: normalizePhone(input.phone),
@@ -679,11 +723,18 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           price: i.price,
           qty: i.qty,
           selectedSize: i.selectedSize,
+          sellerId: i.sellerId,
         })),
       }
       setOrders((prev) => [order, ...prev])
+      // Server-side store: admin can see it, customer gets it on any device
+      syncOrderToServer(order)
       setCart([])
-      setToast(`Order ${order.id} placed`)
+      setToast(
+        input.payment === 'upi'
+          ? `Order ${order.id} received · UTR under verification`
+          : `Order ${order.id} placed`,
+      )
       return order
     },
     [user, cart, store, locationLabel],

@@ -250,27 +250,35 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* Promo band */}
+      {/* Reseller band */}
       <section className="relative min-h-[42svh] overflow-hidden sm:min-h-[48svh]">
         <img
           src="/heroes/ai-wedding.jpg?v=2"
           alt=""
           className="absolute inset-0 h-full w-full object-cover object-[center_25%]"
         />
-        <div className="absolute inset-0 bg-[#3a0505]/60" />
+        <div className="absolute inset-0 bg-[#3a0505]/65" />
         <div className="relative flex min-h-[42svh] flex-col items-center justify-center px-4 py-14 text-center sm:min-h-[48svh]">
           <p className="font-display text-sm tracking-[0.4em] text-[#f3dcb0]">
             Fusora
           </p>
           <h2 className="mt-2 font-display text-5xl tracking-[0.1em] text-[#ffc462] sm:text-6xl">
-            Wedding Collection
+            Become a Reseller
           </h2>
           <p className="mt-3 max-w-md font-display text-sm tracking-[0.25em] text-[#f3dcb0]">
-            Pieces chosen for celebrations that last
+            List your shop · Sell on Fusora · Reach customers nationwide
           </p>
-          <Link to="/category/women/sarees" className="btn-primary mt-7">
-            Shop Now
-          </Link>
+          <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+            <Link to="/sell" className="btn-primary">
+              Start Selling
+            </Link>
+            <Link
+              to="/sell"
+              className="border border-[#f3dcb0]/50 px-5 py-3 text-xs font-semibold tracking-[0.16em] text-[#f3dcb0] uppercase transition hover:border-[#ffc462] hover:text-[#ffc462]"
+            >
+              Reseller Login
+            </Link>
+          </div>
         </div>
       </section>
     </main>

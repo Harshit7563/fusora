@@ -1,20 +1,27 @@
 import { Link } from 'react-router-dom'
 import { useCatalog } from '../../hooks/useCatalog'
-import { loadAdminProducts } from '../../lib/adminCatalog'
+import { uploadByTag } from '../../data'
 import { usePageTitle } from '../../hooks/usePageTitle'
 import { Package, Tags, ShoppingBag, Plus } from 'lucide-react'
 
 export function AdminDashboardPage() {
   usePageTitle('Admin')
   const { products, adminCategories } = useCatalog()
-  const adminProducts = loadAdminProducts()
+  const byG = products.filter((p) => uploadByTag(p) === 'G').length
+  const byHS = products.filter((p) => uploadByTag(p) === 'HS').length
 
   const cards = [
     {
-      label: 'Admin products',
-      value: adminProducts.length,
+      label: 'Upload by G (Admin)',
+      value: byG,
       icon: Package,
-      color: 'bg-blue-50 text-blue-600',
+      color: 'bg-green-50 text-green-700',
+    },
+    {
+      label: 'Upload by HS (AI)',
+      value: byHS,
+      icon: Package,
+      color: 'bg-red-50 text-[#cf2028]',
     },
     {
       label: 'Categories',

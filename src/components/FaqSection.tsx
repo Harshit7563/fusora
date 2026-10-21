@@ -4,7 +4,7 @@ import { ChevronDown } from 'lucide-react'
 const faqs = [
   {
     q: 'What is the delivery time?',
-    a: 'We usually dispatch orders within 24–48 hours. Delivery takes 3–7 business days depending on your location.',
+    a: 'We usually dispatch orders within 24–48 hours. Delivery takes 1–7 days depending on your location.',
   },
   {
     q: 'Is Cash on Delivery (COD) available?',

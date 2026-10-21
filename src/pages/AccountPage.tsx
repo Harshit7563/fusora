@@ -480,7 +480,7 @@ export function AccountPage() {
                   setOtpState(emptyOtp)
                 }}
                 className={`${field} mt-0 min-w-0 flex-1`}
-                placeholder="you@email.com"
+                placeholder="shopsupportfusora@gmail.com"
                 autoComplete="email"
               />
               {!otpState.verified && (

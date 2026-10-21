@@ -1,3 +1,4 @@
+// v=20261018d
 // Fusora runtime config (edit on server without rebuilding)
 // Google Cloud Console → APIs & Services → Credentials → Create OAuth Client ID (Web)
 // Authorized JavaScript origins:
@@ -7,7 +8,7 @@
 //   http://localhost:5181
 window.__FUSORA__ = window.__FUSORA__ || {
   googleClientId:
-    '40918556756-fdqt7v4tnmj5bejc726a5mt0jjs7l700.apps.googleusercontent.com',
+    '955699114876-o19var7ktsmjobvqhkqgr579uaiun828.apps.googleusercontent.com',
   // EmailJS — email OTP login (browser uses public key only)
   emailjs: {
     serviceId: 'service_zzdygr4',
@@ -15,6 +16,5 @@ window.__FUSORA__ = window.__FUSORA__ || {
     publicKey: '9z1t6eVNbk2GSc2KS',
   },
   // Admin panel — https://fusora.shop/admin
-  // Change this password on the server after first login.
-  adminPassword: 'Govind@7563',
+  // Password is verified server-side via /api/admin/login.php (never stored here).
 }

@@ -8,7 +8,12 @@ import {
 } from 'react'
 import { Link } from 'react-router-dom'
 import { Pencil, Plus, Star, Trash2, Upload, X } from 'lucide-react'
-import { formatMoney, type Product } from '../../data'
+import {
+  formatMoney,
+  uploadByTag,
+  uploadDateLabel,
+  type Product,
+} from '../../data'
 import { apparelSubtypes, type ApparelSubtype } from '../../data/apparel'
 import { useCatalog } from '../../hooks/useCatalog'
 import { usePageTitle } from '../../hooks/usePageTitle'
@@ -16,7 +21,6 @@ import {
   defaultSizesForSubtype,
   deleteAdminProduct,
   ensureAdminProductsLoaded,
-  loadAdminProducts,
   upsertAdminProduct,
 } from '../../lib/adminCatalog'
 import { filesToDataUrls } from '../../lib/imageUpload'
@@ -86,9 +90,10 @@ const inputClass =
 
 export function AdminProductsPage() {
   usePageTitle('Admin products')
-  const { refresh } = useCatalog()
-  const [products, setProducts] = useState<Product[]>([])
+  const { products: catalogProducts, refresh } = useCatalog()
   const [filterGender, setFilterGender] = useState('')
+  const [filterUploader, setFilterUploader] = useState('')
+  const [visibleRows, setVisibleRows] = useState(50)
   const [showForm, setShowForm] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [form, setForm] = useState<FormState>(emptyForm)
@@ -100,10 +105,7 @@ export function AdminProductsPage() {
   const [okMsg, setOkMsg] = useState('')
 
   useEffect(() => {
-    void ensureAdminProductsLoaded().then(() => {
-      setProducts(loadAdminProducts())
-      refresh()
-    })
+    void ensureAdminProductsLoaded().then(() => refresh())
     // hydrate once on mount
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -118,12 +120,28 @@ export function AdminProductsPage() {
     [form.gender],
   )
 
+  const uploadCounts = useMemo(() => {
+    const counts = { total: catalogProducts.length, G: 0, HS: 0, Seller: 0 }
+    for (const p of catalogProducts) counts[uploadByTag(p)] += 1
+    return counts
+  }, [catalogProducts])
+
   const filtered = useMemo(() => {
-    if (!filterGender) return products
-    return products.filter(
-      (p) => p.gender === filterGender || p.tab === filterGender,
-    )
-  }, [products, filterGender])
+    return catalogProducts.filter((p) => {
+      if (
+        filterGender &&
+        !(p.gender === filterGender || p.tab === filterGender)
+      )
+        return false
+      if (filterUploader && uploadByTag(p) !== filterUploader) return false
+      return true
+    })
+  }, [catalogProducts, filterGender, filterUploader])
+
+  const displayed = useMemo(
+    () => filtered.slice(0, visibleRows),
+    [filtered, visibleRows],
+  )
 
   const field = (label: string, child: ReactNode) => (
     <label className="block">
@@ -135,7 +153,6 @@ export function AdminProductsPage() {
   )
 
   const reload = () => {
-    setProducts(loadAdminProducts())
     refresh()
   }
 
@@ -333,18 +350,39 @@ export function AdminProductsPage() {
         <div>
           <h1 className="text-xl font-bold sm:text-2xl">Products</h1>
           <p className="mt-0.5 text-sm text-gray-500">
-            {products.length} products · Men / Women · sizes always unlimited
+            {uploadCounts.total} products · Upload by G: {uploadCounts.G} ·
+            Upload by HS: {uploadCounts.HS}
+            {uploadCounts.Seller
+              ? ` · Upload by Seller: ${uploadCounts.Seller}`
+              : ''}{' '}
+            · sizes always unlimited
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <select
             value={filterGender}
-            onChange={(e) => setFilterGender(e.target.value)}
+            onChange={(e) => {
+              setFilterGender(e.target.value)
+              setVisibleRows(50)
+            }}
             className={`${inputClass} sm:w-44`}
           >
             <option value="">All Categories</option>
             <option value="men">Men</option>
             <option value="women">Women</option>
+          </select>
+          <select
+            value={filterUploader}
+            onChange={(e) => {
+              setFilterUploader(e.target.value)
+              setVisibleRows(50)
+            }}
+            className={`${inputClass} sm:w-48`}
+          >
+            <option value="">All Uploaders</option>
+            <option value="G">Upload by G (Admin)</option>
+            <option value="HS">Upload by HS (AI)</option>
+            <option value="Seller">Upload by Seller</option>
           </select>
           <button
             type="button"
@@ -363,10 +401,12 @@ export function AdminProductsPage() {
       )}
 
       <div className="overflow-x-auto rounded-xl border border-[#e8e8e8] bg-white">
-        <table className="w-full min-w-[800px] text-sm">
+        <table className="w-full min-w-[900px] text-sm">
           <thead className="bg-[#faf9f7]">
             <tr>
               <th className="p-3 text-left font-semibold">Product</th>
+              <th className="p-3 text-left font-semibold">Upload By</th>
+              <th className="p-3 text-left font-semibold">Upload Date</th>
               <th className="p-3 text-left font-semibold">Category</th>
               <th className="p-3 text-left font-semibold">Sizes</th>
               <th className="p-3 text-left font-semibold">Price</th>
@@ -375,11 +415,13 @@ export function AdminProductsPage() {
             </tr>
           </thead>
           <tbody>
-            {filtered.map((p) => {
+            {displayed.map((p) => {
               const imgs = [p.image, ...(p.images || [])].filter(Boolean)
               const sizes = p.sizes?.length
                 ? p.sizes
                 : defaultSizesForSubtype(p.subtype)
+              const tag = uploadByTag(p)
+              const isAdminProduct = p.source === 'admin'
               return (
                 <tr key={p.id} className="border-t border-[#f0f0f0]">
                   <td className="p-3">
@@ -405,6 +447,22 @@ export function AdminProductsPage() {
                       </div>
                     </div>
                   </td>
+                  <td className="p-3">
+                    <span
+                      className={`inline-block rounded px-2 py-1 text-xs font-bold ${
+                        tag === 'G'
+                          ? 'bg-green-100 text-green-800'
+                          : tag === 'HS'
+                            ? 'bg-red-100 text-[#cf2028]'
+                            : 'bg-amber-100 text-amber-800'
+                      }`}
+                    >
+                      Upload by {tag}
+                    </span>
+                  </td>
+                  <td className="p-3 whitespace-nowrap text-gray-600">
+                    {uploadDateLabel(p)}
+                  </td>
                   <td className="p-3 text-gray-600">
                     {(p.gender || p.tab || '—').toString().toUpperCase()}
                     {p.subtype ? ` / ${p.subtype}` : ''}
@@ -416,14 +474,16 @@ export function AdminProductsPage() {
                   <td className="p-3 font-medium text-green-700">Unlimited</td>
                   <td className="p-3">
                     <div className="flex items-center justify-end gap-2">
-                      <button
-                        type="button"
-                        onClick={() => openEdit(p)}
-                        className="p-1 text-gray-500 hover:text-[#1a1a1a]"
-                        title="Edit"
-                      >
-                        <Pencil size={16} />
-                      </button>
+                      {isAdminProduct && (
+                        <button
+                          type="button"
+                          onClick={() => openEdit(p)}
+                          className="p-1 text-gray-500 hover:text-[#1a1a1a]"
+                          title="Edit"
+                        >
+                          <Pencil size={16} />
+                        </button>
+                      )}
                       <Link
                         to={`/product/${p.id}`}
                         className="p-1 text-xs text-gray-500 hover:text-[#1a1a1a]"
@@ -431,14 +491,16 @@ export function AdminProductsPage() {
                       >
                         View
                       </Link>
-                      <button
-                        type="button"
-                        onClick={() => void remove(p.id, p.name)}
-                        className="p-1 text-red-400 hover:text-red-600"
-                        title="Delete"
-                      >
-                        <Trash2 size={16} />
-                      </button>
+                      {isAdminProduct && (
+                        <button
+                          type="button"
+                          onClick={() => void remove(p.id, p.name)}
+                          className="p-1 text-red-400 hover:text-red-600"
+                          title="Delete"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      )}
                     </div>
                   </td>
                 </tr>
@@ -446,14 +508,27 @@ export function AdminProductsPage() {
             })}
             {!filtered.length && (
               <tr>
-                <td colSpan={6} className="p-8 text-center text-gray-400">
-                  No products yet. Click Add Product.
+                <td colSpan={8} className="p-8 text-center text-gray-400">
+                  No products found.
                 </td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
+
+      <p className="mt-3 text-center text-xs text-gray-500">
+        Showing {displayed.length} of {filtered.length} products
+      </p>
+      {visibleRows < filtered.length && (
+        <button
+          type="button"
+          onClick={() => setVisibleRows((n) => n + 50)}
+          className="mt-3 w-full rounded-lg border border-[#e8e8e8] bg-white px-4 py-3 text-sm font-medium hover:bg-gray-50"
+        >
+          Load more products
+        </button>
+      )}
 
       <div className="mt-6">
         <button

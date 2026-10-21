@@ -6,31 +6,23 @@ import {
   QrCode,
   Smartphone,
 } from 'lucide-react'
-import { useEffect, useMemo, useState, type FormEvent } from 'react'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { formatMoney } from '../data'
-import { UPI_PAYEE_NAME, UPI_VPA } from '../brand'
 import { useStore } from '../context/StoreContext'
 import { usePageTitle } from '../hooks/usePageTitle'
 import {
-  buildUpiPayUrl,
   clearCheckoutDraft,
   readCheckoutDraft,
   saveCheckoutDraft,
-  upiQrImageUrl,
   type PaymentMethod,
 } from '../lib/checkoutDraft'
-
-const BANKS = [
-  'State Bank of India',
-  'HDFC Bank',
-  'ICICI Bank',
-  'Axis Bank',
-  'Kotak Mahindra Bank',
-  'Punjab National Bank',
-  'Bank of Baroda',
-  'Yes Bank',
-] as const
+import {
+  createRazorpayQr,
+  fetchRazorpayQrStatus,
+  payWithRazorpay,
+  type RazorpayQr,
+} from '../lib/razorpay'
 
 export function PaymentPage() {
   usePageTitle('Payment')
@@ -42,13 +34,10 @@ export function PaymentPage() {
   const [paying, setPaying] = useState(false)
   const [doneId, setDoneId] = useState<string | null>(null)
 
-  const [card, setCard] = useState({
-    number: '',
-    name: '',
-    expiry: '',
-    cvv: '',
-  })
-  const [bank, setBank] = useState('')
+  const [paidPaymentId, setPaidPaymentId] = useState<string | null>(null)
+  const [rzpQr, setRzpQr] = useState<RazorpayQr | null>(null)
+  const [qrElapsed, setQrElapsed] = useState(1)
+  const qrDoneRef = useRef(false)
 
   const methodParam = (params.get('method') || draft?.payment || 'upi') as
     | 'upi'
@@ -67,25 +56,77 @@ export function PaymentPage() {
     }
   }, [navigate])
 
-  const txnRef = useMemo(
-    () => `FUS${String(draft?.createdAt ?? Date.now()).slice(-10)}`,
-    [draft?.createdAt],
-  )
+  // QR opening timer — counts up from 00:01 while the QR is being prepared
+  useEffect(() => {
+    if (method !== 'upi' || rzpQr) return
+    setQrElapsed(1)
+    const timer = window.setInterval(
+      () => setQrElapsed((s) => s + 1),
+      1000,
+    )
+    return () => window.clearInterval(timer)
+  }, [method, rzpQr])
 
-  const upiLink = useMemo(() => {
-    if (!draft) return ''
-    return buildUpiPayUrl({
-      pa: UPI_VPA,
-      pn: UPI_PAYEE_NAME,
-      am: draft.total,
-      tr: txnRef,
-    })
-  }, [draft, txnRef])
+  const qrTimerLabel = `${String(Math.floor(qrElapsed / 60)).padStart(2, '0')}:${String(qrElapsed % 60).padStart(2, '0')}`
 
-  const qrUrl = useMemo(
-    () => (upiLink ? upiQrImageUrl(upiLink) : ''),
-    [upiLink],
-  )
+  // Razorpay UPI QR: create one fixed-amount QR per checkout.
+  // If QR is not activated yet, retry every 15s so it appears automatically.
+  useEffect(() => {
+    if (method !== 'upi' || !draft || doneId || rzpQr) return
+    let cancelled = false
+    const attempt = () => {
+      createRazorpayQr({
+        amountRupees: draft.total,
+        receipt: `fus_${draft.createdAt ?? Date.now()}`,
+      })
+        .then((qr) => {
+          if (!cancelled) setRzpQr(qr)
+        })
+        .catch(() => {
+          // QR not active yet — the opening timer keeps running until it appears
+        })
+    }
+    attempt()
+    const retry = window.setInterval(attempt, 15000)
+    return () => {
+      cancelled = true
+      window.clearInterval(retry)
+    }
+  }, [method, draft, doneId, rzpQr])
+
+  // Poll Razorpay QR status — auto place order once payment is captured
+  useEffect(() => {
+    if (method !== 'upi' || !rzpQr || !draft || doneId || qrDoneRef.current)
+      return
+    const timer = window.setInterval(async () => {
+      try {
+        const status = await fetchRazorpayQrStatus(rzpQr.qr_id)
+        if (!status.paid || qrDoneRef.current) return
+        qrDoneRef.current = true
+        const address = [draft.address, draft.city, draft.state, draft.pincode]
+          .filter(Boolean)
+          .join(', ')
+        const order = placeOrder({
+          name: draft.name,
+          phone: draft.phone,
+          email: draft.email,
+          address,
+          payment: 'upi',
+          paymentId: status.payment_id || undefined,
+        })
+        if (order) {
+          if (status.payment_id) setPaidPaymentId(status.payment_id)
+          clearCheckoutDraft()
+          setDoneId(order.id)
+        } else {
+          qrDoneRef.current = false
+        }
+      } catch {
+        // keep polling — transient network errors are expected
+      }
+    }, 4000)
+    return () => window.clearInterval(timer)
+  }, [method, rzpQr, draft, doneId, placeOrder])
 
   if (!isLoggedIn) {
     return (
@@ -106,10 +147,21 @@ export function PaymentPage() {
     return (
       <main className="mx-auto max-w-[640px] px-4 py-16 text-center lg:px-6">
         <CheckCircle2 className="mx-auto size-12 text-green-700" />
-        <h1 className="font-serif mt-4 text-3xl text-bb-text">Payment successful</h1>
+        <h1 className="font-serif mt-4 text-3xl text-bb-text">
+          Payment successful
+        </h1>
         <p className="mt-3 text-sm text-bb-muted">
           Order ID <strong className="text-bb-text">{doneId}</strong>
         </p>
+        {paidPaymentId && (
+          <p className="mt-2 text-xs text-bb-muted">
+            Razorpay Payment ID{' '}
+            <strong className="text-bb-text tracking-wide">
+              {paidPaymentId}
+            </strong>{' '}
+            · Verified
+          </p>
+        )}
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link
             to={`/orders/${doneId}`}
@@ -151,34 +203,39 @@ export function PaymentPage() {
       return
     }
 
-    if (method === 'card') {
-      const digits = card.number.replace(/\D/g, '')
-      if (digits.length < 15 || digits.length > 16) {
-        setError('Enter a valid 15–16 digit card number.')
-        return
-      }
-      if (!card.name.trim()) {
-        setError('Enter the name on the card.')
-        return
-      }
-      if (!/^\d{2}\/\d{2}$/.test(card.expiry.trim())) {
-        setError('Enter expiry as MM/YY.')
-        return
-      }
-      if (!/^\d{3,4}$/.test(card.cvv.trim())) {
-        setError('Enter a valid CVV.')
-        return
-      }
-    }
-
-    if (method === 'netbanking' && !bank) {
-      setError('Select your bank to continue.')
-      return
-    }
+  // Card / NetBanking go through Razorpay Standard Checkout.
+  // Card details are entered only inside Razorpay's secure modal —
+  // Fusora never stores card number / CVV on its own systems.
 
     setPaying(true)
-    // Simulated gateway confirm — order is placed only after this step
-    await new Promise((r) => setTimeout(r, 900))
+    let razorpayPaymentId: string | undefined
+
+    if (method === 'card' || method === 'netbanking') {
+      try {
+        const paid = await payWithRazorpay({
+          amountRupees: draft.total,
+          receipt: `fus_${Date.now()}`,
+          name: draft.name,
+          email: draft.email,
+          phone: draft.phone,
+          description: `Fusora order · ${method === 'card' ? 'Card' : 'NetBanking'}`,
+          method:
+            method === 'card'
+              ? { card: true, netbanking: false, upi: false, wallet: false }
+              : { card: false, netbanking: true, upi: false, wallet: false },
+        })
+        setPaidPaymentId(paid.razorpay_payment_id)
+        razorpayPaymentId = paid.razorpay_payment_id
+      } catch (err) {
+        setPaying(false)
+        setError(
+          err instanceof Error
+            ? err.message
+            : 'Payment could not be completed. Please try again.',
+        )
+        return
+      }
+    }
 
     const address = [draft.address, draft.city, draft.state, draft.pincode]
       .filter(Boolean)
@@ -190,6 +247,7 @@ export function PaymentPage() {
       email: draft.email,
       address,
       payment: method,
+      paymentId: razorpayPaymentId,
     })
 
     setPaying(false)
@@ -201,9 +259,6 @@ export function PaymentPage() {
     setDoneId(order.id)
   }
 
-  const field =
-    'mt-1.5 w-full border border-bb-border bg-white px-3.5 py-3 text-sm outline-none focus:border-bb-blue'
-
   return (
     <main className="mx-auto max-w-[920px] px-3 py-8 sm:px-4 sm:py-10 lg:px-6">
       <p className="text-xs font-semibold tracking-[0.16em] text-bb-muted uppercase">
@@ -213,8 +268,8 @@ export function PaymentPage() {
         Pay {formatMoney(draft.total)}
       </h1>
       <p className="mt-2 text-sm text-bb-muted">
-        Choose UPI QR, debit/credit card, or net banking. Order is placed only
-        after payment confirmation.
+        Choose UPI QR, debit/credit card, or net banking. Your order is
+        confirmed automatically as soon as the UPI QR payment is received.
       </p>
 
       <div className="mt-6 grid gap-6 sm:mt-8 sm:gap-8 lg:grid-cols-[1.15fr_0.85fr]">
@@ -259,114 +314,102 @@ export function PaymentPage() {
                 <QrCode className="size-4 text-bb-blue" />
                 Scan UPI QR
               </div>
-              <div className="mx-auto mt-4 grid size-[min(240px,70vw)] place-items-center border border-bb-border bg-[#f5f5f5] p-3">
-                {qrUrl ? (
-                  <img
-                    src={qrUrl}
-                    alt="UPI payment QR code"
-                    width={220}
-                    height={220}
-                    className="size-full max-w-[220px] object-contain"
-                  />
-                ) : null}
+              <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-bb-border bg-white px-3 py-1.5 text-xs font-bold shadow-sm">
+                  <span aria-hidden className="text-sm font-black">
+                    <span className="text-[#4285F4]">G</span>
+                  </span>
+                  <span>
+                    <span className="text-[#4285F4]">G</span>
+                    <span className="text-[#EA4335]">o</span>
+                    <span className="text-[#FBBC05]">o</span>
+                    <span className="text-[#4285F4]">g</span>
+                    <span className="text-[#34A853]">l</span>
+                    <span className="text-[#EA4335]">e</span>
+                    <span className="ml-1 text-[#5F6368]">Pay</span>
+                  </span>
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-bb-border bg-white px-3 py-1.5 text-xs font-bold shadow-sm">
+                  <span
+                    aria-hidden
+                    className="grid size-5 place-items-center rounded-full bg-[#5F259F] text-[9px] font-black text-white"
+                  >
+                    Pe
+                  </span>
+                  <span className="text-[#5F259F]">PhonePe</span>
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-bb-border bg-white px-3 py-1.5 text-xs font-bold shadow-sm">
+                  <span aria-hidden className="font-black italic">
+                    <span className="text-[#002E6E]">pay</span>
+                    <span className="text-[#00B9F1]">tm</span>
+                  </span>
+                  <span className="text-[#002E6E]">Paytm</span>
+                </span>
               </div>
-              <p className="mt-4 text-sm text-bb-muted">
-                Pay to{' '}
-                <span className="font-semibold text-bb-text">{UPI_VPA}</span>
+              <p className="mt-2 text-[11px] text-bb-muted">
+                Scan with Google Pay, PhonePe, Paytm or any UPI app
               </p>
-              <p className="mt-1 text-xs text-bb-muted">
-                Amount {formatMoney(draft.total)} · Ref {txnRef}
-              </p>
-              <a
-                href={upiLink}
-                className="mt-4 inline-flex text-xs font-semibold tracking-[0.14em] text-bb-blue uppercase underline-offset-2 hover:underline"
-              >
-                Open in UPI app
-              </a>
+              {rzpQr ? (
+                <>
+                  <div className="mx-auto mt-4 grid size-[min(240px,70vw)] place-items-center border border-bb-border bg-[#f5f5f5] p-3">
+                    <img
+                      src={rzpQr.image_url}
+                      alt="Razorpay UPI payment QR code"
+                      width={220}
+                      height={220}
+                      className="size-full max-w-[220px] object-contain"
+                    />
+                  </div>
+                  <p className="mt-4 text-sm font-semibold text-bb-text">
+                    Razorpay UPI QR · {formatMoney(draft.total)}
+                  </p>
+                  <p className="mt-1 animate-pulse text-xs font-medium text-green-700">
+                    Waiting for payment… Scan with GPay / PhonePe / Paytm —
+                    your order will be confirmed automatically once the
+                    payment is received.
+                  </p>
+                </>
+              ) : (
+                <div className="mx-auto mt-4 max-w-md border border-bb-border bg-bb-cream/60 p-4">
+                  <p className="text-sm font-semibold text-bb-text">
+                    Razorpay UPI QR is being activated
+                  </p>
+                  <p className="mt-1 text-xs leading-5 text-bb-muted">
+                    Your QR code will appear here automatically once
+                    activation is complete. Meanwhile, you can pay by Debit /
+                    Credit Card or NetBanking.
+                  </p>
+                  <p className="mt-3 animate-pulse text-xs font-bold tracking-[0.18em] text-bb-blue uppercase">
+                    Opening QR · {qrTimerLabel}
+                  </p>
+                </div>
+              )}
             </div>
           )}
 
           {method === 'card' && (
-            <div className="mt-6 space-y-4">
-              <label className="block text-sm font-semibold">
-                Card number
-                <input
-                  className={field}
-                  inputMode="numeric"
-                  autoComplete="cc-number"
-                  placeholder="XXXX XXXX XXXX XXXX"
-                  value={card.number}
-                  onChange={(e) =>
-                    setCard((c) => ({ ...c, number: e.target.value }))
-                  }
-                />
-              </label>
-              <label className="block text-sm font-semibold">
-                Name on card
-                <input
-                  className={field}
-                  autoComplete="cc-name"
-                  value={card.name}
-                  onChange={(e) =>
-                    setCard((c) => ({ ...c, name: e.target.value }))
-                  }
-                />
-              </label>
-              <div className="grid grid-cols-2 gap-3">
-                <label className="block text-sm font-semibold">
-                  Expiry (MM/YY)
-                  <input
-                    className={field}
-                    autoComplete="cc-exp"
-                    placeholder="MM/YY"
-                    value={card.expiry}
-                    onChange={(e) =>
-                      setCard((c) => ({ ...c, expiry: e.target.value }))
-                    }
-                  />
-                </label>
-                <label className="block text-sm font-semibold">
-                  CVV
-                  <input
-                    className={field}
-                    type="password"
-                    inputMode="numeric"
-                    autoComplete="cc-csc"
-                    maxLength={4}
-                    value={card.cvv}
-                    onChange={(e) =>
-                      setCard((c) => ({ ...c, cvv: e.target.value }))
-                    }
-                  />
-                </label>
-              </div>
+            <div className="mt-6 border border-bb-border bg-bb-cream/60 p-4 text-left">
+              <p className="text-sm font-semibold text-bb-text">
+                Secure card payment via Razorpay
+              </p>
+              <p className="mt-1 text-xs leading-5 text-bb-muted">
+                Click "Pay securely" below — a Razorpay secure window will
+                open to enter your card details. Fusora never stores your
+                card number or CVV.
+              </p>
             </div>
           )}
 
           {method === 'netbanking' && (
-            <div className="mt-6 space-y-3">
-              <p className="text-sm font-semibold">Select bank</p>
-              <div className="grid gap-2 sm:grid-cols-2">
-                {BANKS.map((b) => (
-                  <label
-                    key={b}
-                    className={`flex cursor-pointer items-center gap-3 border px-3 py-3 text-sm ${
-                      bank === b
-                        ? 'border-bb-blue bg-bb-blue/5'
-                        : 'border-bb-border'
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="bank"
-                      checked={bank === b}
-                      onChange={() => setBank(b)}
-                      className="accent-bb-blue"
-                    />
-                    {b}
-                  </label>
-                ))}
-              </div>
+            <div className="mt-6 border border-bb-border bg-bb-cream/60 p-4 text-left">
+              <p className="text-sm font-semibold text-bb-text">
+                NetBanking via Razorpay
+              </p>
+              <p className="mt-1 text-xs leading-5 text-bb-muted">
+                Click "Pay securely" below — choose your bank in the
+                Razorpay secure window and complete the payment on your
+                bank page.
+              </p>
             </div>
           )}
 
@@ -376,17 +419,23 @@ export function PaymentPage() {
             </p>
           )}
 
-          <button
-            type="submit"
-            disabled={paying}
-            className="mt-6 w-full bg-bb-blue py-3.5 text-xs font-semibold tracking-[0.16em] text-white uppercase disabled:opacity-60"
-          >
-            {paying
-              ? 'Confirming…'
-              : method === 'upi'
-                ? `I've paid · ${formatMoney(draft.total)}`
-                : `Pay now · ${formatMoney(draft.total)}`}
-          </button>
+          {method === 'upi' ? (
+            <p className="mt-6 w-full border border-dashed border-bb-border py-3.5 text-center text-xs font-semibold tracking-[0.16em] text-bb-muted uppercase">
+              {rzpQr
+                ? 'Scan QR to pay — no button needed'
+                : `Opening QR · ${qrTimerLabel}`}
+            </p>
+          ) : (
+            <button
+              type="submit"
+              disabled={paying}
+              className="mt-6 w-full bg-bb-blue py-3.5 text-xs font-semibold tracking-[0.16em] text-white uppercase disabled:opacity-60"
+            >
+              {paying
+                ? 'Submitting…'
+                : `Pay securely · ${formatMoney(draft.total)}`}
+            </button>
+          )}
           <button
             type="button"
             onClick={() => navigate('/checkout')}

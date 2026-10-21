@@ -1,0 +1,14 @@
+# Fusora Orders API — order data must never be web-accessible
+Options -Indexes
+
+<IfModule mod_authz_core.c>
+  <FilesMatch "^(_lib\.php)$">
+    Require all denied
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_authz_core.c>
+  <LocationMatch "^/api/orders/data/">
+    Require all denied
+  </LocationMatch>
+</IfModule>

@@ -2,7 +2,7 @@ import denimforgeCategories from './denimforgeCategories.json'
 import dyntraCategories from './dyntraCategories.json'
 
 /** Apparel & Clothes subtypes */
-export type ApparelSubtype = 'tshirts' | 'shirts' | 'sarees' | 'jeans'
+export type ApparelSubtype = 'tshirts' | 'shirts' | 'sarees' | 'jeans' | 'dresses'
 
 export const apparelSubtypes: {
   id: ApparelSubtype
@@ -37,6 +37,12 @@ export const apparelSubtypes: {
     blurb: 'Men, women and kids — fits, washes and everyday denim.',
     image:
       'https://thedenimforge.com/uploads/products/1789985439763-lnhn91.webp',
+  },
+  {
+    id: 'dresses',
+    label: 'Dresses',
+    blurb: 'A-line, fit & flare, wrap and maxi dresses for every day.',
+    image: '/products/dresses/scarlet-maxi.jpg',
   },
 ]
 
@@ -77,4 +83,5 @@ export const ALL_APPAREL_SUBTYPES: ApparelSubtype[] = [
   'shirts',
   'sarees',
   'jeans',
+  'dresses',
 ]

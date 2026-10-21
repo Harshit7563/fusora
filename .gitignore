@@ -17,8 +17,18 @@ deploy
 
 # Hostinger OTP secrets (keep example only)
 hostinger/api/otp/config.php
-hostinger/api/otp/sessions/*
+hostinger/api/otp/sessions/
+hostinger/api/razorpay/config.php
+hostinger/api/admin/config.php
+hostinger/api/orders/data/*
 !hostinger/api/otp/sessions/.gitkeep
+
+# Seller marketplace local + server data
+.data/
+hostinger/api/seller/data/*
+!hostinger/api/seller/data/.gitkeep
+hostinger/api/seller/uploads/*
+!hostinger/api/seller/uploads/.gitkeep
 
 # Local scratch / image caches
 .tmp_img2/

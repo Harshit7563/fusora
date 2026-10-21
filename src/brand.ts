@@ -7,7 +7,9 @@ export const SUPPORT_MAILTO = `mailto:${SUPPORT_EMAIL}`
 /** Legal entity */
 export const COMPANY_NAME = 'FUSEFOLD MULTITRADE PRIVATE LIMITED'
 export const COMPANY_SHORT = 'Fusefold'
-export const POLICY_EFFECTIVE_DATE = '02/12/2025'
+export const COMPANY_CIN = 'U46901MH2025PTC461774'
+export const COMPANY_GSTIN = '27AAGCF7300K1ZL'
+export const POLICY_EFFECTIVE_DATE = '10/12/2025'
 export const GRIEVANCE_OFFICER = 'Ravi Lodha'
 export const GRIEVANCE_EMAIL = SUPPORT_EMAIL
 

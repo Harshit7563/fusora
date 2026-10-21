@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 700">
+<rect width="600" height="700" fill="#f3efe6"/>
+<rect x="70" y="620" width="460" height="14" rx="7" fill="rgba(0,0,0,0.08)"/>
+<path d="M232 108 L148 142 L58 258 L136 302 L136 612 L464 612 L464 302 L542 258 L452 142 L368 108 C342 140 258 140 232 108 Z" fill="#234434" stroke="rgba(0,0,0,0.22)" stroke-width="3" stroke-linejoin="round"/>
+<path d="M136 302 L190 278 L190 612" fill="none" stroke="rgba(0,0,0,0.10)" stroke-width="3"/>
+<path d="M464 302 L410 278 L410 612" fill="none" stroke="rgba(0,0,0,0.10)" stroke-width="3"/>
+<path d="M136 590 L464 590" stroke="rgba(0,0,0,0.14)" stroke-width="3"/>
+<path d="M232 110 C258 152 342 152 368 110" fill="none" stroke="rgba(0,0,0,0.28)" stroke-width="7" stroke-linecap="round"/><path d="M232 110 C258 138 342 138 368 110" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="3"/>
+
+<text x="300" y="668" text-anchor="middle" font-family="Arial, sans-serif" font-size="17" letter-spacing="3" fill="#8a8378">FUSORA ESSENTIAL · FRONT</text>
+</svg>

@@ -11,7 +11,10 @@ const CATEGORIES_KEY = 'fusora-admin-categories'
 const AUTH_KEY = 'fusora-admin-auth'
 
 /** One-off removals — purged from every browser on next catalog load. */
-const PURGED_ADMIN_PRODUCT_IDS = new Set(['admin-xjxjxj-mv7x6k16'])
+const PURGED_ADMIN_PRODUCT_IDS = new Set([
+  'admin-xjxjxj-mv7x6k16',
+  'admin-xjxjxj-mv7x6blx',
+])
 
 export type AdminCategory = {
   id: string
@@ -227,6 +230,8 @@ export async function upsertAdminProduct(
     wash: input.wash?.trim() || undefined,
     sku: input.sku?.trim() || existing?.sku || nextAdminSku(),
     source: 'admin',
+    uploadedBy: 'G' as const,
+    uploadedAt: existing?.uploadedAt || new Date().toISOString(),
   }
   const idx = list.findIndex((p) => p.id === id)
   if (idx >= 0) list[idx] = product
@@ -244,33 +249,51 @@ export function getAdminProduct(id: string) {
   return loadAdminProducts().find((p) => p.id === id)
 }
 
-type FusoraConfig = {
-  adminPassword?: string
-}
+/**
+ * Admin auth is server-side: the password is verified by
+ * /api/admin/login.php and only a signed token is kept in sessionStorage.
+ * The password itself never appears in frontend code or public config.
+ */
+const ADMIN_TOKEN_KEY = 'fusora-admin-token'
 
-function getAdminPassword() {
-  const cfg = (window as Window & { __FUSORA__?: FusoraConfig }).__FUSORA__
-  return cfg?.adminPassword || 'fusora-admin'
+export function getAdminToken(): string {
+  try {
+    return sessionStorage.getItem(ADMIN_TOKEN_KEY) || ''
+  } catch {
+    return ''
+  }
 }
 
 export function isAdminLoggedIn() {
-  try {
-    return sessionStorage.getItem(AUTH_KEY) === '1'
-  } catch {
-    return false
-  }
+  return Boolean(getAdminToken())
 }
 
-export function adminLogin(password: string) {
-  if (password === getAdminPassword()) {
+export async function adminLogin(password: string) {
+  try {
+    const res = await fetch('/api/admin/login.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password }),
+    })
+    const data = (await res.json().catch(() => ({}))) as {
+      ok?: boolean
+      token?: string
+      message?: string
+    }
+    if (!res.ok || !data.ok || !data.token) {
+      return { ok: false as const, message: data.message || 'Wrong password' }
+    }
+    sessionStorage.setItem(ADMIN_TOKEN_KEY, data.token)
     sessionStorage.setItem(AUTH_KEY, '1')
     return { ok: true as const }
+  } catch {
+    return { ok: false as const, message: 'Admin server unreachable' }
   }
-  return { ok: false as const, message: 'Wrong password' }
 }
 
 export function adminLogout() {
   sessionStorage.removeItem(AUTH_KEY)
+  sessionStorage.removeItem(ADMIN_TOKEN_KEY)
 }
 
 // Start hydrate as soon as this module loads in the browser.

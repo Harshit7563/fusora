@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 700">
+<rect width="600" height="700" fill="#f3efe6"/>
+<rect x="70" y="622" width="460" height="14" rx="7" fill="rgba(0,0,0,0.08)"/>
+<path d="M232 108 L150 140 L66 250 L138 292 L138 614 L462 614 L462 292 L534 250 L450 140 L368 108 C342 128 258 128 232 108 Z" fill="#6d1f28" stroke="rgba(0,0,0,0.22)" stroke-width="3" stroke-linejoin="round"/>
+<path d="M138 292 L190 272 L190 614" fill="none" stroke="rgba(0,0,0,0.10)" stroke-width="3"/>
+<path d="M462 292 L410 272 L410 614" fill="none" stroke="rgba(0,0,0,0.10)" stroke-width="3"/>
+<path d="M138 592 L462 592" stroke="rgba(0,0,0,0.14)" stroke-width="3"/>
+
+
+<path d="M300 132 L300 590" stroke="rgba(0,0,0,0.22)" stroke-width="3"/>
+<path d="M286 132 L300 168 L314 132 L368 108 C340 126 260 126 232 108 Z" fill="rgba(0,0,0,0.10)" stroke="rgba(0,0,0,0.20)" stroke-width="2"/>
+<circle cx="300" cy="220" r="5" fill="rgba(255,255,255,0.85)" stroke="rgba(0,0,0,0.25)"/>
+<circle cx="300" cy="300" r="5" fill="rgba(255,255,255,0.85)" stroke="rgba(0,0,0,0.25)"/>
+<circle cx="300" cy="380" r="5" fill="rgba(255,255,255,0.85)" stroke="rgba(0,0,0,0.25)"/>
+<circle cx="300" cy="460" r="5" fill="rgba(255,255,255,0.85)" stroke="rgba(0,0,0,0.25)"/>
+<circle cx="300" cy="540" r="5" fill="rgba(255,255,255,0.85)" stroke="rgba(0,0,0,0.25)"/>
+<path d="M352 250 L408 250 L408 308 L352 308 Z" fill="rgba(0,0,0,0.06)" stroke="rgba(0,0,0,0.18)" stroke-width="2"/>
+<text x="300" y="668" text-anchor="middle" font-family="Arial, sans-serif" font-size="17" letter-spacing="3" fill="#8a8378">FUSORA CLASSIC · FRONT</text>
+</svg>

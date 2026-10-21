@@ -8,9 +8,14 @@ import dyntraSarees from './data/dyntraSarees.json'
 import modcartProducts from './data/modcartProducts.json'
 import denimforgeProducts from './data/denimforgeProducts.json'
 import saltyJewellery from './data/saltyJewellery.json'
+import fusoraBottoms from './data/fusoraBottoms.json'
+import fusoraDresses from './data/fusoraDresses.json'
+import fusoraShirts from './data/fusoraShirts.json'
+import plainTees from './data/plainTees.json'
 import tenaxTshirts from './data/tenaxTshirts.json'
 import { type ApparelSubtype } from './data/apparel'
 import { loadAdminProducts } from './lib/adminCatalog'
+import { loadSellerProducts } from './lib/sellerCatalog'
 
 export type { CategoryId, DealTab }
 export { dealTabs, shopCategories }
@@ -45,8 +50,44 @@ export type Product = {
   fabric?: string
   sku?: string
   source?: string
+  /** Marketplace seller id when source === 'seller' */
+  sellerId?: string
+  /** Marketplace moderation state (seller products need admin approval) */
+  status?: 'pending' | 'approved' | 'rejected' | string
+  sellerShop?: string
+  /** Who uploaded it: G = admin panel, HS = AI/catalog import */
+  uploadedBy?: 'G' | 'HS' | 'Seller'
+  /** Upload date (ISO yyyy-mm-dd or timestamp) */
+  uploadedAt?: string
   /** Verified colour name when product is colour-split */
   color?: string
+}
+
+/** Upload-by label for admin log: G = admin, HS = AI */
+export function uploadByLabel(p: Product): string {
+  if (p.uploadedBy) return `Upload by ${p.uploadedBy}`
+  if (p.source === 'admin') return 'Upload by G'
+  if (p.source === 'seller') return 'Upload by Seller'
+  return 'Upload by HS'
+}
+
+/** Short tag: G / HS / Seller */
+export function uploadByTag(p: Product): 'G' | 'HS' | 'Seller' {
+  if (p.uploadedBy) return p.uploadedBy
+  if (p.source === 'admin') return 'G'
+  if (p.source === 'seller') return 'Seller'
+  return 'HS'
+}
+
+/** Display upload date as DD/MM/YYYY */
+export function uploadDateLabel(p: Product): string {
+  const raw = String(p.uploadedAt || '').trim()
+  if (!raw) return '—'
+  const d = new Date(raw)
+  if (Number.isNaN(d.getTime())) return raw
+  const dd = String(d.getDate()).padStart(2, '0')
+  const mm = String(d.getMonth() + 1).padStart(2, '0')
+  return `${dd}/${mm}/${d.getFullYear()}`
 }
 
 /** Strip supplier brand prefixes from product titles (Dyntra / Denim Forge). */
@@ -115,6 +156,8 @@ const sareeProducts: Product[] = (
       ? cleanSupplierName(String(p.description))
       : undefined,
     source: 'dyntra',
+    uploadedBy: 'HS' as const,
+    uploadedAt: '2026-09-27',
   }
 })
 
@@ -152,6 +195,8 @@ const modcartCatalog: Product[] = (
     image: images[0] || image,
     images,
     description: p.description ? String(p.description) : undefined,
+    uploadedBy: 'HS' as const,
+    uploadedAt: '2026-09-27',
   }
 })
 
@@ -194,6 +239,8 @@ const denimforgeCatalog: Product[] = (
     fabric: p.fabric ? String(p.fabric) : undefined,
     sku: p.sku ? String(p.sku) : undefined,
     source: 'thedenimforge',
+    uploadedBy: 'HS' as const,
+    uploadedAt: '2026-09-27',
   }
 })
 
@@ -233,39 +280,63 @@ function dedupeByImage(list: Product[]): Product[] {
   return out
 }
 
+function isSaltyBrandedImage(url: string): boolean {
+  // Drop lifestyle / packaging shots that carry the Salty brand mark in the file name
+  return /salty/i.test(url)
+}
+
 const jewelleryCatalog: Product[] = (
   saltyJewellery as Array<Record<string, unknown>>
-).map((p, i) => {
-  const image = String(p.image || '')
-  const images = uniqueImages(
-    image,
-    Array.isArray(p.images) ? (p.images as string[]) : undefined,
-  )
-  const disclaimer =
-    'Artificial / fashion jewellery only — not real gold, not real diamond, not precious metal.'
-  const rawDesc = p.description ? String(p.description) : ''
-  const description = /artificial|not real gold/i.test(rawDesc)
-    ? rawDesc
-    : `${disclaimer} ${rawDesc}`.trim()
-  return {
-    id: String(p.id),
-    rank: Number(p.rank) || i + 1,
-    name: String(p.name),
-    price: Number(p.price),
-    was: Number(p.was) || Number(p.price),
-    topDeal: Boolean(p.topDeal),
-    tab: 'jewelry-eyewear-watches' as CategoryId,
-    gender: 'women' as ProductGender,
-    categoryName: p.productType ? String(p.productType) : 'Artificial Jewellery',
-    categorySlug: 'artificial-jewellery',
-    brand: 'Fusora',
-    image: images[0] || image,
-    images,
-    description,
-    sku: p.sku ? String(p.sku) : undefined,
-    source: 'salty',
-  }
-})
+)
+  .flatMap((p, i): Product[] => {
+    const raw = uniqueImages(
+      String(p.image || ''),
+      Array.isArray(p.images) ? (p.images as string[]) : undefined,
+    ).filter((u) => !isSaltyBrandedImage(u))
+    // Prefer model / main product photos as hero
+    const images = [...raw].sort((a, b) => {
+      const score = (u: string) => {
+        const f = u.toLowerCase()
+        let s = 0
+        if (/model|main|_hero/.test(f)) s += 5
+        if (/\.png(\?|$)/.test(f)) s += 1
+        return s
+      }
+      return score(b) - score(a)
+    })
+    if (!images.length) return []
+    const disclaimer =
+      'Artificial / fashion jewellery only — not real gold, not real diamond, not precious metal.'
+    const rawDesc = p.description ? String(p.description) : ''
+    const description = /artificial|not real gold/i.test(rawDesc)
+      ? rawDesc
+      : `${disclaimer} ${rawDesc}`.trim()
+    return [
+      {
+        id: String(p.id),
+        rank: i + 1,
+        name: String(p.name),
+        price: Number(p.price),
+        was: Number(p.was) || Number(p.price),
+        topDeal: Boolean(p.topDeal),
+        tab: 'jewelry-eyewear-watches' as CategoryId,
+        gender: 'women' as ProductGender,
+        categoryName: p.productType
+          ? String(p.productType)
+          : 'Artificial Jewellery',
+        categorySlug: 'artificial-jewellery',
+        brand: 'Fusora',
+        image: images[0],
+        images,
+        description,
+        sku: p.sku ? String(p.sku) : undefined,
+        source: 'salty',
+        uploadedBy: 'HS' as const,
+        uploadedAt: '2026-10-18',
+      },
+    ]
+  })
+  .map((p, i) => ({ ...p, rank: i + 1 }))
 
 const tshirtCatalog: Product[] = (
   tenaxTshirts as Array<Record<string, unknown>>
@@ -299,6 +370,144 @@ const tshirtCatalog: Product[] = (
     sku: p.sku ? String(p.sku) : undefined,
     color: p.color ? String(p.color) : undefined,
     source: 'tenaxtees',
+    uploadedBy: 'HS' as const,
+    uploadedAt: '2026-10-18',
+  }
+})
+
+/** Fusora's own original plain t-shirt line — original names, copy & artwork. */
+const plainTeesCatalog: Product[] = (
+  plainTees as Array<Record<string, unknown>>
+).map((p, i) => {
+  const images = uniqueImages(
+    String(p.image || ''),
+    Array.isArray(p.images) ? (p.images as string[]) : undefined,
+  )
+  return {
+    id: String(p.id),
+    rank: Number(p.rank) || i + 1,
+    name: String(p.name),
+    price: Number(p.price),
+    was: Number(p.was) || Number(p.price),
+    topDeal: Boolean(p.topDeal),
+    tab: 'apparel-accessories' as CategoryId,
+    subtype: 'tshirts' as ApparelSubtype,
+    gender: 'men' as ProductGender,
+    collection: 'mens-tshirts',
+    categoryName: 'Plain T-Shirts',
+    categorySlug: 'mens-tshirts',
+    brand: 'Fusora',
+    image: images[0] || String(p.image || ''),
+    images,
+    description: p.description ? String(p.description) : undefined,
+    sizes: Array.isArray(p.sizes) ? (p.sizes as string[]).map(String) : undefined,
+    sku: p.sku ? String(p.sku) : undefined,
+    color: p.color ? String(p.color) : undefined,
+    source: 'fusora-plain',
+    uploadedBy: 'HS' as const,
+    uploadedAt: '2026-10-20',
+  }
+})
+
+/** Fusora's own original casual shirts line — original names, copy & artwork. */
+const fusoraShirtsCatalog: Product[] = (
+  fusoraShirts as Array<Record<string, unknown>>
+).map((p, i) => {
+  const images = uniqueImages(
+    String(p.image || ''),
+    Array.isArray(p.images) ? (p.images as string[]) : undefined,
+  )
+  return {
+    id: String(p.id),
+    rank: Number(p.rank) || i + 1,
+    name: String(p.name),
+    price: Number(p.price),
+    was: Number(p.was) || Number(p.price),
+    topDeal: Boolean(p.topDeal),
+    tab: 'apparel-accessories' as CategoryId,
+    subtype: 'shirts' as ApparelSubtype,
+    gender: 'men' as ProductGender,
+    collection: 'mens-shirts',
+    categoryName: 'Shirts',
+    categorySlug: 'mens-shirts',
+    brand: 'Fusora',
+    image: images[0] || String(p.image || ''),
+    images,
+    description: p.description ? String(p.description) : undefined,
+    sizes: Array.isArray(p.sizes) ? (p.sizes as string[]).map(String) : undefined,
+    sku: p.sku ? String(p.sku) : undefined,
+    color: p.color ? String(p.color) : undefined,
+    source: 'fusora-shirts',
+    uploadedBy: 'HS' as const,
+    uploadedAt: '2026-10-20',
+  }
+})
+
+/** Fusora's own original bottoms line — chinos, cargos & formal trousers. */
+const fusoraBottomsCatalog: Product[] = (
+  fusoraBottoms as Array<Record<string, unknown>>
+).map((p, i) => {
+  const images = uniqueImages(
+    String(p.image || ''),
+    Array.isArray(p.images) ? (p.images as string[]) : undefined,
+  )
+  return {
+    id: String(p.id),
+    rank: Number(p.rank) || i + 1,
+    name: String(p.name),
+    price: Number(p.price),
+    was: Number(p.was) || Number(p.price),
+    topDeal: Boolean(p.topDeal),
+    tab: 'apparel-accessories' as CategoryId,
+    subtype: 'jeans' as ApparelSubtype,
+    gender: 'men' as ProductGender,
+    collection: 'mens-jeans',
+    categoryName: 'Bottoms',
+    categorySlug: 'mens-jeans',
+    brand: 'Fusora',
+    image: images[0] || String(p.image || ''),
+    images,
+    description: p.description ? String(p.description) : undefined,
+    sizes: Array.isArray(p.sizes) ? (p.sizes as string[]).map(String) : undefined,
+    sku: p.sku ? String(p.sku) : undefined,
+    color: p.color ? String(p.color) : undefined,
+    source: 'fusora-bottoms',
+    uploadedBy: 'HS' as const,
+    uploadedAt: '2026-10-20',
+  }
+})
+
+/** Fusora's own original women's dresses line. */
+const fusoraDressesCatalog: Product[] = (
+  fusoraDresses as Array<Record<string, unknown>>
+).map((p, i) => {
+  const images = uniqueImages(
+    String(p.image || ''),
+    Array.isArray(p.images) ? (p.images as string[]) : undefined,
+  )
+  return {
+    id: String(p.id),
+    rank: Number(p.rank) || i + 1,
+    name: String(p.name),
+    price: Number(p.price),
+    was: Number(p.was) || Number(p.price),
+    topDeal: Boolean(p.topDeal),
+    tab: 'apparel-accessories' as CategoryId,
+    subtype: 'dresses' as ApparelSubtype,
+    gender: 'women' as ProductGender,
+    collection: 'womens-dresses',
+    categoryName: 'Dresses',
+    categorySlug: 'womens-dresses',
+    brand: 'Fusora',
+    image: images[0] || String(p.image || ''),
+    images,
+    description: p.description ? String(p.description) : undefined,
+    sizes: Array.isArray(p.sizes) ? (p.sizes as string[]).map(String) : undefined,
+    sku: p.sku ? String(p.sku) : undefined,
+    color: p.color ? String(p.color) : undefined,
+    source: 'fusora-dresses',
+    uploadedBy: 'HS' as const,
+    uploadedAt: '2026-10-20',
   }
 })
 
@@ -309,13 +518,21 @@ export const staticProducts: Product[] = dedupeByImage([
   ...modcartCatalog,
   ...jewelleryCatalog,
   ...tshirtCatalog,
+  ...plainTeesCatalog,
+  ...fusoraShirtsCatalog,
+  ...fusoraBottomsCatalog,
+  ...fusoraDressesCatalog,
 ])
 
-/** Built-in catalog + products created in /admin (IndexedDB cache). */
+/** Built-in catalog + admin (IndexedDB) + marketplace seller listings. */
 export function getProducts(): Product[] {
   const admin = loadAdminProducts()
-  if (!Array.isArray(admin) || admin.length === 0) return staticProducts
-  return dedupeByImage([...admin, ...staticProducts])
+  const sellers = loadSellerProducts()
+  return dedupeByImage([
+    ...(Array.isArray(admin) ? admin : []),
+    ...(Array.isArray(sellers) ? sellers : []),
+    ...staticProducts,
+  ])
 }
 
 /** @deprecated Prefer getProducts() so admin-added items are included */

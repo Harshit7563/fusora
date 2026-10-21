@@ -3,6 +3,8 @@ import { adminLogout, isAdminLoggedIn } from '../lib/adminCatalog'
 import {
   LayoutDashboard,
   Package,
+  ShoppingBag,
+  Store,
   Tags,
   LogOut,
   Menu,
@@ -13,6 +15,8 @@ import { useEffect, useState } from 'react'
 const NAV = [
   { to: '/admin', label: 'Dashboard', icon: LayoutDashboard, end: true },
   { to: '/admin/products', label: 'Products', icon: Package },
+  { to: '/admin/orders', label: 'Orders', icon: ShoppingBag },
+  { to: '/admin/sellers', label: 'Sellers', icon: Store },
   { to: '/admin/categories', label: 'Categories', icon: Tags },
 ]
 

@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom'
 import {
+  COMPANY_CIN,
+  COMPANY_GSTIN,
   COMPANY_NAME,
-  SITE_DOMAIN,
-  SITE_URL,
   SUPPORT_EMAIL,
   SUPPORT_MAILTO,
 } from '../brand'
@@ -27,6 +27,7 @@ const cols = [
       { label: 'Track order', to: '/orders' },
       { label: 'Wishlist', to: '/wishlist' },
       { label: 'Account', to: '/account' },
+      { label: 'Sell on Fusora', to: '/sell' },
       { label: 'Contact us', to: '/support' },
       { label: 'About us', to: '/about' },
     ],
@@ -39,6 +40,14 @@ const cols = [
       { label: 'Shipping & Delivery', to: '/policies/shipping-policy' },
       { label: 'Return & Refund', to: '/policies/return-refund-policy' },
       { label: 'Disclaimer', to: '/policies/disclaimer' },
+      {
+        label: 'Grievance Redressal Policy',
+        to: '/policies/grievance-redressal-policy',
+      },
+      {
+        label: 'Cancellation Policy',
+        to: '/policies/cancellation-policy',
+      },
     ],
   },
 ]
@@ -83,12 +92,11 @@ export function Footer() {
       </div>
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-[1200px] flex-col gap-2 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-4">
-          <p className="text-[0.7rem] text-white/50">
-            © {new Date().getFullYear()} {COMPANY_NAME}. Fusora (
-            <a href={SITE_URL} className="hover:text-white">
-              {SITE_DOMAIN}
-            </a>
-            ).
+          <p className="text-[0.7rem] font-bold text-white">
+            © {new Date().getFullYear()} {COMPANY_NAME}. CIN: {COMPANY_CIN}
+          </p>
+          <p className="text-[0.7rem] font-bold text-white">
+            GSTIN: {COMPANY_GSTIN}
           </p>
         </div>
       </div>

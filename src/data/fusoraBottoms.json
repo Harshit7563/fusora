@@ -1,0 +1,350 @@
+[
+  {
+    "id": "fusora-bottom-chino-khaki",
+    "rank": 1,
+    "name": "Classic Chino Trousers — Khaki",
+    "price": 899,
+    "was": 1799,
+    "topDeal": true,
+    "image": "/products/bottoms/chino-khaki-front.svg",
+    "images": [
+      "/products/bottoms/chino-khaki-front.svg",
+      "/products/bottoms/chino-khaki-back.svg"
+    ],
+    "color": "Khaki",
+    "brand": "Fusora",
+    "categoryName": "Bottoms",
+    "categorySlug": "mens-jeans",
+    "collection": "mens-jeans",
+    "gender": "men",
+    "subtype": "jeans",
+    "sizes": [
+      "28",
+      "30",
+      "32",
+      "34",
+      "36"
+    ],
+    "sku": "FUS-BTM-CHINO-KHAKI",
+    "description": "Color: Khaki. Fusora classic chino trousers designed for all-day comfort with a clean, modern fit. Durable breathable fabric, secure pockets and neat finishing — easy to pair with t-shirts, shirts and polos for everyday and smart-casual looks."
+  },
+  {
+    "id": "fusora-bottom-chino-navy",
+    "rank": 2,
+    "name": "Classic Chino Trousers — Navy Blue",
+    "price": 899,
+    "was": 1799,
+    "topDeal": true,
+    "image": "/products/bottoms/chino-navy-front.svg",
+    "images": [
+      "/products/bottoms/chino-navy-front.svg",
+      "/products/bottoms/chino-navy-back.svg"
+    ],
+    "color": "Navy Blue",
+    "brand": "Fusora",
+    "categoryName": "Bottoms",
+    "categorySlug": "mens-jeans",
+    "collection": "mens-jeans",
+    "gender": "men",
+    "subtype": "jeans",
+    "sizes": [
+      "28",
+      "30",
+      "32",
+      "34",
+      "36"
+    ],
+    "sku": "FUS-BTM-CHINO-NAVY",
+    "description": "Color: Navy Blue. Fusora classic chino trousers designed for all-day comfort with a clean, modern fit. Durable breathable fabric, secure pockets and neat finishing — easy to pair with t-shirts, shirts and polos for everyday and smart-casual looks."
+  },
+  {
+    "id": "fusora-bottom-chino-black",
+    "rank": 3,
+    "name": "Classic Chino Trousers — Black",
+    "price": 849,
+    "was": 1699,
+    "topDeal": true,
+    "image": "/products/bottoms/chino-black-front.svg",
+    "images": [
+      "/products/bottoms/chino-black-front.svg",
+      "/products/bottoms/chino-black-back.svg"
+    ],
+    "color": "Black",
+    "brand": "Fusora",
+    "categoryName": "Bottoms",
+    "categorySlug": "mens-jeans",
+    "collection": "mens-jeans",
+    "gender": "men",
+    "subtype": "jeans",
+    "sizes": [
+      "28",
+      "30",
+      "32",
+      "34",
+      "36"
+    ],
+    "sku": "FUS-BTM-CHINO-BLACK",
+    "description": "Color: Black. Fusora classic chino trousers designed for all-day comfort with a clean, modern fit. Durable breathable fabric, secure pockets and neat finishing — easy to pair with t-shirts, shirts and polos for everyday and smart-casual looks."
+  },
+  {
+    "id": "fusora-bottom-chino-olive",
+    "rank": 4,
+    "name": "Classic Chino Trousers — Olive",
+    "price": 899,
+    "was": 1799,
+    "topDeal": true,
+    "image": "/products/bottoms/chino-olive-front.svg",
+    "images": [
+      "/products/bottoms/chino-olive-front.svg",
+      "/products/bottoms/chino-olive-back.svg"
+    ],
+    "color": "Olive",
+    "brand": "Fusora",
+    "categoryName": "Bottoms",
+    "categorySlug": "mens-jeans",
+    "collection": "mens-jeans",
+    "gender": "men",
+    "subtype": "jeans",
+    "sizes": [
+      "28",
+      "30",
+      "32",
+      "34",
+      "36"
+    ],
+    "sku": "FUS-BTM-CHINO-OLIVE",
+    "description": "Color: Olive. Fusora classic chino trousers designed for all-day comfort with a clean, modern fit. Durable breathable fabric, secure pockets and neat finishing — easy to pair with t-shirts, shirts and polos for everyday and smart-casual looks."
+  },
+  {
+    "id": "fusora-bottom-cargo-olive",
+    "rank": 5,
+    "name": "Utility Cargo Pants — Olive Green",
+    "price": 1099,
+    "was": 2199,
+    "topDeal": false,
+    "image": "/products/bottoms/cargo-olive-front.svg",
+    "images": [
+      "/products/bottoms/cargo-olive-front.svg",
+      "/products/bottoms/cargo-olive-back.svg"
+    ],
+    "color": "Olive Green",
+    "brand": "Fusora",
+    "categoryName": "Bottoms",
+    "categorySlug": "mens-jeans",
+    "collection": "mens-jeans",
+    "gender": "men",
+    "subtype": "jeans",
+    "sizes": [
+      "28",
+      "30",
+      "32",
+      "34",
+      "36"
+    ],
+    "sku": "FUS-BTM-CARGO-OLIVE",
+    "description": "Color: Olive Green. Fusora utility cargo pants designed for all-day comfort with a clean, modern fit. Durable breathable fabric, secure pockets and neat finishing — easy to pair with t-shirts, shirts and polos for everyday and smart-casual looks."
+  },
+  {
+    "id": "fusora-bottom-cargo-black",
+    "rank": 6,
+    "name": "Utility Cargo Pants — Black",
+    "price": 1099,
+    "was": 2199,
+    "topDeal": false,
+    "image": "/products/bottoms/cargo-black-front.svg",
+    "images": [
+      "/products/bottoms/cargo-black-front.svg",
+      "/products/bottoms/cargo-black-back.svg"
+    ],
+    "color": "Black",
+    "brand": "Fusora",
+    "categoryName": "Bottoms",
+    "categorySlug": "mens-jeans",
+    "collection": "mens-jeans",
+    "gender": "men",
+    "subtype": "jeans",
+    "sizes": [
+      "28",
+      "30",
+      "32",
+      "34",
+      "36"
+    ],
+    "sku": "FUS-BTM-CARGO-BLACK",
+    "description": "Color: Black. Fusora utility cargo pants designed for all-day comfort with a clean, modern fit. Durable breathable fabric, secure pockets and neat finishing — easy to pair with t-shirts, shirts and polos for everyday and smart-casual looks."
+  },
+  {
+    "id": "fusora-bottom-cargo-beige",
+    "rank": 7,
+    "name": "Utility Cargo Pants — Beige",
+    "price": 1049,
+    "was": 2099,
+    "topDeal": false,
+    "image": "/products/bottoms/cargo-beige-front.svg",
+    "images": [
+      "/products/bottoms/cargo-beige-front.svg",
+      "/products/bottoms/cargo-beige-back.svg"
+    ],
+    "color": "Beige",
+    "brand": "Fusora",
+    "categoryName": "Bottoms",
+    "categorySlug": "mens-jeans",
+    "collection": "mens-jeans",
+    "gender": "men",
+    "subtype": "jeans",
+    "sizes": [
+      "28",
+      "30",
+      "32",
+      "34",
+      "36"
+    ],
+    "sku": "FUS-BTM-CARGO-BEIGE",
+    "description": "Color: Beige. Fusora utility cargo pants designed for all-day comfort with a clean, modern fit. Durable breathable fabric, secure pockets and neat finishing — easy to pair with t-shirts, shirts and polos for everyday and smart-casual looks."
+  },
+  {
+    "id": "fusora-bottom-cargo-charcoal",
+    "rank": 8,
+    "name": "Utility Cargo Pants — Charcoal",
+    "price": 1049,
+    "was": 2099,
+    "topDeal": false,
+    "image": "/products/bottoms/cargo-charcoal-front.svg",
+    "images": [
+      "/products/bottoms/cargo-charcoal-front.svg",
+      "/products/bottoms/cargo-charcoal-back.svg"
+    ],
+    "color": "Charcoal",
+    "brand": "Fusora",
+    "categoryName": "Bottoms",
+    "categorySlug": "mens-jeans",
+    "collection": "mens-jeans",
+    "gender": "men",
+    "subtype": "jeans",
+    "sizes": [
+      "28",
+      "30",
+      "32",
+      "34",
+      "36"
+    ],
+    "sku": "FUS-BTM-CARGO-CHARCOAL",
+    "description": "Color: Charcoal. Fusora utility cargo pants designed for all-day comfort with a clean, modern fit. Durable breathable fabric, secure pockets and neat finishing — easy to pair with t-shirts, shirts and polos for everyday and smart-casual looks."
+  },
+  {
+    "id": "fusora-bottom-trouser-grey",
+    "rank": 9,
+    "name": "Slim Formal Trousers — Grey",
+    "price": 999,
+    "was": 1999,
+    "topDeal": false,
+    "image": "/products/bottoms/trouser-grey-front.svg",
+    "images": [
+      "/products/bottoms/trouser-grey-front.svg",
+      "/products/bottoms/trouser-grey-back.svg"
+    ],
+    "color": "Grey",
+    "brand": "Fusora",
+    "categoryName": "Bottoms",
+    "categorySlug": "mens-jeans",
+    "collection": "mens-jeans",
+    "gender": "men",
+    "subtype": "jeans",
+    "sizes": [
+      "28",
+      "30",
+      "32",
+      "34",
+      "36"
+    ],
+    "sku": "FUS-BTM-TROUSER-GREY",
+    "description": "Color: Grey. Fusora slim formal trousers designed for all-day comfort with a clean, modern fit. Durable breathable fabric, secure pockets and neat finishing — easy to pair with t-shirts, shirts and polos for everyday and smart-casual looks."
+  },
+  {
+    "id": "fusora-bottom-trouser-navy",
+    "rank": 10,
+    "name": "Slim Formal Trousers — Navy",
+    "price": 999,
+    "was": 1999,
+    "topDeal": false,
+    "image": "/products/bottoms/trouser-navy-front.svg",
+    "images": [
+      "/products/bottoms/trouser-navy-front.svg",
+      "/products/bottoms/trouser-navy-back.svg"
+    ],
+    "color": "Navy",
+    "brand": "Fusora",
+    "categoryName": "Bottoms",
+    "categorySlug": "mens-jeans",
+    "collection": "mens-jeans",
+    "gender": "men",
+    "subtype": "jeans",
+    "sizes": [
+      "28",
+      "30",
+      "32",
+      "34",
+      "36"
+    ],
+    "sku": "FUS-BTM-TROUSER-NAVY",
+    "description": "Color: Navy. Fusora slim formal trousers designed for all-day comfort with a clean, modern fit. Durable breathable fabric, secure pockets and neat finishing — easy to pair with t-shirts, shirts and polos for everyday and smart-casual looks."
+  },
+  {
+    "id": "fusora-bottom-trouser-black",
+    "rank": 11,
+    "name": "Slim Formal Trousers — Black",
+    "price": 949,
+    "was": 1899,
+    "topDeal": false,
+    "image": "/products/bottoms/trouser-black-front.svg",
+    "images": [
+      "/products/bottoms/trouser-black-front.svg",
+      "/products/bottoms/trouser-black-back.svg"
+    ],
+    "color": "Black",
+    "brand": "Fusora",
+    "categoryName": "Bottoms",
+    "categorySlug": "mens-jeans",
+    "collection": "mens-jeans",
+    "gender": "men",
+    "subtype": "jeans",
+    "sizes": [
+      "28",
+      "30",
+      "32",
+      "34",
+      "36"
+    ],
+    "sku": "FUS-BTM-TROUSER-BLACK",
+    "description": "Color: Black. Fusora slim formal trousers designed for all-day comfort with a clean, modern fit. Durable breathable fabric, secure pockets and neat finishing — easy to pair with t-shirts, shirts and polos for everyday and smart-casual looks."
+  },
+  {
+    "id": "fusora-bottom-trouser-brown",
+    "rank": 12,
+    "name": "Slim Formal Trousers — Brown",
+    "price": 999,
+    "was": 1999,
+    "topDeal": false,
+    "image": "/products/bottoms/trouser-brown-front.svg",
+    "images": [
+      "/products/bottoms/trouser-brown-front.svg",
+      "/products/bottoms/trouser-brown-back.svg"
+    ],
+    "color": "Brown",
+    "brand": "Fusora",
+    "categoryName": "Bottoms",
+    "categorySlug": "mens-jeans",
+    "collection": "mens-jeans",
+    "gender": "men",
+    "subtype": "jeans",
+    "sizes": [
+      "28",
+      "30",
+      "32",
+      "34",
+      "36"
+    ],
+    "sku": "FUS-BTM-TROUSER-BROWN",
+    "description": "Color: Brown. Fusora slim formal trousers designed for all-day comfort with a clean, modern fit. Durable breathable fabric, secure pockets and neat finishing — easy to pair with t-shirts, shirts and polos for everyday and smart-casual looks."
+  }
+]

@@ -202,8 +202,16 @@ export function ProductPage() {
 
             <p className="mt-3 text-xs tracking-[0.08em] text-[#666666]">
               SKU: {details.sku}
+              {product.sellerShop ? (
+                <>
+                  {' '}
+                  · Sold by{' '}
+                  <span className="font-semibold text-[#cf2028]">
+                    {product.sellerShop}
+                  </span>
+                </>
+              ) : null}
             </p>
-
             {product.tab === 'jewelry-eyewear-watches' && (
               <div className="mt-4 border border-[#cf2028] bg-[#fff5f5] px-3 py-3 text-sm leading-snug text-[#070001]">
                 <p className="font-heading text-base tracking-wide text-[#cf2028]">
@@ -497,11 +505,11 @@ export function ProductPage() {
                   ))}
                   <li className="flex gap-2">
                     <Check className="mt-0.5 size-3.5 shrink-0 text-[#cf2028]" />
-                    Delivery in 2–5 business days
+                    Delivery in 1–7 days
                   </li>
                   <li className="flex gap-2">
                     <Check className="mt-0.5 size-3.5 shrink-0 text-[#cf2028]" />
-                    Easy returns within 15 days with receipt
+                    Easy returns within 7 days with receipt
                   </li>
                 </ul>
               </Accordion>

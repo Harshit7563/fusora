@@ -6,6 +6,7 @@ import {
   loadAdminCategories,
   type AdminCategory,
 } from '../lib/adminCatalog'
+import { ensureSellerProductsLoaded } from '../lib/sellerCatalog'
 
 export function useCatalog() {
   const [products, setProducts] = useState<Product[]>(() => getProducts())
@@ -23,7 +24,10 @@ export function useCatalog() {
   }
 
   useEffect(() => {
-    void ensureAdminProductsLoaded().then(() => refresh())
+    void Promise.all([
+      ensureAdminProductsLoaded(),
+      ensureSellerProductsLoaded(),
+    ]).then(() => refresh())
     window.addEventListener('fusora-catalog-change', refresh)
     window.addEventListener('storage', refresh)
     return () => {

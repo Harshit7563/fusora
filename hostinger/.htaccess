@@ -16,6 +16,12 @@ DirectoryIndex index.html
   RewriteRule ^api/otp/send/?$ api/otp/send.php [L,QSA]
   RewriteRule ^api/otp/verify/?$ api/otp/verify.php [L,QSA]
 
+  # Seller marketplace API
+  RewriteRule ^api/seller/register/?$ api/seller/register.php [L,QSA]
+  RewriteRule ^api/seller/login/?$ api/seller/login.php [L,QSA]
+  RewriteRule ^api/seller/me/?$ api/seller/me.php [L,QSA]
+  RewriteRule ^api/seller/products/?$ api/seller/products.php [L,QSA]
+
   # React Router SPA fallback
   RewriteRule ^ index.html [L]
 </IfModule>
@@ -27,5 +33,8 @@ DirectoryIndex index.html
   </FilesMatch>
   <FilesMatch "index\.html$">
     Header set Cache-Control "no-cache"
+  </FilesMatch>
+  <FilesMatch "^config\.js$">
+    Header set Cache-Control "no-store, no-cache, must-revalidate"
   </FilesMatch>
 </IfModule>

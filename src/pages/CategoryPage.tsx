@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react'
-import { Link, Navigate, useParams } from 'react-router-dom'
+import { useEffect, useMemo, useState } from 'react'
+import { Link, Navigate, useParams, useSearchParams } from 'react-router-dom'
 import { getCategory } from '../categories'
 import {
   ALL_APPAREL_SUBTYPES,
@@ -17,8 +17,15 @@ import { getProductGender, matchesGender, type Gender } from '../lib/gender'
 export function CategoryPage() {
   const { tab, subtype: subtypeParam, collection: collectionParam } =
     useParams()
+  const [searchParams] = useSearchParams()
+  const showAll = searchParams.get('all') === '1'
   const { products } = useCatalog()
   const [sort, setSort] = useState('featured')
+  const [visibleCount, setVisibleCount] = useState(48)
+
+  useEffect(() => {
+    setVisibleCount(48)
+  }, [tab, subtypeParam, collectionParam, showAll])
 
   const active = (tab as CategoryId) || 'apparel-accessories'
   const meta = getCategory(active)
@@ -96,14 +103,18 @@ export function CategoryPage() {
   }, [active, isApparel, subtype, collection, shopGender, products, sort])
 
   const genderSubtypes = useMemo(() => {
-    if (active === 'men') return apparelSubtypes.filter((s) => s.id !== 'sarees')
+    if (active === 'men')
+      return apparelSubtypes.filter(
+        (s) => s.id !== 'sarees' && s.id !== 'dresses',
+      )
     return apparelSubtypes
   }, [active])
 
   const subtypeMeta = apparelSubtypes.find((s) => s.id === subtype)
   const denimMeta = denimCollections.find((c) => c.id === denimCollection)
-  const showGenderLanding = isGenderShop && !subtype
-  const showApparelLanding = isApparel && !subtype
+  // "All" (?all=1) shows every product as a grid — no category tiles
+  const showGenderLanding = isGenderShop && !subtype && !showAll
+  const showApparelLanding = isApparel && !subtype && !showAll
   const showJeansLanding = subtype === 'jeans' && !denimCollection
 
   const title = denimMeta?.label || subtypeMeta?.label || meta.label
@@ -155,33 +166,43 @@ export function CategoryPage() {
         {(isApparel || isGenderShop) && (
           <div className="mb-7 flex flex-wrap gap-2">
             <Link
-              to={`/category/${active}`}
+              to={`/category/${active}?all=1`}
               className="chip"
-              data-active={!subtype}
+              data-active={!subtype && showAll}
             >
               All
             </Link>
-            {genderSubtypes.map((s) => (
-              <Link
-                key={s.id}
-                to={`/category/${active}/${s.id}`}
-                className="chip"
-                data-active={subtype === s.id}
-              >
-                {s.label}
-              </Link>
-            ))}
+            {genderSubtypes
+              .filter((s) => {
+                if (!shopGender) return true
+                return products.some(
+                  (p) => p.subtype === s.id && matchesGender(p, shopGender),
+                )
+              })
+              .map((s) => (
+                <Link
+                  key={s.id}
+                  to={`/category/${active}/${s.id}`}
+                  className="chip"
+                  data-active={subtype === s.id}
+                >
+                  {s.label}
+                </Link>
+              ))}
           </div>
         )}
 
         {(showApparelLanding || showGenderLanding) && (
           <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
             {genderSubtypes.map((s) => {
-              const count = products.filter((p) => {
+              const matching = products.filter((p) => {
                 if (p.subtype !== s.id) return false
                 if (shopGender) return matchesGender(p, shopGender)
                 return p.tab === 'apparel-accessories'
-              }).length
+              })
+              const count = matching.length
+              // On Men/Women pages, never show an empty or wrong-gender tile
+              if (shopGender && count === 0) return null
               return (
                 <Link
                   key={s.id}
@@ -189,7 +210,7 @@ export function CategoryPage() {
                   className="group relative aspect-[3/4] overflow-hidden"
                 >
                   <SafeImage
-                    src={s.image}
+                    src={matching[0]?.image || s.image}
                     alt={s.label}
                     className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                   />
@@ -211,12 +232,14 @@ export function CategoryPage() {
         {showJeansLanding && (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {genderDenimCollections.map((c) => {
-              const count = products.filter(
+              const matching = products.filter(
                 (p) =>
                   p.subtype === 'jeans' &&
                   p.collection === c.id &&
                   (!shopGender || matchesGender(p, shopGender)),
-              ).length
+              )
+              const count = matching.length
+              if (shopGender && count === 0) return null
               const jeansBase = isGenderShop
                 ? `/category/${active}/jeans`
                 : '/category/apparel-accessories/jeans'
@@ -227,7 +250,7 @@ export function CategoryPage() {
                   className="group relative aspect-[3/4] overflow-hidden"
                 >
                   <SafeImage
-                    src={c.image}
+                    src={matching[0]?.image || c.image}
                     alt={c.label}
                     className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                   />
@@ -285,11 +308,26 @@ export function CategoryPage() {
                 </Link>
               </div>
             ) : (
-              <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
-                {list.map((p) => (
-                  <ProductCard key={p.id} product={p} />
-                ))}
-              </div>
+              <>
+                <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
+                  {list.slice(0, visibleCount).map((p) => (
+                    <ProductCard key={p.id} product={p} />
+                  ))}
+                </div>
+                {list.length > visibleCount && (
+                  <div className="mt-8 text-center">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setVisibleCount((c) => c + 48)
+                      }
+                      className="btn-primary-solid inline-flex"
+                    >
+                      Load more products ({list.length - visibleCount} more)
+                    </button>
+                  </div>
+                )}
+              </>
             )}
           </>
         )}

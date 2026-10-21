@@ -1,0 +1,362 @@
+[
+  {
+    "id": "fusora-dress-white-offshoulder",
+    "rank": 1,
+    "name": "Off-Shoulder Summer Dress — White",
+    "price": 1099,
+    "was": 2199,
+    "topDeal": true,
+    "image": "/products/dresses/white-offshoulder.jpg",
+    "images": [
+      "/products/dresses/white-offshoulder.jpg",
+      "/products/dresses/white-offshoulder-detail.jpg"
+    ],
+    "color": "White",
+    "brand": "Fusora",
+    "categoryName": "Dresses",
+    "categorySlug": "womens-dresses",
+    "collection": "womens-dresses",
+    "gender": "women",
+    "subtype": "dresses",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "sku": "FUS-DRS-WHITE-OFFSHOULDER",
+    "description": "Color: White. Fusora off-shoulder summer dress with a flattering feminine silhouette and easy all-day comfort. Soft breathable fabric with a smooth finish — styled for brunches, outings, festive days and evening plans."
+  },
+  {
+    "id": "fusora-dress-scarlet-maxi",
+    "rank": 2,
+    "name": "Scarlet Flowy Maxi Gown — Red",
+    "price": 1499,
+    "was": 2999,
+    "topDeal": true,
+    "image": "/products/dresses/scarlet-maxi.jpg",
+    "images": [
+      "/products/dresses/scarlet-maxi.jpg",
+      "/products/dresses/scarlet-maxi-detail.jpg"
+    ],
+    "color": "Red",
+    "brand": "Fusora",
+    "categoryName": "Dresses",
+    "categorySlug": "womens-dresses",
+    "collection": "womens-dresses",
+    "gender": "women",
+    "subtype": "dresses",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "sku": "FUS-DRS-SCARLET-MAXI",
+    "description": "Color: Red. Fusora scarlet flowy maxi gown with a flattering feminine silhouette and easy all-day comfort. Soft breathable fabric with a smooth finish — styled for brunches, outings, festive days and evening plans."
+  },
+  {
+    "id": "fusora-dress-red-floral-fitflare",
+    "rank": 3,
+    "name": "Red Floral Fit & Flare Dress — Red Floral",
+    "price": 1199,
+    "was": 2399,
+    "topDeal": true,
+    "image": "/products/dresses/red-floral-fitflare.jpg",
+    "images": [
+      "/products/dresses/red-floral-fitflare.jpg",
+      "/products/dresses/red-floral-fitflare-detail.jpg"
+    ],
+    "color": "Red Floral",
+    "brand": "Fusora",
+    "categoryName": "Dresses",
+    "categorySlug": "womens-dresses",
+    "collection": "womens-dresses",
+    "gender": "women",
+    "subtype": "dresses",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "sku": "FUS-DRS-RED-FLORAL-FITFLARE",
+    "description": "Color: Red Floral. Fusora red floral fit & flare dress with a flattering feminine silhouette and easy all-day comfort. Soft breathable fabric with a smooth finish — styled for brunches, outings, festive days and evening plans."
+  },
+  {
+    "id": "fusora-dress-ivory-floral-wrap",
+    "rank": 4,
+    "name": "Ivory Floral Wrap Dress — Ivory Floral",
+    "price": 1149,
+    "was": 2299,
+    "topDeal": true,
+    "image": "/products/dresses/ivory-floral-wrap.jpg",
+    "images": [
+      "/products/dresses/ivory-floral-wrap.jpg",
+      "/products/dresses/ivory-floral-wrap-detail.jpg"
+    ],
+    "color": "Ivory Floral",
+    "brand": "Fusora",
+    "categoryName": "Dresses",
+    "categorySlug": "womens-dresses",
+    "collection": "womens-dresses",
+    "gender": "women",
+    "subtype": "dresses",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "sku": "FUS-DRS-IVORY-FLORAL-WRAP",
+    "description": "Color: Ivory Floral. Fusora ivory floral wrap dress with a flattering feminine silhouette and easy all-day comfort. Soft breathable fabric with a smooth finish — styled for brunches, outings, festive days and evening plans."
+  },
+  {
+    "id": "fusora-dress-denim-shirt",
+    "rank": 5,
+    "name": "Denim Shirt Midi Dress — Denim Blue",
+    "price": 1049,
+    "was": 2099,
+    "topDeal": false,
+    "image": "/products/dresses/denim-shirt-v2.jpg",
+    "images": [
+      "/products/dresses/denim-shirt-v2.jpg",
+      "/products/dresses/denim-shirt-detail-v2.jpg"
+    ],
+    "color": "Denim Blue",
+    "brand": "Fusora",
+    "categoryName": "Dresses",
+    "categorySlug": "womens-dresses",
+    "collection": "womens-dresses",
+    "gender": "women",
+    "subtype": "dresses",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "sku": "FUS-DRS-DENIM-SHIRT",
+    "description": "Color: Denim Blue. Fusora denim shirt midi dress with a flattering feminine silhouette and easy all-day comfort. Soft breathable fabric with a smooth finish — styled for brunches, outings, festive days and evening plans."
+  },
+  {
+    "id": "fusora-dress-plum-evening",
+    "rank": 6,
+    "name": "Plum Off-Shoulder Evening Dress — Plum",
+    "price": 1599,
+    "was": 3199,
+    "topDeal": false,
+    "image": "/products/dresses/plum-evening-v2.jpg",
+    "images": [
+      "/products/dresses/plum-evening-v2.jpg",
+      "/products/dresses/plum-evening-detail-v2.jpg"
+    ],
+    "color": "Plum",
+    "brand": "Fusora",
+    "categoryName": "Dresses",
+    "categorySlug": "womens-dresses",
+    "collection": "womens-dresses",
+    "gender": "women",
+    "subtype": "dresses",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "sku": "FUS-DRS-PLUM-EVENING",
+    "description": "Color: Plum. Fusora plum off-shoulder evening dress with a flattering feminine silhouette and easy all-day comfort. Soft breathable fabric with a smooth finish — styled for brunches, outings, festive days and evening plans."
+  },
+  {
+    "id": "fusora-dress-powder-blue-long",
+    "rank": 7,
+    "name": "Powder Blue Belted Long Dress — Powder Blue",
+    "price": 1399,
+    "was": 2799,
+    "topDeal": false,
+    "image": "/products/dresses/powder-blue-long-v2.jpg",
+    "images": [
+      "/products/dresses/powder-blue-long-v2.jpg",
+      "/products/dresses/powder-blue-long-detail-v2.jpg"
+    ],
+    "color": "Powder Blue",
+    "brand": "Fusora",
+    "categoryName": "Dresses",
+    "categorySlug": "womens-dresses",
+    "collection": "womens-dresses",
+    "gender": "women",
+    "subtype": "dresses",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "sku": "FUS-DRS-POWDER-BLUE-LONG",
+    "description": "Color: Powder Blue. Fusora powder blue belted long dress with a flattering feminine silhouette and easy all-day comfort. Soft breathable fabric with a smooth finish — styled for brunches, outings, festive days and evening plans."
+  },
+  {
+    "id": "fusora-dress-burgundy-shirt-midi",
+    "rank": 8,
+    "name": "Burgundy Shirt Midi Dress — Burgundy",
+    "price": 1199,
+    "was": 2399,
+    "topDeal": false,
+    "image": "/products/dresses/burgundy-shirt-midi.jpg",
+    "images": [
+      "/products/dresses/burgundy-shirt-midi.jpg",
+      "/products/dresses/burgundy-shirt-midi-detail.jpg"
+    ],
+    "color": "Burgundy",
+    "brand": "Fusora",
+    "categoryName": "Dresses",
+    "categorySlug": "womens-dresses",
+    "collection": "womens-dresses",
+    "gender": "women",
+    "subtype": "dresses",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "sku": "FUS-DRS-BURGUNDY-SHIRT-MIDI",
+    "description": "Color: Burgundy. Fusora burgundy shirt midi dress with a flattering feminine silhouette and easy all-day comfort. Soft breathable fabric with a smooth finish — styled for brunches, outings, festive days and evening plans."
+  },
+  {
+    "id": "fusora-dress-red-polka",
+    "rank": 9,
+    "name": "Red Polka Dot Day Dress — Red Polka",
+    "price": 999,
+    "was": 1999,
+    "topDeal": false,
+    "image": "/products/dresses/red-polka.jpg",
+    "images": [
+      "/products/dresses/red-polka.jpg",
+      "/products/dresses/red-polka-detail.jpg"
+    ],
+    "color": "Red Polka",
+    "brand": "Fusora",
+    "categoryName": "Dresses",
+    "categorySlug": "womens-dresses",
+    "collection": "womens-dresses",
+    "gender": "women",
+    "subtype": "dresses",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "sku": "FUS-DRS-RED-POLKA",
+    "description": "Color: Red Polka. Fusora red polka dot day dress with a flattering feminine silhouette and easy all-day comfort. Soft breathable fabric with a smooth finish — styled for brunches, outings, festive days and evening plans."
+  },
+  {
+    "id": "fusora-dress-pink-floral-puff",
+    "rank": 10,
+    "name": "Pink Floral Puff-Sleeve Dress — Pink Floral",
+    "price": 1249,
+    "was": 2499,
+    "topDeal": false,
+    "image": "/products/dresses/pink-floral-puff.jpg",
+    "images": [
+      "/products/dresses/pink-floral-puff.jpg",
+      "/products/dresses/pink-floral-puff-detail.jpg"
+    ],
+    "color": "Pink Floral",
+    "brand": "Fusora",
+    "categoryName": "Dresses",
+    "categorySlug": "womens-dresses",
+    "collection": "womens-dresses",
+    "gender": "women",
+    "subtype": "dresses",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "sku": "FUS-DRS-PINK-FLORAL-PUFF",
+    "description": "Color: Pink Floral. Fusora pink floral puff-sleeve dress with a flattering feminine silhouette and easy all-day comfort. Soft breathable fabric with a smooth finish — styled for brunches, outings, festive days and evening plans."
+  },
+  {
+    "id": "fusora-dress-blush-floral-maxi",
+    "rank": 11,
+    "name": "Blush Floral Maxi Dress — Blush Floral",
+    "price": 1499,
+    "was": 2999,
+    "topDeal": false,
+    "image": "/products/dresses/blush-floral-maxi.jpg",
+    "images": [
+      "/products/dresses/blush-floral-maxi.jpg",
+      "/products/dresses/blush-floral-maxi-detail.jpg"
+    ],
+    "color": "Blush Floral",
+    "brand": "Fusora",
+    "categoryName": "Dresses",
+    "categorySlug": "womens-dresses",
+    "collection": "womens-dresses",
+    "gender": "women",
+    "subtype": "dresses",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "sku": "FUS-DRS-BLUSH-FLORAL-MAXI",
+    "description": "Color: Blush Floral. Fusora blush floral maxi dress with a flattering feminine silhouette and easy all-day comfort. Soft breathable fabric with a smooth finish — styled for brunches, outings, festive days and evening plans."
+  },
+  {
+    "id": "fusora-dress-mustard-wrap",
+    "rank": 12,
+    "name": "Mustard Wrap Midi Dress — Mustard",
+    "price": 1099,
+    "was": 2199,
+    "topDeal": false,
+    "image": "/products/dresses/mustard-wrap.jpg",
+    "images": [
+      "/products/dresses/mustard-wrap.jpg",
+      "/products/dresses/mustard-wrap-detail.jpg"
+    ],
+    "color": "Mustard",
+    "brand": "Fusora",
+    "categoryName": "Dresses",
+    "categorySlug": "womens-dresses",
+    "collection": "womens-dresses",
+    "gender": "women",
+    "subtype": "dresses",
+    "sizes": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "sku": "FUS-DRS-MUSTARD-WRAP",
+    "description": "Color: Mustard. Fusora mustard wrap midi dress with a flattering feminine silhouette and easy all-day comfort. Soft breathable fabric with a smooth finish — styled for brunches, outings, festive days and evening plans."
+  }
+]
