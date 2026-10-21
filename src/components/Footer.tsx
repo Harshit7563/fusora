@@ -8,7 +8,6 @@ import {
   ShieldCheck,
   Smartphone,
   Truck,
-  Zap,
 } from 'lucide-react'
 
 import {
@@ -140,8 +139,13 @@ export function Footer() {
               <ShieldCheck className="size-4 text-[#1f8a3b]" />
               100% Secure Payments:
             </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#dcdcdc] bg-white px-3 py-1.5 font-semibold text-[#3d3d3d]">
+              <span className="grid size-4 place-items-center rounded-[4px] bg-[#2b6cf5] text-[0.6rem] font-black text-white italic">
+                R
+              </span>
+              Razorpay
+            </span>
             {[
-              { label: 'Razorpay', Icon: Zap },
               { label: 'UPI', Icon: Smartphone },
               { label: 'Cards', Icon: CreditCard },
               { label: 'Net Banking', Icon: Landmark },
