@@ -5,9 +5,16 @@ import {
   BadgeIndianRupee,
   CheckCircle2,
   Clock3,
+  Eye,
+  EyeOff,
+  Lock,
+  Mail,
   PackageCheck,
+  Phone,
   Store,
   Truck,
+  User,
+  Wallet,
   X,
 } from 'lucide-react'
 import { usePageTitle } from '../../hooks/usePageTitle'
@@ -19,6 +26,8 @@ import {
 
 const field =
   'mt-1.5 w-full rounded-xl border border-[#e7e2dc] bg-[#faf8f4] px-4 py-3 text-sm outline-none transition focus:border-[#cf2028] focus:bg-white'
+const iconCls =
+  'pointer-events-none absolute top-1/2 left-3.5 size-[1.05rem] -translate-y-1/2 text-[#b3aca4]'
 
 const perks = [
   {
@@ -56,6 +65,8 @@ export function SellPage() {
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
+  const [showRegPass, setShowRegPass] = useState(false)
+  const [showLoginPass, setShowLoginPass] = useState(false)
 
   const [reg, setReg] = useState({
     shopName: '',
@@ -202,90 +213,124 @@ export function SellPage() {
             </div>
 
             {mode === 'register' ? (
-              <form onSubmit={onRegister} className="mt-6 space-y-4">
+              <form onSubmit={onRegister} className="mt-6">
+                <h2 className="font-heading text-3xl tracking-wide text-[#141414] uppercase">
+                  Create your seller account
+                </h2>
+                <p className="mt-1 text-xs text-[#96938b]">
+                  Free registration — your shop can start selling after a
+                  quick approval.
+                </p>
+                <div className="mt-5 space-y-4">
                 <label className="block text-[0.7rem] font-bold tracking-[0.12em] text-[#141414] uppercase">
                   Shop name
-                  <input
-                    className={field}
-                    required
-                    value={reg.shopName}
-                    onChange={(e) =>
-                      setReg((r) => ({ ...r, shopName: e.target.value }))
-                    }
-                    placeholder="e.g. Meera Silk House"
-                  />
+                  <span className="relative mt-1.5 block">
+                    <Store className={iconCls} />
+                    <input
+                      className={`${field} mt-0 pl-11`}
+                      required
+                      value={reg.shopName}
+                      onChange={(e) =>
+                        setReg((r) => ({ ...r, shopName: e.target.value }))
+                      }
+                      placeholder="e.g. Meera Silk House"
+                    />
+                  </span>
                 </label>
                 <label className="block text-[0.7rem] font-bold tracking-[0.12em] text-[#141414] uppercase">
                   Owner name
-                  <input
-                    className={field}
-                    required
-                    value={reg.ownerName}
-                    onChange={(e) =>
-                      setReg((r) => ({ ...r, ownerName: e.target.value }))
-                    }
-                    placeholder="Your full name"
-                  />
+                  <span className="relative mt-1.5 block">
+                    <User className={iconCls} />
+                    <input
+                      className={`${field} mt-0 pl-11`}
+                      required
+                      value={reg.ownerName}
+                      onChange={(e) =>
+                        setReg((r) => ({ ...r, ownerName: e.target.value }))
+                      }
+                      placeholder="Your full name"
+                    />
+                  </span>
                 </label>
                 <div className="grid gap-4 sm:grid-cols-2">
                   <label className="block text-[0.7rem] font-bold tracking-[0.12em] text-[#141414] uppercase">
                     Email
-                    <input
-                      className={field}
-                      type="email"
-                      required
-                      value={reg.email}
-                      onChange={(e) =>
-                        setReg((r) => ({ ...r, email: e.target.value }))
-                      }
-                      placeholder="you@shop.com"
-                    />
+                    <span className="relative mt-1.5 block">
+                      <Mail className={iconCls} />
+                      <input
+                        className={`${field} mt-0 pl-11`}
+                        type="email"
+                        required
+                        value={reg.email}
+                        onChange={(e) =>
+                          setReg((r) => ({ ...r, email: e.target.value }))
+                        }
+                        placeholder="you@shop.com"
+                      />
+                    </span>
                   </label>
                   <label className="block text-[0.7rem] font-bold tracking-[0.12em] text-[#141414] uppercase">
                     Mobile
-                    <input
-                      className={field}
-                      inputMode="numeric"
-                      required
-                      maxLength={10}
-                      value={reg.phone}
-                      onChange={(e) =>
-                        setReg((r) => ({
-                          ...r,
-                          phone: e.target.value.replace(/\D/g, '').slice(0, 10),
-                        }))
-                      }
-                      placeholder="10-digit mobile"
-                    />
+                    <span className="relative mt-1.5 block">
+                      <Phone className={iconCls} />
+                      <input
+                        className={`${field} mt-0 pl-11`}
+                        inputMode="numeric"
+                        required
+                        maxLength={10}
+                        value={reg.phone}
+                        onChange={(e) =>
+                          setReg((r) => ({
+                            ...r,
+                            phone: e.target.value.replace(/\D/g, '').slice(0, 10),
+                          }))
+                        }
+                        placeholder="10-digit mobile"
+                      />
+                    </span>
                   </label>
                 </div>
                 <label className="block text-[0.7rem] font-bold tracking-[0.12em] text-[#141414] uppercase">
                   Password
-                  <input
-                    className={field}
-                    type="password"
-                    required
-                    minLength={6}
-                    value={reg.password}
-                    onChange={(e) =>
-                      setReg((r) => ({ ...r, password: e.target.value }))
-                    }
-                    placeholder="Minimum 6 characters"
-                  />
+                  <span className="relative mt-1.5 block">
+                    <Lock className={iconCls} />
+                    <input
+                      className={`${field} mt-0 pr-11 pl-11`}
+                      type={showRegPass ? 'text' : 'password'}
+                      required
+                      minLength={6}
+                      value={reg.password}
+                      onChange={(e) =>
+                        setReg((r) => ({ ...r, password: e.target.value }))
+                      }
+                      placeholder="Minimum 6 characters"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowRegPass((s) => !s)}
+                      aria-label={showRegPass ? 'Hide password' : 'Show password'}
+                      className="absolute top-1/2 right-3 grid size-7 -translate-y-1/2 place-items-center rounded-full text-[#96938b] transition hover:text-[#141414]"
+                    >
+                      {showRegPass ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                    </button>
+                  </span>
                 </label>
                 <label className="block text-[0.7rem] font-bold tracking-[0.12em] text-[#141414] uppercase">
                   Payout UPI ID{' '}
                   <span className="font-semibold text-[#96938b] normal-case">
                     (where you receive payments)
                   </span>
-                  <input
-                    className={field}
-                    value={reg.payoutUpi}
-                    onChange={(e) =>
-                      setReg((r) => ({ ...r, payoutUpi: e.target.value }))
-                    }
-                    placeholder="e.g. yourname@okhdfcbank"
-                  />
+                  <span className="relative mt-1.5 block">
+                    <Wallet className={iconCls} />
+                    <input
+                      className={`${field} mt-0 pl-11`}
+                      value={reg.payoutUpi}
+                      onChange={(e) =>
+                        setReg((r) => ({ ...r, payoutUpi: e.target.value }))
+                      }
+                      placeholder="e.g. yourname@okhdfcbank"
+                    />
+                  </span>
                 </label>
                 <p className="rounded-xl bg-[#f8f6ee] px-3.5 py-2.5 text-xs leading-5 text-[#6a6667]">
                   Fusora marketplace commission is 10%. Payouts are settled
@@ -304,31 +349,55 @@ export function SellPage() {
                 >
                   {busy ? 'Creating…' : 'Create seller account'}
                 </button>
+                </div>
               </form>
             ) : (
-              <form onSubmit={onLogin} className="mt-6 space-y-4">
+              <form onSubmit={onLogin} className="mt-6">
+                <h2 className="font-heading text-3xl tracking-wide text-[#141414] uppercase">
+                  Welcome back, seller
+                </h2>
+                <p className="mt-1 text-xs text-[#96938b]">
+                  Login to manage your products, orders and payouts.
+                </p>
+                <div className="mt-5 space-y-4">
                 <label className="block text-[0.7rem] font-bold tracking-[0.12em] text-[#141414] uppercase">
                   Email or mobile
-                  <input
-                    className={field}
-                    required
-                    value={login.email}
-                    onChange={(e) =>
-                      setLogin((l) => ({ ...l, email: e.target.value }))
-                    }
-                  />
+                  <span className="relative mt-1.5 block">
+                    <Mail className={iconCls} />
+                    <input
+                      className={`${field} mt-0 pl-11`}
+                      required
+                      value={login.email}
+                      onChange={(e) =>
+                        setLogin((l) => ({ ...l, email: e.target.value }))
+                      }
+                      placeholder="Registered email or mobile"
+                    />
+                  </span>
                 </label>
                 <label className="block text-[0.7rem] font-bold tracking-[0.12em] text-[#141414] uppercase">
                   Password
-                  <input
-                    className={field}
-                    type="password"
-                    required
-                    value={login.password}
-                    onChange={(e) =>
-                      setLogin((l) => ({ ...l, password: e.target.value }))
-                    }
-                  />
+                  <span className="relative mt-1.5 block">
+                    <Lock className={iconCls} />
+                    <input
+                      className={`${field} mt-0 pr-11 pl-11`}
+                      type={showLoginPass ? 'text' : 'password'}
+                      required
+                      value={login.password}
+                      onChange={(e) =>
+                        setLogin((l) => ({ ...l, password: e.target.value }))
+                      }
+                      placeholder="Your password"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowLoginPass((s) => !s)}
+                      aria-label={showLoginPass ? 'Hide password' : 'Show password'}
+                      className="absolute top-1/2 right-3 grid size-7 -translate-y-1/2 place-items-center rounded-full text-[#96938b] transition hover:text-[#141414]"
+                    >
+                      {showLoginPass ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                    </button>
+                  </span>
                 </label>
                 {error && (
                   <p className="rounded-xl bg-red-50 px-3.5 py-2.5 text-sm text-[#cf2028]">
@@ -342,6 +411,12 @@ export function SellPage() {
                 >
                   {busy ? 'Signing in…' : 'Seller login'}
                 </button>
+                <p className="flex items-center justify-center gap-1.5 pt-1 text-center text-xs text-[#96938b]">
+                  <Clock3 className="size-3.5 shrink-0 text-[#cf2028]" />
+                  Forgot your password? Our team can help between 9:00 AM
+                  and 6:00 PM — write to shopsupportfusora@gmail.com
+                </p>
+                </div>
               </form>
             )}
 
