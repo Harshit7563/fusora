@@ -45,71 +45,71 @@ export function Layout() {
       <LocationModal />
       <NewsletterPopup />
 
-      {/* Wishlist popup - right side, auto-dismiss in 3s */}
+      {/* Wishlist popup - bottom, Fusora dark theme, auto-dismiss in 3s */}
       <AnimatePresence>
         {wishToast && (
           <motion.div
             key={wishToast.key}
-            initial={{ opacity: 0, x: 60 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 60 }}
-            transition={{ duration: 0.25, ease: 'easeOut' }}
-            className="fixed top-24 right-3 z-[85] w-[min(92vw,21rem)] overflow-hidden rounded-2xl border border-[#f0e7da] bg-white shadow-[0_16px_44px_rgba(0,0,0,0.16)] sm:right-5"
+            initial={{ opacity: 0, y: 48 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 48 }}
+            transition={{ duration: 0.28, ease: 'easeOut' }}
+            className="fixed right-3 bottom-[max(1rem,env(safe-area-inset-bottom))] left-3 z-[85] sm:left-auto sm:w-[23rem] sm:right-5"
             role="status"
           >
-            <div className="flex items-center gap-3 px-3.5 py-3">
-              <span className="relative shrink-0">
-                {wishProduct?.image ? (
-                  <img
-                    src={wishProduct.image}
-                    alt=""
-                    className="size-12 rounded-xl object-cover"
-                  />
-                ) : (
-                  <span className="grid size-12 place-items-center rounded-xl bg-[#cf2028]/10">
-                    <Heart className="size-5 fill-[#cf2028] text-[#cf2028]" />
+            <div className="relative overflow-hidden rounded-3xl bg-[#141414] shadow-[0_20px_50px_rgba(0,0,0,0.35)] ring-1 ring-white/10">
+              <div className="flex items-center gap-3 px-4 py-3.5">
+                <span className="relative shrink-0">
+                  {wishProduct?.image ? (
+                    <img
+                      src={wishProduct.image}
+                      alt=""
+                      className="size-14 rounded-2xl object-cover ring-1 ring-white/15"
+                    />
+                  ) : (
+                    <span className="grid size-14 place-items-center rounded-2xl bg-[#cf2028]/20">
+                      <Heart className="size-6 fill-[#cf2028] text-[#cf2028]" />
+                    </span>
+                  )}
+                  <span className="absolute -right-1.5 -bottom-1.5 grid size-5 place-items-center rounded-full bg-[#cf2028] ring-2 ring-[#141414]">
+                    <Heart className="size-3 fill-white text-white" />
                   </span>
-                )}
-                <span className="absolute -right-1.5 -bottom-1.5 grid size-5 place-items-center rounded-full bg-[#cf2028] text-white">
-                  <Heart className="size-3 fill-white" />
                 </span>
-              </span>
-              <div className="min-w-0 flex-1">
-                <p className="text-sm font-bold text-[#141414]">
-                  {wishToast.added
-                    ? 'Added to wishlist'
-                    : 'Removed from wishlist'}
-                </p>
-                {wishProduct && (
-                  <p className="line-clamp-1 text-xs text-[#6a6667]">
-                    {wishProduct.name}
+                <div className="min-w-0 flex-1">
+                  <p className="flex items-center gap-1.5 font-heading text-lg leading-none tracking-wide text-white uppercase">
+                    {wishToast.added ? 'Added to wishlist' : 'Removed'}
                   </p>
-                )}
+                  {wishProduct && (
+                    <p className="mt-1 line-clamp-1 text-xs text-white/65">
+                      {wishProduct.name}
+                    </p>
+                  )}
+                </div>
                 {wishToast.added && (
                   <Link
                     to="/wishlist"
                     onClick={dismissWishToast}
-                    className="mt-0.5 inline-block text-xs font-bold text-[#cf2028] hover:underline"
+                    className="shrink-0 rounded-full bg-[#cf2028] px-4 py-2 text-[0.65rem] font-bold tracking-[0.12em] text-white uppercase transition hover:bg-white hover:text-[#141414]"
                   >
-                    View wishlist →
+                    View
                   </Link>
                 )}
+                <button
+                  type="button"
+                  onClick={dismissWishToast}
+                  aria-label="Close"
+                  className="grid size-7 shrink-0 place-items-center rounded-full text-white/50 transition hover:bg-white/10 hover:text-white"
+                >
+                  <X className="size-4" />
+                </button>
               </div>
-              <button
-                type="button"
-                onClick={dismissWishToast}
-                aria-label="Close"
-                className="grid size-7 shrink-0 place-items-center rounded-full text-[#96938b] transition hover:bg-[#f6f2ec] hover:text-[#141414]"
-              >
-                <X className="size-4" />
-              </button>
+              <motion.div
+                initial={{ width: '100%' }}
+                animate={{ width: '0%' }}
+                transition={{ duration: 3, ease: 'linear' }}
+                className="h-[3px] bg-[#ffc462]"
+              />
             </div>
-            <motion.div
-              initial={{ width: '100%' }}
-              animate={{ width: '0%' }}
-              transition={{ duration: 3, ease: 'linear' }}
-              className="h-1 bg-[#cf2028]"
-            />
           </motion.div>
         )}
       </AnimatePresence>
