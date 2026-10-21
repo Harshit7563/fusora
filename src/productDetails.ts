@@ -48,20 +48,20 @@ type CategoryMeta = {
 
 const defaultMeta: CategoryMeta = {
   highlights: [
-    'Quality-checked marketplace pick',
+    'Quality-checked before dispatch',
     'Competitive pricing vs MRP',
-    'Fast delivery to your Fusora hub',
+    'Doorstep delivery across India (1–7 days)',
     'Easy returns on eligible items',
   ],
   specs: [
     { label: 'Condition', value: 'New' },
-    { label: 'Fulfilment', value: 'Fusora hub / doorstep' },
+    { label: 'Fulfilment', value: 'Doorstep delivery' },
     { label: 'Returns', value: 'Eligible items' },
     { label: 'Support', value: 'shopsupportfusora@gmail.com' },
     { label: 'Warranty', value: 'Brand warranty where applicable' },
   ],
   overview:
-    'A curated catalog item from Fusora marketplace — reliable quality, clear pricing, and delivery you can trust.',
+    'A curated catalogue item from Fusora — clear pricing and doorstep delivery you can trust.',
 }
 
 const byCategory: Partial<Record<CategoryId, CategoryMeta>> = {
@@ -98,10 +98,9 @@ const byCategory: Partial<Record<CategoryId, CategoryMeta>> = {
   },
   'apparel-accessories': {
     highlights: [
-      'Everyday apparel essentials',
-      'Trusted clothing brands',
-      'Comfort-first fabrics',
-      'Great value packs',
+      'Fabric and colour as listed on this page',
+      'Sizes and fit as listed on this page',
+      '7-day returns on eligible items',
     ],
     specs: [
       { label: 'Category', value: 'Apparel & Accessories' },
@@ -157,6 +156,119 @@ const byCategory: Partial<Record<CategoryId, CategoryMeta>> = {
     ],
     overview: 'Toys, kids gear and parent essentials for growing families.',
   },
+}
+
+
+const FABRIC_WORDS = [
+  'Kanchipuram Silk', 'Banarasi Silk', 'Pure Silk', 'Silk Blend', 'Silk Cotton',
+  'Silk', 'Cotton', 'Georgette', 'Chiffon', 'Organza', 'Satin', 'Crepe', 'Net',
+  'Linen', 'Rayon', 'Viscose', 'Tissue', 'Chanderi', 'Denim', 'Lycra', 'Velvet',
+]
+const COLOUR_WORDS =
+  /(Peacock Blue|Off White|Rust|Maroon|Magenta|Lavender|Mustard|Ivory|Black|White|Pink|Red|Blue|Green|Yellow|Orange|Purple|Brown|Beige|Grey|Gray|Gold|Silver|Multicolor|Multi)/i
+
+function fabricOf(product: Product): string {
+  if (product.fabric?.trim()) return product.fabric.trim()
+  const fromName = FABRIC_WORDS.find((f) =>
+    product.name.toLowerCase().includes(f.toLowerCase()),
+  )
+  if (fromName) return fromName
+  const cat = (product.categoryName || '').replace(/\s*Sarees?$/i, '').trim()
+  return cat || 'As per product label'
+}
+
+function colourOf(product: Product): string {
+  if (product.color?.trim()) return product.color.trim()
+  return product.name.match(COLOUR_WORDS)?.[1] ?? 'As pictured'
+}
+
+function hasBlousePiece(product: Product): boolean {
+  return /blouse/i.test(`${product.name} ${product.description || ''}`)
+}
+
+/** Real, product-specific highlights/specs for apparel — never generic filler. */
+function apparelMeta(product: Product): CategoryMeta | null {
+  if (product.tab !== 'apparel-accessories') return null
+  const fabric = fabricOf(product)
+  const colour = colourOf(product)
+  const subtype = product.subtype as ApparelSubtype | undefined
+  const name = product.name.toLowerCase()
+  const silkCare = /silk|organza|satin/i.test(fabric)
+
+  if (subtype === 'sarees' || /saree|sari/.test(name)) {
+    const blouse = hasBlousePiece(product)
+    return {
+      highlights: [
+        `${fabric} saree in ${colour}`,
+        blouse
+          ? 'Includes an unstitched blouse piece — stitch it to your size'
+          : 'Blouse piece as mentioned in the description above',
+        'Free-size drape, standard saree length',
+        '7-day returns on eligible items',
+      ],
+      specs: [
+        { label: 'Fabric', value: fabric },
+        { label: 'Colour', value: colour },
+        { label: 'Saree length', value: 'Approx. 5.5 m (standard)' },
+        {
+          label: 'Blouse piece',
+          value: blouse ? 'Unstitched, approx. 0.8 m — included' : 'See description',
+        },
+        { label: 'Contents', value: blouse ? '1 saree + 1 unstitched blouse piece' : '1 saree' },
+        { label: 'Care', value: silkCare ? 'Dry clean recommended' : 'Gentle hand wash; follow the label' },
+      ],
+      overview: product.description || '',
+    }
+  }
+  if (subtype === 'blouses') {
+    const unstitched = /unstitched|piece material/.test(name)
+    return {
+      highlights: [
+        `${fabric} blouse in ${colour}`,
+        unstitched
+          ? 'Unstitched blouse-piece material — stitch to your measurements'
+          : 'Readymade blouse, ready to wear with any saree',
+        '7-day returns on eligible items',
+      ],
+      specs: [
+        { label: 'Fabric', value: fabric },
+        { label: 'Colour', value: colour },
+        { label: 'Contents', value: unstitched ? 'Blouse-piece material (unstitched)' : '1 readymade blouse' },
+        { label: 'Care', value: silkCare ? 'Dry clean recommended' : 'Gentle hand wash; follow the label' },
+      ],
+      overview: product.description || '',
+    }
+  }
+  if (subtype === 'petticoats') {
+    return {
+      highlights: [
+        `${fabric} saree petticoat in ${colour}`,
+        'Free size with drawstring waist',
+        '7-day returns on eligible items',
+      ],
+      specs: [
+        { label: 'Fabric', value: fabric },
+        { label: 'Colour', value: colour },
+        { label: 'Contents', value: '1 petticoat' },
+        { label: 'Care', value: 'Machine wash gentle; follow the label' },
+      ],
+      overview: product.description || '',
+    }
+  }
+  // Tops / jeans / dresses / ethnic sets
+  return {
+    highlights: [
+      `${fabric} fabric in ${colour}`,
+      'Sizes and fit as listed on this page',
+      '7-day returns on eligible items',
+    ],
+    specs: [
+      { label: 'Fabric', value: fabric },
+      { label: 'Colour', value: colour },
+      { label: 'Care', value: 'Follow the care label on the garment' },
+    ],
+    overview: product.description || '',
+  }
 }
 
 type JeansAudience = 'men' | 'women' | 'kids'
@@ -450,7 +562,41 @@ function pickSizeProfile(product: Product): {
       ],
     }
   }
-  if (subtype === 'sarees' || /saree|sari|blouse|petticoat/.test(name)) {
+  if (subtype === 'blouses') {
+    const unstitched = /unstitched|piece material/.test(name)
+    const sizes = unstitched
+      ? ['Free Size']
+      : product.sizes && product.sizes.length > 0
+        ? product.sizes
+        : ['32', '34', '36', '38', '40', '42']
+    return {
+      sizes,
+      chart: null,
+      material: product.fabric || 'As per product description',
+      care: ['Gentle hand wash', 'Do not wring', 'Iron on low heat'],
+    }
+  }
+  if (subtype === 'petticoats') {
+    return {
+      sizes: ['Free Size'],
+      chart: null,
+      material: product.fabric || 'Cotton as listed',
+      care: ['Machine wash gentle', 'Line dry'],
+    }
+  }
+  if (subtype === 'ethnic-sets') {
+    const sizes =
+      product.sizes && product.sizes.length > 0
+        ? product.sizes
+        : ['S', 'M', 'L', 'XL', 'XXL']
+    return {
+      sizes,
+      chart: buildProductSizeChart(product, sizes, 'tops'),
+      material: product.fabric || 'As per product description',
+      care: ['Gentle machine wash', 'Wash dark colours separately', 'Iron on low heat'],
+    }
+  }
+  if (subtype === 'sarees' || /saree|sari/.test(name)) {
     const sizes = ['Free Size']
     return {
       sizes,
@@ -566,7 +712,7 @@ const REVIEW_POOL: Omit<ProductReview, 'id' | 'helpful' | 'date'>[] = [
     name: 'Aarav K.',
     rating: 5,
     title: 'Exactly as shown',
-    text: 'Fabric feel is premium for the price. Pickup from my Fusora hub was ready in under an hour.',
+    text: 'Fabric feel is premium for the price. Delivery reached me in four days, neatly packed.',
     verified: true,
   },
   {
@@ -587,7 +733,7 @@ const REVIEW_POOL: Omit<ProductReview, 'id' | 'helpful' | 'date'>[] = [
     name: 'Ananya R.',
     rating: 5,
     title: 'Worth the deal',
-    text: 'Looked even better in hand. Soft finish and stitching is clean. Hub staff were helpful.',
+    text: 'Looked even better in hand. Soft finish and stitching is clean. Support replied quickly on email.',
     verified: true,
   },
   {
@@ -652,7 +798,7 @@ function buildReviews(product: Product, rating: number, count: number): {
 }
 
 export function getProductDetails(product: Product): ProductDetails {
-  const meta = byCategory[product.tab] ?? defaultMeta
+  const meta = apparelMeta(product) ?? byCategory[product.tab] ?? defaultMeta
   const colorMatch = product.name.match(
     /(Silver|Black|White|Grey|Gray|Nude|Yellow|Red|Blue|Green|Titanium|Natural|Carbon|Maroon|Pink|Navy|Ivory|Cream|Olive|Beige|Brown|Purple|Orange|Rust|Turquoise|French Beige|Midnight Blue|Foggy Grey|Slate Grey|Dark Blue|Brownish|Firefly|Mid Grey|Spanish Green|Pearl Bush|Cavern Pink)[^,]*/i,
   )
@@ -665,11 +811,15 @@ export function getProductDetails(product: Product): ProductDetails {
 
   const specs = [
     ...meta.specs,
-    { label: 'Material', value: profile.material },
+    ...(meta.specs.some((s) => s.label === 'Fabric')
+      ? []
+      : [{ label: 'Material', value: profile.material }]),
     ...(profile.sizes.length
       ? [{ label: 'Available sizes', value: profile.sizes.join(', ') }]
       : []),
-    { label: 'Colour', value: colorLabel },
+    ...(meta.specs.some((s) => s.label === 'Colour')
+      ? []
+      : [{ label: 'Colour', value: colorLabel }]),
   ]
 
   return {
@@ -685,7 +835,7 @@ export function getProductDetails(product: Product): ProductDetails {
     protection: [
       'Fusora Purchase Protection',
       'Easy returns on eligible items',
-      'Hub pickup support',
+      'Email support, Mon–Sat 9 AM–6 PM',
     ],
     sizes: profile.sizes,
     sizeChart: profile.chart,

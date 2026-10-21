@@ -32,8 +32,8 @@ export function LocationModal() {
               </h2>
             </div>
             <p className="text-sm text-bb-muted">
-              Allow location access so we can show your real area and the nearest
-              Fusora hub for pickup.
+              Allow location access so we can confirm delivery to your area.
+              Orders are delivered to your doorstep — there is no store pickup.
             </p>
           </div>
           <button

@@ -9,9 +9,11 @@ export function StoresPage() {
     <main className="mx-auto max-w-[900px] px-4 py-10 lg:px-6">
       <h1 className="text-3xl font-bold">Our fulfilment centre</h1>
       <p className="mt-2 text-bb-muted">
-        Fusora is an online-first fashion store. Every order is packed and
-        dispatched from the one centre below — we do not run walk-in retail
-        stores, so there are no other hubs to pick from.
+        Fusora is an online-first fashion store — we do not run walk-in
+        retail stores. Fusora&rsquo;s own products are packed and dispatched
+        from the centre below; products listed by independent sellers
+        (marked &ldquo;Sold by&rdquo; on the product page) are dispatched by
+        that seller and may arrive in a separate package.
       </p>
 
       {centre && (

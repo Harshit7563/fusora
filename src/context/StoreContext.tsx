@@ -286,7 +286,7 @@ export const ORDER_STATUS_LABEL: Record<OrderStatus, string> = {
   placed: 'Order placed',
   confirmed: 'Confirmed',
   packing: 'Packing at hub',
-  ready: 'Ready for pickup',
+  ready: 'Ready to dispatch',
   out_for_delivery: 'Out for delivery',
   delivered: 'Delivered',
   cancelled: 'Cancelled',
@@ -735,7 +735,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         phone: normalizePhone(input.phone),
         email: normalizeEmail(input.email),
         address: input.address.trim(),
-        hub: store?.name ?? 'Fusora hub',
+        hub: store?.name ?? 'Fusora Fulfilment Centre',
         locationLabel,
         items: cart.map((i) => ({
           id: i.id,

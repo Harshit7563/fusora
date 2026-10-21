@@ -22,7 +22,7 @@ const faqs = [
   },
   {
     q: 'How do returns and refunds work?',
-    a: 'Eligible items can be returned within 7 days of delivery: email us your Order ID at shopsupportfusora@gmail.com and keep the item unused with tags intact. Once the returned item reaches us and passes quality check (QC), we initiate your refund within 5–10 business days; your bank or payment account is then credited within a further 3–7 business days.',
+    a: 'Eligible items can be returned within 7 days of delivery: email us your Order ID at shopsupportfusora@gmail.com and keep the item unused with tags intact. We complete quality check (QC) within 2 business days of the returned item reaching us; once it passes QC, we initiate your refund within 5–10 business days; your bank or payment account is then credited within a further 3–7 business days.',
   },
   {
     q: 'How can I pay?',
@@ -75,7 +75,7 @@ export function SupportPage() {
           },
           {
             title: 'Delivery & returns',
-            to: '/policies/returns-refunds',
+            to: '/policies/return-refund-policy',
             body: '7-day returns on eligible items',
           },
           {
@@ -98,6 +98,18 @@ export function SupportPage() {
             <p className="mt-1 text-sm text-bb-muted">{card.body}</p>
           </Link>
         ))}
+      </div>
+
+      <div className="mt-8 rounded-2xl border border-bb-border bg-bb-gray/50 p-5 text-sm">
+        <p className="font-bold text-bb-text">How Fusora works</p>
+        <p className="mt-1 text-bb-muted">
+          Fusora sells its own catalogue and also hosts independent shops
+          under <span className="font-semibold">Sell on Fusora</span>. Items
+          from independent shops are marked &ldquo;Sold by&rdquo; on the
+          product page and may be dispatched by that seller in a separate
+          package. Payments are collected by {COMPANY_NAME}, and our support
+          team above remains your single point of contact for every order.
+        </p>
       </div>
 
       <h2 className="mt-12 text-xl font-bold">Company policies</h2>

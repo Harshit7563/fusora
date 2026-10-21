@@ -136,8 +136,10 @@ const JUNK_LISTING_NAME = /size\s*chart|placeholder|dummy\s+product|test\s+produ
 function ethnicSubtype(name: string): ApparelSubtype | null {
   const n = name.toLowerCase()
   if (/petticoat/.test(n)) return 'petticoats'
-  if (/blouse|blouese/.test(n)) return 'blouses'
-  if (/kurta|kurti|suit\s*set|salwar|lehenga|ethnic\s*set/.test(n))
+  // A saree that merely "includes an unstitched blouse piece" is still a
+  // saree — only blouse-only listings are Blouses.
+  if (/blouse|blouese/.test(n) && !/saree|sari/.test(n)) return 'blouses'
+  if (/kurta|kurti|suit\s*set|salwar|lehenga|ethnic\s*set/.test(n) && !/saree|sari/.test(n))
     return 'ethnic-sets'
   return null
 }
