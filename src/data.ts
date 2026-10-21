@@ -8,10 +8,7 @@ import dyntraSarees from './data/dyntraSarees.json'
 import modcartProducts from './data/modcartProducts.json'
 import denimforgeProducts from './data/denimforgeProducts.json'
 import saltyJewellery from './data/saltyJewellery.json'
-import fusoraBottoms from './data/fusoraBottoms.json'
 import fusoraDresses from './data/fusoraDresses.json'
-import fusoraShirts from './data/fusoraShirts.json'
-import plainTees from './data/plainTees.json'
 import tenaxTshirts from './data/tenaxTshirts.json'
 import { type ApparelSubtype } from './data/apparel'
 import { loadAdminProducts } from './lib/adminCatalog'
@@ -375,108 +372,6 @@ const tshirtCatalog: Product[] = (
   }
 })
 
-/** Fusora's own original plain t-shirt line — original names, copy & artwork. */
-const plainTeesCatalog: Product[] = (
-  plainTees as Array<Record<string, unknown>>
-).map((p, i) => {
-  const images = uniqueImages(
-    String(p.image || ''),
-    Array.isArray(p.images) ? (p.images as string[]) : undefined,
-  )
-  return {
-    id: String(p.id),
-    rank: Number(p.rank) || i + 1,
-    name: String(p.name),
-    price: Number(p.price),
-    was: Number(p.was) || Number(p.price),
-    topDeal: Boolean(p.topDeal),
-    tab: 'apparel-accessories' as CategoryId,
-    subtype: 'tshirts' as ApparelSubtype,
-    gender: 'men' as ProductGender,
-    collection: 'mens-tshirts',
-    categoryName: 'Plain T-Shirts',
-    categorySlug: 'mens-tshirts',
-    brand: 'Fusora',
-    image: images[0] || String(p.image || ''),
-    images,
-    description: p.description ? String(p.description) : undefined,
-    sizes: Array.isArray(p.sizes) ? (p.sizes as string[]).map(String) : undefined,
-    sku: p.sku ? String(p.sku) : undefined,
-    color: p.color ? String(p.color) : undefined,
-    source: 'fusora-plain',
-    uploadedBy: 'HS' as const,
-    uploadedAt: '2026-10-20',
-  }
-})
-
-/** Fusora's own original casual shirts line — original names, copy & artwork. */
-const fusoraShirtsCatalog: Product[] = (
-  fusoraShirts as Array<Record<string, unknown>>
-).map((p, i) => {
-  const images = uniqueImages(
-    String(p.image || ''),
-    Array.isArray(p.images) ? (p.images as string[]) : undefined,
-  )
-  return {
-    id: String(p.id),
-    rank: Number(p.rank) || i + 1,
-    name: String(p.name),
-    price: Number(p.price),
-    was: Number(p.was) || Number(p.price),
-    topDeal: Boolean(p.topDeal),
-    tab: 'apparel-accessories' as CategoryId,
-    subtype: 'shirts' as ApparelSubtype,
-    gender: 'men' as ProductGender,
-    collection: 'mens-shirts',
-    categoryName: 'Shirts',
-    categorySlug: 'mens-shirts',
-    brand: 'Fusora',
-    image: images[0] || String(p.image || ''),
-    images,
-    description: p.description ? String(p.description) : undefined,
-    sizes: Array.isArray(p.sizes) ? (p.sizes as string[]).map(String) : undefined,
-    sku: p.sku ? String(p.sku) : undefined,
-    color: p.color ? String(p.color) : undefined,
-    source: 'fusora-shirts',
-    uploadedBy: 'HS' as const,
-    uploadedAt: '2026-10-20',
-  }
-})
-
-/** Fusora's own original bottoms line — chinos, cargos & formal trousers. */
-const fusoraBottomsCatalog: Product[] = (
-  fusoraBottoms as Array<Record<string, unknown>>
-).map((p, i) => {
-  const images = uniqueImages(
-    String(p.image || ''),
-    Array.isArray(p.images) ? (p.images as string[]) : undefined,
-  )
-  return {
-    id: String(p.id),
-    rank: Number(p.rank) || i + 1,
-    name: String(p.name),
-    price: Number(p.price),
-    was: Number(p.was) || Number(p.price),
-    topDeal: Boolean(p.topDeal),
-    tab: 'apparel-accessories' as CategoryId,
-    subtype: 'jeans' as ApparelSubtype,
-    gender: 'men' as ProductGender,
-    collection: 'mens-jeans',
-    categoryName: 'Bottoms',
-    categorySlug: 'mens-jeans',
-    brand: 'Fusora',
-    image: images[0] || String(p.image || ''),
-    images,
-    description: p.description ? String(p.description) : undefined,
-    sizes: Array.isArray(p.sizes) ? (p.sizes as string[]).map(String) : undefined,
-    sku: p.sku ? String(p.sku) : undefined,
-    color: p.color ? String(p.color) : undefined,
-    source: 'fusora-bottoms',
-    uploadedBy: 'HS' as const,
-    uploadedAt: '2026-10-20',
-  }
-})
-
 /** Fusora's own original women's dresses line. */
 const fusoraDressesCatalog: Product[] = (
   fusoraDresses as Array<Record<string, unknown>>
@@ -518,9 +413,6 @@ export const staticProducts: Product[] = dedupeByImage([
   ...modcartCatalog,
   ...jewelleryCatalog,
   ...tshirtCatalog,
-  ...plainTeesCatalog,
-  ...fusoraShirtsCatalog,
-  ...fusoraBottomsCatalog,
   ...fusoraDressesCatalog,
 ])
 
