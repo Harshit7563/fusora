@@ -74,8 +74,9 @@ export function Footer() {
           Born in India. Worn with Pride.
         </p>
       </div>
-      <p className="px-4 pt-8 text-center text-3xl font-light text-[#262626] sm:text-5xl">
-        Your Style. <span className="font-bold">Delivered Nationwide.</span>
+      <p className="px-4 pt-9 text-center font-heading text-5xl tracking-wide text-[#141414] uppercase sm:text-6xl">
+        Your Style.{' '}
+        <span className="text-[#cf2028]">Delivered Nationwide.</span>
       </p>
 
       <div className="mx-auto max-w-[1280px] px-4 pt-10 sm:px-6">
