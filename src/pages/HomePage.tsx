@@ -166,7 +166,7 @@ export function HomePage() {
       <section className="px-4 py-10 sm:py-12">
         <div className="mx-auto max-w-[1280px]">
           <SectionTitle>Shop by category</SectionTitle>
-          <div className="hide-scrollbar mt-8 flex gap-4 overflow-x-auto pb-1 sm:gap-6 lg:justify-center">
+          <div className="mt-8 flex flex-wrap items-start justify-center gap-4 pb-1 sm:gap-6">
             {circles.map((c) => (
               <Link
                 key={c.title}
@@ -177,7 +177,7 @@ export function HomePage() {
                   <img
                     src={c.image}
                     alt={c.title}
-                    className="aspect-square w-full object-cover transition duration-500 group-hover:scale-105"
+                    className="aspect-square w-full object-cover object-center transition duration-500 group-hover:scale-105"
                   />
                 </span>
                 <span className="mt-2 block text-xs font-bold tracking-[0.08em] text-[#262626] uppercase group-hover:text-[#cf2028]">
