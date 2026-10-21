@@ -37,8 +37,8 @@ const slides: Slide[] = [
   },
   {
     id: 'men',
-    image: '/heroes/ai-men.jpg?v=2',
-    position: 'object-[center_22%]',
+    image: '/heroes/men-hero-v2.jpg',
+    position: 'object-[center_18%]',
     eyebrow: 'For Him',
     title: "Men's Essentials",
     line: 'Tees, shirts & denim for every day',
