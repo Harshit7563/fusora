@@ -123,6 +123,21 @@ export function HomePage() {
       products.find(fn)?.image || fallback
     return [
       {
+        title: 'Men',
+        to: '/category/men',
+        image: pick((p) => p.gender === 'men', '/heroes/ai-men.jpg?v=2'),
+      },
+      {
+        title: 'Women',
+        to: '/category/women',
+        image: '/products/dresses/red-floral-fitflare.jpg',
+      },
+      {
+        title: 'Jeans',
+        to: '/category/men/jeans',
+        image: pick((p) => p.subtype === 'jeans', '/heroes/ai-men.jpg?v=2'),
+      },
+      {
         title: 'Sarees',
         to: '/category/women/sarees',
         image: pick((p) => p.subtype === 'sarees', '/heroes/ai-saree.jpg?v=2'),
@@ -131,21 +146,6 @@ export function HomePage() {
         title: 'Dresses',
         to: '/category/women/dresses',
         image: pick((p) => p.subtype === 'dresses', '/heroes/ai-wedding.jpg?v=2'),
-      },
-      {
-        title: 'Women',
-        to: '/category/women',
-        image: '/products/dresses/red-floral-fitflare.jpg',
-      },
-      {
-        title: 'Men',
-        to: '/category/men',
-        image: pick((p) => p.gender === 'men', '/heroes/ai-men.jpg?v=2'),
-      },
-      {
-        title: 'Jeans',
-        to: '/category/men/jeans',
-        image: pick((p) => p.subtype === 'jeans', '/heroes/ai-men.jpg?v=2'),
       },
       {
         title: 'Jewellery',
