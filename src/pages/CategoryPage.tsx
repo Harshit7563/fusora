@@ -9,7 +9,6 @@ import {
 } from '../data/apparel'
 import { type CategoryId } from '../data'
 import { ProductCard } from '../components/ProductCard'
-import { SafeImage } from '../components/SafeImage'
 import { useCatalog } from '../hooks/useCatalog'
 import { usePageTitle } from '../hooks/usePageTitle'
 import { getProductGender, matchesGender, type Gender } from '../lib/gender'
@@ -39,16 +38,6 @@ export function CategoryPage() {
       : null
 
   const redirectSareeFabric = subtype === 'sarees' && Boolean(collectionParam)
-
-  const genderDenimCollections = useMemo(() => {
-    if (active === 'men') {
-      return denimCollections.filter((c) => c.id === 'mens-jeans')
-    }
-    if (active === 'women') {
-      return denimCollections.filter((c) => c.id === 'womens-jeans')
-    }
-    return denimCollections
-  }, [active])
 
   const denimCollection =
     subtype === 'jeans' &&
@@ -112,10 +101,7 @@ export function CategoryPage() {
 
   const subtypeMeta = apparelSubtypes.find((s) => s.id === subtype)
   const denimMeta = denimCollections.find((c) => c.id === denimCollection)
-  // "All" (?all=1) shows every product as a grid — no category tiles
-  const showGenderLanding = isGenderShop && !subtype && !showAll
-  const showApparelLanding = isApparel && !subtype && !showAll
-  const showJeansLanding = subtype === 'jeans' && !denimCollection
+  // Category pages open straight on the product grid — no tile landing.
 
   const title = denimMeta?.label || subtypeMeta?.label || meta.label
 
@@ -130,8 +116,7 @@ export function CategoryPage() {
 
   usePageTitle(title)
 
-  const showProductGrid =
-    !showApparelLanding && !showGenderLanding && !showJeansLanding
+  const showProductGrid = true
 
   if (redirectSareeFabric) {
     return <Navigate to={`/category/${active}/sarees`} replace />
@@ -168,7 +153,7 @@ export function CategoryPage() {
             <Link
               to={`/category/${active}?all=1`}
               className="chip"
-              data-active={!subtype && showAll}
+              data-active={!subtype}
             >
               All
             </Link>
@@ -192,85 +177,8 @@ export function CategoryPage() {
           </div>
         )}
 
-        {(showApparelLanding || showGenderLanding) && (
-          <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4">
-            {genderSubtypes.map((s) => {
-              const matching = products.filter((p) => {
-                if (p.subtype !== s.id) return false
-                if (shopGender) return matchesGender(p, shopGender)
-                return p.tab === 'apparel-accessories'
-              })
-              const count = matching.length
-              // On Men/Women pages, never show an empty or wrong-gender tile
-              if (shopGender && count === 0) return null
-              return (
-                <Link
-                  key={s.id}
-                  to={`/category/${active}/${s.id}`}
-                  className="group relative aspect-[3/4] overflow-hidden"
-                >
-                  <SafeImage
-                    src={matching[0]?.image || s.image}
-                    alt={s.label}
-                    className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#070001]/75 via-transparent to-transparent" />
-                  <div className="absolute inset-x-0 bottom-0 p-4 text-white">
-                    <h2 className="font-heading text-xl tracking-wide">
-                      {s.label}
-                    </h2>
-                    <p className="mt-1 text-[0.65rem] font-bold tracking-wide uppercase opacity-85">
-                      {count} pieces
-                    </p>
-                  </div>
-                </Link>
-              )
-            })}
-          </div>
-        )}
 
-        {showJeansLanding && (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {genderDenimCollections.map((c) => {
-              const matching = products.filter(
-                (p) =>
-                  p.subtype === 'jeans' &&
-                  p.collection === c.id &&
-                  (!shopGender || matchesGender(p, shopGender)),
-              )
-              const count = matching.length
-              if (shopGender && count === 0) return null
-              const jeansBase = isGenderShop
-                ? `/category/${active}/jeans`
-                : '/category/apparel-accessories/jeans'
-              return (
-                <Link
-                  key={c.id}
-                  to={`${jeansBase}/${c.id}`}
-                  className="group relative aspect-[3/4] overflow-hidden"
-                >
-                  <SafeImage
-                    src={matching[0]?.image || c.image}
-                    alt={c.label}
-                    className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#070001]/75 via-transparent to-transparent" />
-                  <div className="absolute inset-x-0 bottom-0 p-5 text-white">
-                    <h2 className="font-heading text-2xl tracking-wide">
-                      {c.label}
-                    </h2>
-                    <p className="mt-1 text-sm text-white/85">{c.blurb}</p>
-                    <p className="mt-2 text-[0.65rem] font-bold tracking-wide uppercase">
-                      {count} styles
-                    </p>
-                  </div>
-                </Link>
-              )
-            })}
-          </div>
-        )}
-
-        {(showProductGrid || denimCollection) && (
+        {showProductGrid && (
           <>
             <div className="mb-5 flex items-center justify-between gap-3 border-b border-[#e9e1db] pb-4">
               <p className="text-sm font-semibold text-[#6a6667]">
