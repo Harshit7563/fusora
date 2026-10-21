@@ -16,22 +16,51 @@ function categoryLabel(p: Product): string {
   return p.gender === 'men' ? 'Men' : p.gender === 'women' ? 'Women' : 'Fusora'
 }
 
-/** Souled-style card: portrait photo, wishlist heart, price + green discount */
+function isNew(p: Product): boolean {
+  if (!p.uploadedAt) return false
+  const t = new Date(String(p.uploadedAt)).getTime()
+  if (Number.isNaN(t)) return false
+  return Date.now() - t < 45 * 24 * 3600 * 1000
+}
+
+/** Storefront card: portrait photo, hover second photo, wishlist, price + green discount */
 export function ProductCard({ product: p }: Props) {
   const { wishlist, toggleWish, addToCart } = useStore()
   const onSale = p.was > p.price
   const off = onSale ? Math.round(((p.was - p.price) / p.was) * 100) : 0
+  const secondImage = p.images?.find((img) => img && img !== p.image)
 
   return (
-    <article className="group flex h-full flex-col bg-white">
+    <article className="group flex h-full flex-col bg-white transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_34px_rgba(0,0,0,0.10)]">
       <div className="relative overflow-hidden bg-[#f4f2ee]">
-        <Link to={`/product/${p.id}`}>
+        <Link to={`/product/${p.id}`} className="relative block">
           <SafeImage
             src={p.image}
             alt={p.name}
-            className="aspect-[3/4] w-full object-cover transition duration-500 group-hover:scale-[1.04]"
+            className="aspect-[3/4] w-full object-cover object-center transition duration-500 group-hover:scale-[1.03]"
           />
+          {secondImage && (
+            <SafeImage
+              src={secondImage}
+              alt=""
+              className="absolute inset-0 aspect-[3/4] w-full object-cover object-center opacity-0 transition duration-500 group-hover:scale-[1.03] group-hover:opacity-100"
+            />
+          )}
         </Link>
+
+        <div className="absolute top-2.5 left-2.5 flex flex-col items-start gap-1.5">
+          {isNew(p) && (
+            <span className="bg-[#141414] px-2 py-0.5 text-[0.6rem] font-bold tracking-[0.12em] text-white uppercase">
+              New
+            </span>
+          )}
+          {p.topDeal && (
+            <span className="bg-[#ffc462] px-2 py-0.5 text-[0.6rem] font-bold tracking-[0.12em] text-[#7f1714] uppercase">
+              Bestseller
+            </span>
+          )}
+        </div>
+
         <button
           type="button"
           onClick={() => toggleWish(p.id)}
@@ -45,18 +74,27 @@ export function ProductCard({ product: p }: Props) {
             strokeWidth={2}
           />
         </button>
+
         {off >= 5 && (
-          <span className="absolute bottom-2.5 left-2.5 bg-[#cf2028] px-1.5 py-0.5 text-[0.62rem] font-bold tracking-wide text-white uppercase">
+          <span className="absolute bottom-2.5 left-2.5 bg-[#cf2028] px-1.5 py-0.5 text-[0.62rem] font-bold tracking-wide text-white uppercase shadow-sm">
             {off}% off
           </span>
         )}
       </div>
-      <div className="flex flex-1 flex-col px-1 pt-2.5 pb-1">
-        <p className="text-[0.62rem] font-bold tracking-[0.12em] text-[#8a8585] uppercase">
-          {categoryLabel(p)}
-        </p>
+
+      <div className="flex flex-1 flex-col px-1.5 pt-3 pb-1.5">
+        <div className="flex items-center justify-between gap-2">
+          <p className="text-[0.62rem] font-bold tracking-[0.14em] text-[#8a8585] uppercase">
+            {categoryLabel(p)}
+          </p>
+          {p.brand && (
+            <p className="line-clamp-1 text-[0.62rem] font-semibold tracking-[0.08em] text-[#b3aca4] uppercase">
+              {p.brand}
+            </p>
+          )}
+        </div>
         <Link to={`/product/${p.id}`} className="block">
-          <p className="mt-0.5 line-clamp-2 min-h-[2.5em] text-[0.83rem] leading-snug font-medium text-[#262626]">
+          <p className="mt-1 line-clamp-2 min-h-[2.55em] text-[0.86rem] leading-snug font-medium text-[#262626] transition group-hover:text-[#cf2028]">
             {p.name}
           </p>
         </Link>
@@ -65,8 +103,8 @@ export function ProductCard({ product: p }: Props) {
             Not real gold / diamond
           </p>
         )}
-        <div className="mt-1 flex flex-wrap items-baseline gap-x-1.5">
-          <span className="text-[0.95rem] font-bold text-[#070001]">
+        <div className="mt-1.5 flex flex-wrap items-baseline gap-x-1.5">
+          <span className="text-[1rem] font-bold text-[#070001]">
             {formatMoney(p.price)}
           </span>
           {onSale && (
@@ -85,7 +123,7 @@ export function ProductCard({ product: p }: Props) {
         <button
           type="button"
           onClick={() => addToCart(p)}
-          className="mt-2.5 w-full border border-[#262626] py-2 text-[0.68rem] font-bold tracking-[0.14em] text-[#262626] uppercase transition hover:bg-[#cf2028] hover:border-[#cf2028] hover:text-white"
+          className="mt-3 w-full rounded-full border border-[#262626] py-2.5 text-[0.68rem] font-bold tracking-[0.16em] text-[#262626] uppercase transition hover:border-[#cf2028] hover:bg-[#cf2028] hover:text-white active:scale-[0.99]"
         >
           Add to cart
         </button>
