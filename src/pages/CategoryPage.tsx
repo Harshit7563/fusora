@@ -180,10 +180,7 @@ export function CategoryPage() {
 
         {showProductGrid && (
           <>
-            <div className="mb-5 flex items-center justify-between gap-3 border-b border-[#e9e1db] pb-4">
-              <p className="text-sm font-semibold text-[#6a6667]">
-                {list.length} items
-              </p>
+            <div className="mb-5 flex items-center justify-end gap-3 border-b border-[#e9e1db] pb-4">
               <label className="flex items-center gap-2 text-sm font-semibold text-[#6a6667]">
                 Sort
                 <select
