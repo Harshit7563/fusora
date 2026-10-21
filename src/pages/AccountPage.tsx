@@ -379,7 +379,7 @@ export function AccountPage() {
   }
 
   const field =
-    'mt-1.5 w-full border border-[#ececec] bg-white px-3.5 py-3 text-sm font-normal text-[#272727] outline-none transition focus:border-[#323232] disabled:bg-[#f5f5f5]'
+    'mt-1.5 w-full rounded-xl border border-[#e7e2dc] bg-[#faf8f4] px-4 py-3 text-sm font-normal text-[#272727] outline-none transition focus:border-[#cf2028] focus:bg-white disabled:bg-[#f5f5f5]'
 
   const isErrorBanner = (msg: string) =>
     msg.includes('accept') ||
@@ -397,20 +397,20 @@ export function AccountPage() {
     msg.includes('configured')
 
   return (
-    <main className="min-h-[calc(100svh-8rem)] bg-white">
-      <div className="mx-auto flex w-full max-w-[440px] flex-col px-4 py-8 sm:px-6 sm:py-16">
+    <main className="min-h-[calc(100svh-8rem)] bg-[#faf8f4] px-4 py-10 sm:py-14">
+      <div className="mx-auto flex w-full max-w-[460px] flex-col rounded-3xl border border-[#eee7df] bg-white px-5 py-8 shadow-[0_12px_44px_rgba(0,0,0,0.08)] sm:px-8 sm:py-10">
         <div className="mb-6 flex justify-center sm:mb-8">
           <FusoraLogo centered compact />
         </div>
 
-        <div className="mb-6 flex items-center justify-center gap-6 border-b border-[#ececec] sm:mb-8">
+        <div className="mb-7 grid grid-cols-2 gap-1 rounded-full bg-[#f2f0ec] p-1">
           <button
             type="button"
             onClick={() => setMode('signin')}
-            className={`pb-3 text-[0.68rem] font-semibold tracking-[0.14em] uppercase transition sm:text-[0.72rem] sm:tracking-[0.16em] ${
+            className={`rounded-full py-2.5 text-[0.7rem] font-bold tracking-[0.14em] uppercase transition ${
               mode === 'signin'
-                ? 'border-b-2 border-[#323232] text-[#272727]'
-                : 'text-[#787878] hover:text-[#272727]'
+                ? 'bg-[#141414] text-white shadow'
+                : 'text-[#787878] hover:text-[#141414]'
             }`}
           >
             Login
@@ -418,19 +418,20 @@ export function AccountPage() {
           <button
             type="button"
             onClick={() => setMode('register')}
-            className={`pb-3 text-[0.68rem] font-semibold tracking-[0.14em] uppercase transition sm:text-[0.72rem] sm:tracking-[0.16em] ${
+            className={`rounded-full py-2.5 text-[0.7rem] font-bold tracking-[0.14em] uppercase transition ${
               mode === 'register'
-                ? 'border-b-2 border-[#323232] text-[#272727]'
-                : 'text-[#787878] hover:text-[#272727]'
+                ? 'bg-[#141414] text-white shadow'
+                : 'text-[#787878] hover:text-[#141414]'
             }`}
           >
             Register
           </button>
         </div>
 
-        <h1 className="text-center text-[1.4rem] font-medium tracking-wide text-[#272727] sm:text-[1.65rem]">
+        <h1 className="text-center font-heading text-4xl tracking-wide text-[#141414] uppercase sm:text-5xl">
           {mode === 'signin' ? 'Login' : 'Create account'}
         </h1>
+        <div className="mx-auto mt-2.5 h-1 w-12 bg-[#cf2028]" />
         <p className="mt-2 text-center text-sm text-[#787878]">
           {mode === 'signin'
             ? 'If you are already registered, please log in with email OTP.'
@@ -488,7 +489,7 @@ export function AccountPage() {
                   type="button"
                   onClick={() => void sendOtp()}
                   disabled={otpState.busy !== 'idle' || !form.email.trim()}
-                  className="shrink-0 bg-[#323232] px-4 text-[0.65rem] font-semibold tracking-[0.12em] text-white uppercase disabled:opacity-60"
+                  className="shrink-0 rounded-full bg-[#141414] px-5 text-[0.65rem] font-bold tracking-[0.12em] text-white uppercase transition hover:bg-[#cf2028] disabled:opacity-60"
                 >
                   {otpState.busy === 'send' ? (
                     <Loader2 className="size-4 animate-spin" />
@@ -500,7 +501,7 @@ export function AccountPage() {
                 </button>
               )}
               {otpState.verified && (
-                <span className="inline-flex items-center gap-1 border border-[#ececec] bg-[#f5f5f5] px-3 text-[0.65rem] font-semibold tracking-wide text-[#272727] uppercase">
+                <span className="inline-flex items-center gap-1 rounded-full border border-green-200 bg-green-50 px-3 text-[0.65rem] font-bold tracking-wide text-green-800 uppercase">
                   <CheckCircle2 className="size-3.5 text-green-700" />
                   Verified
                 </span>
@@ -532,7 +533,7 @@ export function AccountPage() {
                   disabled={
                     otpState.busy !== 'idle' || otpState.otp.length < 4
                   }
-                  className="shrink-0 border border-[#323232] bg-white px-4 text-[0.65rem] font-semibold tracking-[0.12em] text-[#323232] uppercase disabled:opacity-60"
+                  className="shrink-0 rounded-full border border-[#141414] bg-white px-5 text-[0.65rem] font-bold tracking-[0.12em] text-[#141414] uppercase transition hover:bg-[#141414] hover:text-white disabled:opacity-60"
                 >
                   {otpState.busy === 'verify' ? (
                     <Loader2 className="size-4 animate-spin" />
@@ -546,7 +547,7 @@ export function AccountPage() {
 
           {otpState.message && (
             <p
-              className={`border px-3 py-2 text-sm ${
+              className={`rounded-xl border px-3.5 py-2.5 text-sm ${
                 otpState.error
                   ? 'border-red-200 bg-red-50 text-bb-save'
                   : 'border-[#ececec] bg-[#f5f5f5] text-[#272727]'
@@ -564,7 +565,7 @@ export function AccountPage() {
                 onChange={(e) =>
                   setForm((f) => ({ ...f, terms: e.target.checked }))
                 }
-                className="mt-0.5 size-4 border-[#ececec] accent-[#323232]"
+                className="mt-0.5 size-4 border-[#ececec] accent-[#cf2028]"
               />
               <span>
                 I agree to Fusora{' '}
@@ -587,7 +588,7 @@ export function AccountPage() {
 
           {done && (
             <p
-              className={`border px-3 py-2 text-sm ${
+              className={`rounded-xl border px-3.5 py-2.5 text-sm ${
                 isErrorBanner(done)
                   ? 'border-red-200 bg-red-50 text-bb-save'
                   : 'border-[#ececec] bg-[#f5f5f5] text-[#272727]'
@@ -600,7 +601,7 @@ export function AccountPage() {
           <button
             type="submit"
             disabled={!otpState.verified}
-            className="w-full bg-[#323232] py-3.5 text-[0.72rem] font-semibold tracking-[0.16em] text-white uppercase transition hover:bg-[#1f1f1f] disabled:opacity-60"
+            className="w-full rounded-full bg-[#cf2028] py-3.5 text-[0.75rem] font-bold tracking-[0.16em] text-white uppercase transition hover:bg-[#141414] disabled:opacity-60"
           >
             {mode === 'signin' ? 'Sign in' : 'Create account'}
           </button>
@@ -613,7 +614,7 @@ export function AccountPage() {
               <button
                 type="button"
                 onClick={() => setMode('register')}
-                className="font-medium text-[#272727] underline underline-offset-4"
+                className="font-bold text-[#cf2028] underline underline-offset-4"
               >
                 Create an account
               </button>
@@ -624,13 +625,26 @@ export function AccountPage() {
               <button
                 type="button"
                 onClick={() => setMode('signin')}
-                className="font-medium text-[#272727] underline underline-offset-4"
+                className="font-bold text-[#cf2028] underline underline-offset-4"
               >
                 Login
               </button>
             </>
           )}
         </p>
+
+        <div className="mt-7 grid grid-cols-3 gap-2 border-t border-[#f0ece7] pt-5 text-center">
+          {[
+            ['Secure login', 'OTP verified'],
+            ['Easy returns', '7-day policy'],
+            ['Fast delivery', '1-7 days'],
+          ].map(([a, b]) => (
+            <div key={a}>
+              <p className="text-[0.68rem] font-bold tracking-wide text-[#141414] uppercase">{a}</p>
+              <p className="mt-0.5 text-[0.65rem] text-[#96938b]">{b}</p>
+            </div>
+          ))}
+        </div>
 
         <p className="mt-6 text-center text-xs text-[#787878]">
           Need help?{' '}
