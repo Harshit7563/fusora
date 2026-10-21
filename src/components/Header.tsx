@@ -84,9 +84,7 @@ export function Header() {
               <Link
                 key={item.label}
                 to={item.to}
-                className={`pb-1 text-[0.82rem] font-bold tracking-[0.06em] whitespace-nowrap uppercase transition hover:text-[#cf2028] ${
-                  item.hot ? 'text-[#cf2028]' : 'text-[#262626]'
-                } ${
+                className={`pb-1 text-[0.82rem] font-bold tracking-[0.06em] whitespace-nowrap uppercase transition hover:text-[#cf2028] text-[#262626] ${
                   location.pathname === item.to
                     ? 'border-b-2 border-[#141414]'
                     : 'border-b-2 border-transparent'
@@ -166,9 +164,7 @@ export function Header() {
               <Link
                 key={item.label}
                 to={item.to}
-                className={`text-[0.8rem] font-bold tracking-[0.08em] whitespace-nowrap uppercase ${
-                  item.hot ? 'text-[#cf2028]' : 'text-[#262626]'
-                }`}
+                className={`text-[0.8rem] font-bold tracking-[0.08em] whitespace-nowrap uppercase text-[#262626]`}
               >
                 {item.label}
               </Link>
@@ -233,9 +229,7 @@ export function Header() {
                   <Link
                     to={item.to}
                     onClick={() => setMenuOpen(false)}
-                    className={`block px-5 py-3.5 text-sm font-bold tracking-[0.08em] uppercase ${
-                      item.hot ? 'text-[#cf2028]' : 'text-[#262626]'
-                    }`}
+                    className="block px-5 py-3.5 text-sm font-bold tracking-[0.08em] uppercase text-[#262626]"
                   >
                     {item.label}
                   </Link>
