@@ -58,9 +58,9 @@ const collections = [
 ]
 
 const giftTiers = [
-  { label: 'Under ₹999', to: '/deals', price: '₹999' },
-  { label: 'Under ₹1,499', to: '/deals', price: '₹1,499' },
-  { label: 'Under ₹2,999', to: '/deals', price: '₹2,999' },
+  { label: 'Under ₹999', to: '/deals?max=999', price: '₹999' },
+  { label: 'Under ₹1,499', to: '/deals?max=1499', price: '₹1,499' },
+  { label: 'Under ₹2,999', to: '/deals?max=2999', price: '₹2,999' },
   { label: 'Shop All', to: '/deals', price: 'All' },
 ]
 

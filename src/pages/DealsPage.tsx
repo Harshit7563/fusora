@@ -1,15 +1,22 @@
 import { Link, useSearchParams } from 'react-router-dom'
+import { X } from 'lucide-react'
 import { ProductCard } from '../components/ProductCard'
 import { useCatalog } from '../hooks/useCatalog'
 import { usePageTitle } from '../hooks/usePageTitle'
+import { formatMoney } from '../data'
 
 export function DealsPage() {
   const [params] = useSearchParams()
   const { products } = useCatalog()
   const q = (params.get('q') || '').trim().toLowerCase()
-  usePageTitle(q ? `Search: ${params.get('q')}` : 'Sale')
+  const maxRaw = Number(params.get('max') || 0)
+  const max = Number.isFinite(maxRaw) && maxRaw > 0 ? maxRaw : 0
 
-  const list = q
+  usePageTitle(
+    q ? `Search: ${params.get('q')}` : max ? `Under ${formatMoney(max)}` : 'Sale',
+  )
+
+  let list = q
     ? products.filter(
         (p) =>
           p.name.toLowerCase().includes(q) ||
@@ -18,7 +25,14 @@ export function DealsPage() {
       )
     : products.filter((p) => p.topDeal || p.was > p.price)
 
-  const title = q ? `Results for “${params.get('q')}”` : 'Sale'
+  if (max) list = list.filter((p) => p.price <= max)
+  list = [...list].sort((a, b) => a.price - b.price)
+
+  const title = q
+    ? `Results for “${params.get('q')}”`
+    : max
+      ? `Under ${formatMoney(max)}`
+      : 'Sale'
 
   return (
     <main className="bg-[#f8f6ee]">
@@ -40,11 +54,39 @@ export function DealsPage() {
           <span className="text-[#070001]">{title}</span>
         </nav>
 
+        {max > 0 && (
+          <div className="mb-6 flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center gap-2 rounded-full bg-[#141414] py-1.5 pr-2 pl-4 text-xs font-bold text-white">
+              Price: up to {formatMoney(max)}
+              <Link
+                to="/deals"
+                aria-label="Clear price filter"
+                className="grid size-5 place-items-center rounded-full bg-white/15 transition hover:bg-[#cf2028]"
+              >
+                <X className="size-3" />
+              </Link>
+            </span>
+            {[999, 1499, 2999].map((m) => (
+              <Link
+                key={m}
+                to={`/deals?max=${m}`}
+                className={`rounded-full border px-3.5 py-1.5 text-xs font-bold transition ${
+                  max === m
+                    ? 'border-[#141414] bg-[#141414] text-white'
+                    : 'border-[#d9d9d9] bg-white text-[#262626] hover:border-[#141414]'
+                }`}
+              >
+                Under {formatMoney(m)}
+              </Link>
+            ))}
+          </div>
+        )}
+
         {list.length === 0 ? (
           <p className="border border-dashed border-[#d9d9d9] bg-white px-6 py-16 text-center text-[#6a6667]">
             No products found.{' '}
             <Link to="/deals" className="font-bold text-[#cf2028] underline">
-              Clear search
+              Clear filter
             </Link>
           </p>
         ) : (
