@@ -14,8 +14,8 @@ export function Layout() {
   return (
     <div id="top" className="min-h-svh bg-[#f8f6ee]">
       <Header />
-      {/* promo + header + chip row */}
-      <div className="pt-[8.75rem] sm:pt-[9.5rem] lg:pt-[10rem]">
+      {/* offer bar + header + category nav */}
+      <div className="pt-[8.7rem] sm:pt-[9.2rem]">
         <Outlet />
       </div>
       <ScamAlert />

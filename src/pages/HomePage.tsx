@@ -1,10 +1,10 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { usePageTitle } from '../hooks/usePageTitle'
 import { Hero } from '../components/Hero'
 import { ProductCard } from '../components/ProductCard'
 import { useCatalog } from '../hooks/useCatalog'
-import { formatMoney, type Product } from '../data'
+import type { Product } from '../data'
 
 const PAGE = 12
 
@@ -33,7 +33,7 @@ const tabs: {
   },
 ]
 
-const categories = [
+const collections = [
   {
     title: 'Sarees',
     to: '/category/women/sarees',
@@ -63,6 +63,27 @@ const giftTiers = [
   { label: 'Shop All', to: '/deals', price: 'All' },
 ]
 
+function SectionTitle({
+  children,
+  light = false,
+}: {
+  children: ReactNode
+  light?: boolean
+}) {
+  return (
+    <div className="text-center">
+      <h2
+        className={`font-heading text-4xl tracking-wide uppercase sm:text-5xl ${
+          light ? 'text-white' : 'text-[#141414]'
+        }`}
+      >
+        {children}
+      </h2>
+      <div className="mx-auto mt-2.5 h-1 w-14 bg-[#cf2028]" />
+    </div>
+  )
+}
+
 export function HomePage() {
   usePageTitle()
   const { products } = useCatalog()
@@ -82,21 +103,117 @@ export function HomePage() {
     return pool.slice(0, 4)
   }, [products])
 
-  const founderPicks = useMemo(
+  const newArrivals = useMemo(
+    () =>
+      [...products]
+        .sort((a, b) =>
+          String(b.uploadedAt ?? '').localeCompare(String(a.uploadedAt ?? '')),
+        )
+        .slice(0, 8),
+    [products],
+  )
+
+  const bestsellers = useMemo(
     () => products.filter((p) => p.subtype === 'sarees').slice(0, 8),
     [products],
   )
 
+  const circles = useMemo(() => {
+    const pick = (fn: (p: Product) => boolean, fallback: string) =>
+      products.find(fn)?.image || fallback
+    return [
+      {
+        title: 'Sarees',
+        to: '/category/women/sarees',
+        image: pick((p) => p.subtype === 'sarees', '/heroes/ai-saree.jpg?v=2'),
+      },
+      {
+        title: 'Dresses',
+        to: '/category/women/dresses',
+        image: pick((p) => p.subtype === 'dresses', '/heroes/ai-wedding.jpg?v=2'),
+      },
+      {
+        title: 'Women',
+        to: '/category/women',
+        image: pick((p) => p.gender === 'women', '/heroes/ai-wedding.jpg?v=2'),
+      },
+      {
+        title: 'Men',
+        to: '/category/men',
+        image: pick((p) => p.gender === 'men', '/heroes/ai-men.jpg?v=2'),
+      },
+      {
+        title: 'Jeans',
+        to: '/category/men/jeans',
+        image: pick((p) => p.subtype === 'jeans', '/heroes/ai-men.jpg?v=2'),
+      },
+      {
+        title: 'Jewellery',
+        to: '/category/jewelry-eyewear-watches',
+        image: pick(
+          (p) => p.tab === 'jewelry-eyewear-watches',
+          '/heroes/ai-sale.jpg?v=2',
+        ),
+      },
+      {
+        title: 'Sale',
+        to: '/deals',
+        image: '/heroes/ai-sale.jpg?v=2',
+      },
+    ]
+  }, [products])
+
   return (
-    <main className="bg-[#f8f6ee]">
+    <main className="bg-white">
       <Hero />
 
-      {/* What's in your deck — category strip */}
-      <section className="bg-white px-4 py-10 sm:py-14">
-        <div className="mx-auto max-w-[1200px]">
-          <h2 className="section-title text-[#1f201e]">What&apos;s in your deck</h2>
-          <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-            {categories.map((c) => (
+      {/* Shop by category — circles */}
+      <section className="px-4 py-10 sm:py-12">
+        <div className="mx-auto max-w-[1280px]">
+          <SectionTitle>Shop by category</SectionTitle>
+          <div className="hide-scrollbar mt-8 flex gap-4 overflow-x-auto pb-1 sm:gap-6 lg:justify-center">
+            {circles.map((c) => (
+              <Link
+                key={c.title}
+                to={c.to}
+                className="group w-24 shrink-0 text-center sm:w-28"
+              >
+                <span className="block overflow-hidden rounded-full ring-2 ring-transparent transition group-hover:ring-[#cf2028]">
+                  <img
+                    src={c.image}
+                    alt={c.title}
+                    className="aspect-square w-full object-cover transition duration-500 group-hover:scale-105"
+                  />
+                </span>
+                <span className="mt-2 block text-xs font-bold tracking-[0.08em] text-[#262626] uppercase group-hover:text-[#cf2028]">
+                  {c.title}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* New arrivals */}
+      {newArrivals.length > 0 && (
+        <section className="px-4 pb-12 sm:pb-16">
+          <div className="mx-auto max-w-[1280px]">
+            <SectionTitle>New arrivals</SectionTitle>
+            <div className="mt-8 grid grid-cols-2 gap-x-3 gap-y-6 sm:gap-x-4 md:grid-cols-3 lg:grid-cols-4">
+              {newArrivals.map((p) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Trending collections */}
+      <section className="bg-[#faf8f4] px-4 py-12 sm:py-16">
+        <div className="mx-auto max-w-[1280px]">
+          <SectionTitle>Trending collections</SectionTitle>
+          <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+            {collections.map((c) => (
               <Link
                 key={c.to + c.title}
                 to={c.to}
@@ -108,7 +225,7 @@ export function HomePage() {
                   className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#070001]/75 via-transparent to-transparent" />
-                <p className="absolute inset-x-0 bottom-0 p-3 text-center font-heading text-xl tracking-wide text-white sm:text-2xl">
+                <p className="absolute inset-x-0 bottom-0 p-3 text-center font-heading text-2xl tracking-wide text-white uppercase">
                   {c.title}
                 </p>
               </Link>
@@ -117,66 +234,37 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* Deal of the Day — 4 hot picks */}
+      {/* Deal of the Day */}
       {deals.length > 0 && (
-        <section className="bbb-red-band px-4 py-12 sm:py-16">
-          <div className="mx-auto max-w-[1200px]">
-            <h2 className="section-title text-[#ffc462]">Deal of the Day</h2>
-            <div className="mx-auto mt-2 grid w-max place-items-center bg-[#ffc462] px-3 py-1 font-heading text-lg text-[#7f1714]">
-              Hot pick
-            </div>
-            <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+        <section className="bg-[#cf2028] px-4 py-12 sm:py-16">
+          <div className="mx-auto max-w-[1280px]">
+            <SectionTitle light>Deal of the day</SectionTitle>
+            <p className="mt-2 text-center text-xs font-bold tracking-[0.2em] text-[#ffc462] uppercase">
+              Limited time · Grab before it&apos;s gone
+            </p>
+            <div className="mt-8 grid grid-cols-2 gap-x-3 gap-y-6 sm:gap-x-4 lg:grid-cols-4">
               {deals.map((deal) => (
-                <article
-                  key={deal.id}
-                  className="flex flex-col border border-[#d9d9d9] bg-white text-[#070001] shadow-[0_3px_13px_#00000024]"
-                >
-                  <Link to={`/product/${deal.id}`}>
-                    <img
-                      src={deal.image}
-                      alt={deal.name}
-                      className="aspect-square w-full object-cover"
-                    />
-                  </Link>
-                  <div className="flex flex-1 flex-col items-center gap-2 px-3 py-3 text-center sm:px-4 sm:py-4">
-                    <p className="line-clamp-2 text-sm font-medium">{deal.name}</p>
-                    <p className="font-heading text-xl sm:text-2xl">
-                      {formatMoney(deal.price)}
-                    </p>
-                    {deal.was > deal.price && (
-                      <p className="text-xs text-[#6a6667] line-through">
-                        {formatMoney(deal.was)}
-                      </p>
-                    )}
-                    <Link
-                      to={`/product/${deal.id}`}
-                      className="btn-outline mt-auto w-full max-w-[9rem]"
-                    >
-                      Buy
-                    </Link>
-                  </div>
-                </article>
+                <div key={deal.id} className="bg-white p-2">
+                  <ProductCard product={deal} />
+                </div>
               ))}
             </div>
           </div>
         </section>
       )}
 
-      {/* Free gift tiers */}
-      <section className="bg-[#f8f6ee] px-4 py-12 sm:py-14">
+      {/* Price bands */}
+      <section className="px-4 py-12 sm:py-14">
         <div className="mx-auto max-w-[900px] text-center">
-          <h2 className="section-title text-[#1f201e]">Build the party bag</h2>
-          <p className="mt-2 text-sm text-[#6a6667]">
-            Pick your price band and stack the looks
-          </p>
+          <SectionTitle>Shop by price</SectionTitle>
           <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
             {giftTiers.map((t) => (
               <Link
                 key={t.label}
                 to={t.to}
-                className="border border-[#d9d9d9] bg-white px-3 py-6 transition hover:border-[#cf2028] hover:shadow-[0_3px_13px_#00000014]"
+                className="border border-[#e5e0da] bg-white px-3 py-6 transition hover:border-[#cf2028] hover:shadow-[0_3px_13px_#00000014]"
               >
-                <p className="font-heading text-2xl text-[#cf2028]">{t.price}</p>
+                <p className="font-heading text-3xl text-[#cf2028]">{t.price}</p>
                 <p className="mt-1 text-xs font-semibold tracking-wide text-[#6a6667] uppercase">
                   {t.label}
                 </p>
@@ -186,13 +274,13 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* Founder's Pick */}
-      {founderPicks.length > 0 && (
-        <section className="bg-white px-4 py-12 sm:py-14">
-          <div className="mx-auto max-w-[1200px]">
-            <h2 className="section-title text-[#1f201e]">Founder&apos;s Pick</h2>
-            <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
-              {founderPicks.map((p) => (
+      {/* Bestsellers */}
+      {bestsellers.length > 0 && (
+        <section className="bg-[#faf8f4] px-4 py-12 sm:py-16">
+          <div className="mx-auto max-w-[1280px]">
+            <SectionTitle>Bestselling sarees</SectionTitle>
+            <div className="mt-8 grid grid-cols-2 gap-x-3 gap-y-6 sm:gap-x-4 md:grid-cols-3 lg:grid-cols-4">
+              {bestsellers.map((p) => (
                 <ProductCard key={p.id} product={p} />
               ))}
             </div>
@@ -200,37 +288,45 @@ export function HomePage() {
         </section>
       )}
 
-      {/* Shop By grid */}
-      <section className="bg-[#f8f6ee] px-4 py-12 sm:py-14">
-        <div className="mx-auto max-w-[1200px]">
-          <div className="mb-6 flex items-end justify-between gap-3">
-            <h2 className="section-title text-left text-[#1f201e]">Shop the drop</h2>
+      {/* Shop the drop */}
+      <section className="px-4 py-12 sm:py-16">
+        <div className="mx-auto max-w-[1280px]">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <h2 className="font-heading text-4xl tracking-wide text-[#141414] uppercase sm:text-5xl">
+                Shop the drop
+              </h2>
+              <div className="mt-2.5 h-1 w-14 bg-[#cf2028]" />
+            </div>
             <Link
               to="/deals"
-              className="font-heading text-lg tracking-wide text-[#cf2028] hover:underline"
+              className="text-xs font-bold tracking-[0.14em] text-[#cf2028] uppercase hover:underline"
             >
-              View all
+              View all →
             </Link>
           </div>
 
-          <div className="mb-5 flex gap-2 overflow-x-auto pb-1">
+          <div className="hide-scrollbar mt-6 flex gap-2 overflow-x-auto pb-1">
             {tabs.map((t) => (
               <button
                 key={t.id}
                 type="button"
-                className="chip"
-                data-active={tab === t.id}
                 onClick={() => {
                   setTab(t.id)
                   setVisible(PAGE)
                 }}
+                className={`rounded-full border px-4 py-2 text-xs font-bold tracking-[0.08em] whitespace-nowrap uppercase transition ${
+                  tab === t.id
+                    ? 'border-[#141414] bg-[#141414] text-white'
+                    : 'border-[#d9d9d9] bg-white text-[#262626] hover:border-[#141414]'
+                }`}
               >
                 {t.label}
               </button>
             ))}
           </div>
 
-          <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
+          <div className="mt-6 grid grid-cols-2 gap-x-3 gap-y-6 sm:gap-x-4 md:grid-cols-3 lg:grid-cols-4">
             {shown.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}
@@ -241,9 +337,9 @@ export function HomePage() {
               <button
                 type="button"
                 onClick={() => setVisible((n) => n + PAGE)}
-                className="btn-outline"
+                className="border border-[#141414] px-8 py-3 text-xs font-bold tracking-[0.16em] text-[#141414] uppercase transition hover:bg-[#141414] hover:text-white"
               >
-                Load more
+                Load more products
               </button>
             </div>
           )}

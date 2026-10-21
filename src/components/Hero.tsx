@@ -92,22 +92,22 @@ export function Hero() {
               transition={{ duration: 18, ease: 'easeInOut' }}
               className={`absolute inset-0 h-full w-full object-cover ${slide.position || 'object-center'}`}
             />
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(60,5,5,0.15)_0%,rgba(7,0,1,0.55)_70%)]" />
-            <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-[#3a0505] to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#070001]/60 via-[#070001]/15 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#070001]/50 to-transparent" />
 
-            <div className="absolute inset-0 z-[1] flex flex-col items-center justify-center px-5 text-center">
-              <p className="font-display text-sm tracking-[0.45em] text-[#f3dcb0] sm:text-lg">
+            <div className="absolute inset-0 z-[1] flex flex-col items-start justify-end px-5 pb-14 text-left sm:px-10 sm:pb-16">
+              <p className="bg-[#cf2028] px-2.5 py-1 text-[0.65rem] font-bold tracking-[0.22em] text-white uppercase sm:text-xs">
                 {slide.eyebrow}
               </p>
-              <h1 className="mt-2 font-display text-[3.5rem] leading-none tracking-[0.12em] text-[#ffc462] sm:text-7xl md:text-[5.5rem] lg:text-[6rem]">
+              <h1 className="mt-3 font-heading text-6xl leading-[0.95] tracking-wide text-white uppercase drop-shadow-[0_2px_10px_rgba(0,0,0,0.45)] sm:text-7xl md:text-8xl">
                 {slide.title}
               </h1>
-              <p className="mt-2 font-display text-[0.8rem] tracking-[0.35em] text-[#f3dcb0] sm:text-base">
+              <p className="mt-2 text-sm font-medium text-white/90 sm:text-base">
                 {slide.line}
               </p>
               <Link
                 to={slide.to}
-                className="btn-primary mt-7 pointer-events-auto"
+                className="mt-5 bg-white px-6 py-3 text-xs font-bold tracking-[0.16em] text-[#070001] uppercase transition hover:bg-[#cf2028] hover:text-white"
               >
                 {slide.cta}
               </Link>

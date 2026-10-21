@@ -9,25 +9,33 @@ type Props = {
   showAdd?: boolean
 }
 
-/** Bla Bli Blu–style card: bordered tile, centered copy, BUY CTA */
+function categoryLabel(p: Product): string {
+  if (p.tab === 'jewelry-eyewear-watches') return 'Artificial Jewellery'
+  if (p.subtype) return p.subtype.replace(/-/g, ' ')
+  if (p.categoryName) return p.categoryName
+  return p.gender === 'men' ? 'Men' : p.gender === 'women' ? 'Women' : 'Fusora'
+}
+
+/** Souled-style card: portrait photo, wishlist heart, price + green discount */
 export function ProductCard({ product: p }: Props) {
   const { wishlist, toggleWish, addToCart } = useStore()
   const onSale = p.was > p.price
+  const off = onSale ? Math.round(((p.was - p.price) / p.was) * 100) : 0
 
   return (
-    <article className="group flex h-full flex-col border border-[#d9d9d9] bg-white transition hover:shadow-[0_3px_13px_#00000024]">
-      <div className="relative overflow-hidden bg-[#f1efec]">
+    <article className="group flex h-full flex-col bg-white">
+      <div className="relative overflow-hidden bg-[#f4f2ee]">
         <Link to={`/product/${p.id}`}>
           <SafeImage
             src={p.image}
             alt={p.name}
-            className="aspect-square w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+            className="aspect-[3/4] w-full object-cover transition duration-500 group-hover:scale-[1.04]"
           />
         </Link>
         <button
           type="button"
           onClick={() => toggleWish(p.id)}
-          className="absolute top-2.5 right-2.5 grid size-8 place-items-center rounded-full bg-white text-[#070001] shadow-sm transition hover:scale-105"
+          className="absolute top-2.5 right-2.5 grid size-8 place-items-center rounded-full bg-white/95 text-[#070001] shadow-sm transition hover:scale-110"
           aria-label="Wishlist"
         >
           <Heart
@@ -37,44 +45,49 @@ export function ProductCard({ product: p }: Props) {
             strokeWidth={2}
           />
         </button>
-        {onSale && (
-          <span className="absolute top-2.5 left-2.5 bg-[#ffc462] px-2 py-0.5 font-heading text-[0.85rem] tracking-wide text-[#7f1714]">
-            Sale
-          </span>
-        )}
-        {p.tab === 'jewelry-eyewear-watches' && (
-          <span className="absolute bottom-2.5 left-2.5 bg-[#070001]/85 px-2 py-0.5 text-[0.58rem] font-bold tracking-wide text-white uppercase">
-            Artificial
+        {off >= 5 && (
+          <span className="absolute bottom-2.5 left-2.5 bg-[#cf2028] px-1.5 py-0.5 text-[0.62rem] font-bold tracking-wide text-white uppercase">
+            {off}% off
           </span>
         )}
       </div>
-      <div className="flex flex-1 flex-col items-center gap-2 px-3 py-3 text-center">
-        <Link to={`/product/${p.id}`} className="block w-full">
-          <p className="line-clamp-2 min-h-[2.4em] text-[0.8rem] font-medium leading-snug text-[#070001]">
+      <div className="flex flex-1 flex-col px-1 pt-2.5 pb-1">
+        <p className="text-[0.62rem] font-bold tracking-[0.12em] text-[#8a8585] uppercase">
+          {categoryLabel(p)}
+        </p>
+        <Link to={`/product/${p.id}`} className="block">
+          <p className="mt-0.5 line-clamp-2 min-h-[2.5em] text-[0.83rem] leading-snug font-medium text-[#262626]">
             {p.name}
           </p>
-          {p.tab === 'jewelry-eyewear-watches' && (
-            <p className="mt-1 text-[0.65rem] font-semibold tracking-wide text-[#cf2028] uppercase">
-              Not real gold / diamond
-            </p>
-          )}
-          <div className="mt-1.5 flex flex-wrap items-baseline justify-center gap-2">
-            <p className="font-heading text-xl leading-none text-[#070001]">
-              {formatMoney(p.price)}
-            </p>
-            {onSale && (
-              <p className="text-xs font-medium text-[#6a6667] line-through">
-                {formatMoney(p.was)}
-              </p>
-            )}
-          </div>
         </Link>
+        {p.tab === 'jewelry-eyewear-watches' && (
+          <p className="mt-0.5 text-[0.62rem] font-semibold tracking-wide text-[#cf2028] uppercase">
+            Not real gold / diamond
+          </p>
+        )}
+        <div className="mt-1 flex flex-wrap items-baseline gap-x-1.5">
+          <span className="text-[0.95rem] font-bold text-[#070001]">
+            {formatMoney(p.price)}
+          </span>
+          {onSale && (
+            <>
+              <span className="text-xs text-[#8a8585] line-through">
+                {formatMoney(p.was)}
+              </span>
+              {off > 0 && (
+                <span className="text-xs font-bold text-[#1f8a3b]">
+                  ({off}% OFF)
+                </span>
+              )}
+            </>
+          )}
+        </div>
         <button
           type="button"
           onClick={() => addToCart(p)}
-          className="btn-outline mt-auto w-full max-w-[9rem]"
+          className="mt-2.5 w-full border border-[#262626] py-2 text-[0.68rem] font-bold tracking-[0.14em] text-[#262626] uppercase transition hover:bg-[#cf2028] hover:border-[#cf2028] hover:text-white"
         >
-          Buy
+          Add to cart
         </button>
       </div>
     </article>
