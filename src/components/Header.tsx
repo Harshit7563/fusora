@@ -68,63 +68,81 @@ export function Header() {
         </p>
       </div>
 
-      {/* Main bar */}
-      <div className="bg-white">
-        <div className="mx-auto flex h-16 max-w-[1280px] items-center gap-3 px-3 sm:h-[4.5rem] sm:px-5">
+      {/* Main bar - menu left, logo center, actions right */}
+      <div className="relative bg-white">
+        <div className="mx-auto flex h-16 max-w-[1400px] items-center gap-3 px-3 sm:h-[4.5rem] sm:px-5">
           <button
             type="button"
-            className="grid size-9 shrink-0 place-items-center lg:hidden"
+            className="grid size-9 shrink-0 place-items-center xl:hidden"
             aria-label="Menu"
             onClick={() => setMenuOpen(true)}
           >
             <Menu className="size-5" strokeWidth={2} />
           </button>
 
-          <FusoraLogo compact className="shrink-0" />
+          {/* Left menu (desktop) */}
+          <nav className="hidden items-center gap-5 xl:flex 2xl:gap-7">
+            {nav.map((item) => (
+              <Link
+                key={item.label}
+                to={item.to}
+                className={`pb-1 text-[0.82rem] font-bold tracking-[0.06em] whitespace-nowrap uppercase transition hover:text-[#cf2028] ${
+                  item.hot ? 'text-[#cf2028]' : 'text-[#262626]'
+                } ${
+                  location.pathname === item.to
+                    ? 'border-b-2 border-[#141414]'
+                    : 'border-b-2 border-transparent'
+                }`}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
 
-          <form
-            onSubmit={onSearch}
-            className="mx-auto hidden w-full max-w-xl items-center gap-2 rounded-full bg-[#f2f2f2] px-4 py-2.5 transition focus-within:bg-white focus-within:ring-1 focus-within:ring-[#cf2028] md:flex"
-          >
-            <Search className="size-4 shrink-0 text-[#6a6667]" strokeWidth={2.2} />
-            <input
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-              placeholder="Search for tees, sarees, dresses & more"
-              className="w-full bg-transparent text-sm outline-none placeholder:text-[#96938b]"
-            />
-          </form>
+          {/* Logo - centered on desktop */}
+          <div className="xl:absolute xl:top-1/2 xl:left-1/2 xl:-translate-x-1/2 xl:-translate-y-1/2">
+            <FusoraLogo compact className="shrink-0" />
+          </div>
 
-          <div className="ml-auto flex items-start gap-3 sm:gap-5 md:ml-0">
+          {/* Right actions */}
+          <div className="ml-auto flex items-center gap-2.5 sm:gap-4">
+            <form
+              onSubmit={onSearch}
+              className="hidden w-56 items-center gap-2 rounded-full border border-[#d9d9d9] bg-white px-4 py-2 transition focus-within:border-[#cf2028] lg:flex 2xl:w-72"
+            >
+              <input
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                placeholder="What are you looking for?"
+                className="w-full bg-transparent text-sm outline-none placeholder:text-[#96938b]"
+              />
+              <button type="submit" aria-label="Search" className="shrink-0">
+                <Search className="size-4 text-[#262626]" strokeWidth={2.2} />
+              </button>
+            </form>
             <button
               type="button"
-              className="grid size-9 place-items-center md:hidden"
+              className="grid size-9 place-items-center lg:hidden"
               aria-label="Search"
               onClick={() => navigate('/deals')}
             >
-              <Search className="size-[1.15rem]" strokeWidth={2} />
+              <Search className="size-[1.25rem]" strokeWidth={1.9} />
             </button>
             <Link
               to="/account"
-              className="hidden flex-col items-center gap-0.5 text-[#070001] transition hover:text-[#cf2028] sm:flex"
+              className="relative hidden size-9 place-items-center text-[#141414] transition hover:text-[#cf2028] sm:grid"
               aria-label="Account"
             >
-              <User className="size-[1.3rem]" strokeWidth={1.8} />
-              <span className="text-[0.6rem] font-semibold tracking-wide uppercase">
-                {isLoggedIn ? 'Account' : 'Login'}
-              </span>
+              <User className="size-[1.35rem]" strokeWidth={1.7} />
             </Link>
             <Link
               to="/wishlist"
-              className="relative flex flex-col items-center gap-0.5 text-[#070001] transition hover:text-[#cf2028]"
+              className="relative grid size-9 place-items-center text-[#141414] transition hover:text-[#cf2028]"
               aria-label="Wishlist"
             >
-              <Heart className="size-[1.3rem]" strokeWidth={1.8} />
-              <span className="hidden text-[0.6rem] font-semibold tracking-wide uppercase sm:block">
-                Wishlist
-              </span>
+              <Heart className="size-[1.35rem]" strokeWidth={1.7} />
               {wishlist.size > 0 && (
-                <span className="absolute -top-1.5 right-0 flex min-w-4 items-center justify-center rounded-full bg-[#cf2028] px-1 text-[0.55rem] font-bold text-white">
+                <span className="absolute -top-0.5 -right-0.5 flex min-w-4 items-center justify-center rounded-full bg-[#cf2028] px-1 text-[0.55rem] font-bold text-white">
                   {wishlist.size}
                 </span>
               )}
@@ -132,44 +150,37 @@ export function Header() {
             <button
               type="button"
               onClick={openCart}
-              className="relative flex flex-col items-center gap-0.5 text-[#070001] transition hover:text-[#cf2028]"
+              className="relative grid size-9 place-items-center text-[#141414] transition hover:text-[#cf2028]"
               aria-label="Cart"
             >
-              <ShoppingBag className="size-[1.3rem]" strokeWidth={1.8} />
-              <span className="hidden text-[0.6rem] font-semibold tracking-wide uppercase sm:block">
-                Cart
-              </span>
-              <span className="absolute -top-1.5 right-0 flex min-w-4 items-center justify-center rounded-full bg-[#cf2028] px-1 text-[0.55rem] font-bold text-white">
+              <ShoppingBag className="size-[1.35rem]" strokeWidth={1.7} />
+              <span className="absolute -top-0.5 -right-0.5 flex min-w-4 items-center justify-center rounded-full bg-[#cf2028] px-1 text-[0.55rem] font-bold text-white">
                 {cartCount}
               </span>
             </button>
           </div>
         </div>
+
+        {/* Category strip (mobile / tablet) */}
+        <nav className="border-t border-[#f0ecec] bg-white xl:hidden">
+          <div className="hide-scrollbar flex items-center gap-6 overflow-x-auto px-3 py-2.5 sm:px-5">
+            {nav.map((item) => (
+              <Link
+                key={item.label}
+                to={item.to}
+                className={`text-[0.8rem] font-bold tracking-[0.08em] whitespace-nowrap uppercase ${
+                  item.hot ? 'text-[#cf2028]' : 'text-[#262626]'
+                }`}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </div>
+        </nav>
       </div>
 
-      {/* Category nav */}
-      <nav className="border-t border-[#f0ecec] bg-white">
-        <div className="hide-scrollbar mx-auto flex max-w-[1280px] items-center gap-6 overflow-x-auto px-3 py-2.5 sm:px-5 lg:justify-center lg:gap-9">
-          {nav.map((item) => (
-            <Link
-              key={item.label}
-              to={item.to}
-              className={`text-[0.8rem] font-bold tracking-[0.08em] whitespace-nowrap uppercase transition hover:text-[#cf2028] ${
-                item.hot ? 'text-[#cf2028]' : 'text-[#262626]'
-              } ${
-                location.pathname === item.to
-                  ? 'underline decoration-[#cf2028] decoration-2 underline-offset-4'
-                  : ''
-              }`}
-            >
-              {item.label}
-            </Link>
-          ))}
-        </div>
-      </nav>
-
       {menuOpen && (
-        <div className="fixed inset-0 z-[60] lg:hidden">
+        <div className="fixed inset-0 z-[60] xl:hidden">
           <button
             type="button"
             className="absolute inset-0 bg-black/45"

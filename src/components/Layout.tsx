@@ -15,7 +15,7 @@ export function Layout() {
     <div id="top" className="min-h-svh bg-[#f8f6ee]">
       <Header />
       {/* offer bar + header + category nav */}
-      <div className="pt-[8.7rem] sm:pt-[9.2rem]">
+      <div className="pt-[8.7rem] sm:pt-[9.2rem] xl:pt-[7.15rem]">
         <Outlet />
       </div>
       <ScamAlert />
