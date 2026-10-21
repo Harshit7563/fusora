@@ -1,5 +1,15 @@
 import { Link } from 'react-router-dom'
-import { IndianRupee, RotateCcw } from 'lucide-react'
+import {
+  Banknote,
+  CreditCard,
+  IndianRupee,
+  Landmark,
+  RotateCcw,
+  ShieldCheck,
+  Smartphone,
+  Truck,
+  Zap,
+} from 'lucide-react'
 
 import {
   COMPANY_CIN,
@@ -124,17 +134,34 @@ export function Footer() {
         </div>
 
         {/* Payments row */}
-        <div className="mt-8 flex flex-col items-center justify-center gap-2 border-t border-[#e0e0e0] pt-5 text-center text-xs text-[#6a6667] sm:flex-row sm:gap-6">
-          <p>
-            <span className="font-bold text-[#262626]">
+        <div className="mt-8 border-t border-[#e0e0e0] pt-5">
+          <div className="flex flex-wrap items-center justify-center gap-2 text-xs text-[#6a6667]">
+            <span className="mr-1 inline-flex items-center gap-1.5 font-bold text-[#262626]">
+              <ShieldCheck className="size-4 text-[#1f8a3b]" />
               100% Secure Payments:
+            </span>
+            {[
+              { label: 'Razorpay', Icon: Zap },
+              { label: 'UPI', Icon: Smartphone },
+              { label: 'Cards', Icon: CreditCard },
+              { label: 'Net Banking', Icon: Landmark },
+              { label: 'COD', Icon: Banknote },
+            ].map(({ label, Icon }) => (
+              <span
+                key={label}
+                className="inline-flex items-center gap-1.5 rounded-full border border-[#dcdcdc] bg-white px-3 py-1.5 font-semibold text-[#3d3d3d]"
+              >
+                <Icon className="size-3.5 text-[#cf2028]" />
+                {label}
+              </span>
+            ))}
+          </div>
+          <p className="mt-3 text-center text-xs text-[#6a6667]">
+            <span className="inline-flex items-center gap-1.5 font-bold text-[#262626]">
+              <Truck className="size-4 text-[#cf2028]" />
+              Delivery:
             </span>{' '}
-            Razorpay · UPI · Cards · Net Banking · COD
-          </p>
-          <span className="hidden h-4 w-px bg-[#cfcaca] sm:block" />
-          <p>
-            <span className="font-bold text-[#262626]">Delivery:</span> 1–7
-            days across India
+            1–7 days across India
           </p>
         </div>
       </div>
