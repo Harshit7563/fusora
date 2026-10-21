@@ -1,4 +1,5 @@
 import { useMemo, useState, type ReactNode } from 'react'
+import { RotateCcw, ShieldCheck, Truck } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { usePageTitle } from '../hooks/usePageTitle'
 import { Hero } from '../components/Hero'
@@ -161,6 +162,45 @@ export function HomePage() {
   return (
     <main className="bg-white">
       <Hero />
+
+      {/* Trust strip */}
+      <section className="bg-[#e9f5f6]">
+        <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-3 px-4 py-4 text-center sm:grid-cols-3 sm:px-5">
+          {[
+            {
+              Icon: ShieldCheck,
+              head: 'Extra 5% Off',
+              sub: 'on prepaid Razorpay orders',
+            },
+            {
+              Icon: RotateCcw,
+              head: '7-Day Easy Returns',
+              sub: '& quick refunds',
+            },
+            {
+              Icon: Truck,
+              head: 'Free & Fast Shipping',
+              sub: 'on orders above ₹999',
+            },
+          ].map(({ Icon, head, sub }) => (
+            <div
+              key={head}
+              className="flex items-center justify-center gap-3 text-left"
+            >
+              <Icon
+                className="size-8 shrink-0 text-[#141414]"
+                strokeWidth={1.5}
+              />
+              <p className="text-sm leading-tight font-bold text-[#141414]">
+                {head}
+                <span className="block text-xs font-medium text-[#4c5a5c]">
+                  {sub}
+                </span>
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
 
       {/* Shop by category — circles */}
       <section className="px-4 py-10 sm:py-12">
