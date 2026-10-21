@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom'
 import {
   Banknote,
-  CreditCard,
   IndianRupee,
   Landmark,
   RotateCcw,
@@ -153,8 +152,17 @@ export function Footer() {
                 <span className="text-[#ed752e]">›</span>
               </span>
             </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#dcdcdc] bg-white px-3 py-1.5 font-semibold text-[#3d3d3d]">
+              <span className="text-[0.62rem] font-black tracking-wide text-[#1a1f71] italic">
+                VISA
+              </span>
+              <span className="relative flex w-6 items-center">
+                <span className="size-3.5 rounded-full bg-[#eb001b]/90" />
+                <span className="-ml-1.5 size-3.5 rounded-full bg-[#f79e1b]/90" />
+              </span>
+              Cards
+            </span>
             {[
-              { label: 'Cards', Icon: CreditCard },
               { label: 'Net Banking', Icon: Landmark },
               { label: 'COD', Icon: Banknote },
             ].map(({ label, Icon }) => (
