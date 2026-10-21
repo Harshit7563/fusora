@@ -440,18 +440,6 @@ export function ProductPage() {
                     </dt>
                     <dd className="text-[#666666]">{product.brand}</dd>
                   </div>
-                  <div className="flex gap-3">
-                    <dt className="w-28 shrink-0 font-medium text-[#111111]">
-                      Color
-                    </dt>
-                    <dd className="text-[#666666]">{details.color}</dd>
-                  </div>
-                  <div className="flex gap-3">
-                    <dt className="w-28 shrink-0 font-medium text-[#111111]">
-                      Material
-                    </dt>
-                    <dd className="text-[#666666]">{details.material}</dd>
-                  </div>
                 </dl>
               </Accordion>
 

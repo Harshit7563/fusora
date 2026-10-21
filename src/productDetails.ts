@@ -601,7 +601,7 @@ function pickSizeProfile(product: Product): {
     return {
       sizes,
       chart: buildProductSizeChart(product, sizes, 'saree'),
-      material: product.fabric || 'Silk / chiffon / georgette as listed',
+      material: product.fabric || fabricOf(product),
       care: [
         'Dry clean preferred for silk',
         'Hand wash gentle for chiffon',
@@ -800,7 +800,7 @@ function buildReviews(product: Product, rating: number, count: number): {
 export function getProductDetails(product: Product): ProductDetails {
   const meta = apparelMeta(product) ?? byCategory[product.tab] ?? defaultMeta
   const colorMatch = product.name.match(
-    /(Silver|Black|White|Grey|Gray|Nude|Yellow|Red|Blue|Green|Titanium|Natural|Carbon|Maroon|Pink|Navy|Ivory|Cream|Olive|Beige|Brown|Purple|Orange|Rust|Turquoise|French Beige|Midnight Blue|Foggy Grey|Slate Grey|Dark Blue|Brownish|Firefly|Mid Grey|Spanish Green|Pearl Bush|Cavern Pink)[^,]*/i,
+    /(French Beige|Midnight Blue|Foggy Grey|Slate Grey|Dark Blue|Spanish Green|Pearl Bush|Cavern Pink|Peacock Blue|Off White|Silver|Black|White|Grey|Gray|Nude|Yellow|Red|Blue|Green|Titanium|Natural|Carbon|Maroon|Pink|Navy|Ivory|Cream|Olive|Beige|Brown|Purple|Orange|Rust|Turquoise|Lavender|Mustard|Magenta)/i,
   )
   const colorLabel =
     product.color?.trim() || colorMatch?.[0]?.trim() || 'As pictured'
@@ -822,6 +822,8 @@ export function getProductDetails(product: Product): ProductDetails {
       : [{ label: 'Colour', value: colorLabel }]),
   ]
 
+  const fabricSpec = specs.find((s) => s.label === 'Fabric')?.value
+
   return {
     sku: `FUS-${product.id.toUpperCase()}-${product.brand.slice(0, 3).toUpperCase()}`,
     rating: Math.round(rating * 10) / 10,
@@ -842,6 +844,6 @@ export function getProductDetails(product: Product): ProductDetails {
     reviews,
     ratingBreakdown: breakdown,
     care: profile.care,
-    material: profile.material,
+    material: fabricSpec ?? profile.material,
   }
 }

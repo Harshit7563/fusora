@@ -14,7 +14,7 @@ import { policies } from '../policies'
 const faqs = [
   {
     q: 'How long will my order take to arrive?',
-    a: 'Orders are dispatched from our Maharashtra fulfilment centre and typically arrive within 1–7 days depending on your pincode. You will receive tracking details by email and SMS as soon as your order ships, and you can follow it any time from Order status.',
+    a: 'Orders may ship from our Maharashtra fulfilment centre or the respective seller, and typically arrive within 1–7 days depending on your pincode. You will receive tracking details by email and SMS as soon as your order ships, and you can follow it any time from Order status.',
   },
   {
     q: 'How do I verify my email?',
