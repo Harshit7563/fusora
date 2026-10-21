@@ -155,11 +155,6 @@ export function HomePage() {
           '/heroes/ai-sale.jpg?v=2',
         ),
       },
-      {
-        title: 'Sale',
-        to: '/deals',
-        image: '/heroes/ai-sale.jpg?v=2',
-      },
     ]
   }, [products])
 
