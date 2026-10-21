@@ -30,10 +30,10 @@ export function FusoraLogo({
       aria-label="Fusora home"
     >
       <span
-        className={`inline-flex items-center rounded-2xl border-[3px] border-white shadow-[0_0_0_2px_#cf2028] ${pad} ${
+        className={`inline-flex items-center rounded-2xl border-[3px] border-white shadow-[0_0_0_2px_#141414] ${pad} ${
           onDark
-            ? 'bg-white text-[#cf2028] shadow-[0_0_0_2px_#ffffff]'
-            : 'bg-[#cf2028] text-white'
+            ? 'bg-white text-[#141414] shadow-[0_0_0_2px_#ffffff]'
+            : 'bg-[#141414] text-white'
         }`}
       >
         <span

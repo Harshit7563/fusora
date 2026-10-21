@@ -1,11 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 88" fill="none" role="img" aria-label="Fusora">
   <title>Fusora</title>
-  <!-- Outer red border (sticker rim) -->
-  <rect x="2" y="6" width="316" height="76" rx="22" fill="#CF2028"/>
+  <!-- Outer black border (sticker rim) -->
+  <rect x="2" y="6" width="316" height="76" rx="22" fill="#141414"/>
   <!-- White ring -->
   <rect x="7" y="11" width="306" height="66" rx="18" fill="#FFFFFF"/>
-  <!-- Inner red fill -->
-  <rect x="12" y="16" width="296" height="56" rx="14" fill="#CF2028"/>
+  <!-- Inner black fill -->
+  <rect x="12" y="16" width="296" height="56" rx="14" fill="#141414"/>
   <!-- Wordmark -->
   <text
     x="160"
