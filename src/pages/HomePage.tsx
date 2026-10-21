@@ -135,7 +135,7 @@ export function HomePage() {
       {
         title: 'Women',
         to: '/category/women',
-        image: pick((p) => p.gender === 'women', '/heroes/ai-wedding.jpg?v=2'),
+        image: '/products/dresses/red-floral-fitflare.jpg',
       },
       {
         title: 'Men',
