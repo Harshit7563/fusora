@@ -480,7 +480,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!wishToast) return
-    const t = window.setTimeout(() => setWishToast(null), 2000)
+    const t = window.setTimeout(() => setWishToast(null), 1500)
     return () => window.clearTimeout(t)
   }, [wishToast])
 

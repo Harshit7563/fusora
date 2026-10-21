@@ -45,7 +45,7 @@ export function Layout() {
       <LocationModal />
       <NewsletterPopup />
 
-      {/* Wishlist popup - bottom, Fusora dark theme, auto-dismiss in 2s */}
+      {/* Wishlist popup - bottom, Fusora dark theme, auto-dismiss in 1.5s */}
       <AnimatePresence>
         {wishToast && (
           <motion.div
@@ -106,7 +106,7 @@ export function Layout() {
               <motion.div
                 initial={{ width: '100%' }}
                 animate={{ width: '0%' }}
-                transition={{ duration: 2, ease: 'linear' }}
+                transition={{ duration: 1.5, ease: 'linear' }}
                 className="h-[3px] bg-[#ffc462]"
               />
             </div>
