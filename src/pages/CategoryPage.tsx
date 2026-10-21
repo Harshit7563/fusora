@@ -20,10 +20,12 @@ export function CategoryPage() {
   const showAll = searchParams.get('all') === '1'
   const { products } = useCatalog()
   const [sort, setSort] = useState('featured')
+  const [priceRange, setPriceRange] = useState('all')
   const [visibleCount, setVisibleCount] = useState(48)
 
   useEffect(() => {
     setVisibleCount(48)
+    setPriceRange('all')
   }, [tab, subtypeParam, collectionParam, showAll])
 
   const active = (tab as CategoryId) || 'apparel-accessories'
@@ -84,12 +86,24 @@ export function CategoryPage() {
       return true
     })
 
+    if (priceRange === 'under500') rows = rows.filter((x) => x.price < 500)
+    if (priceRange === '500-999')
+      rows = rows.filter((x) => x.price >= 500 && x.price <= 999)
+    if (priceRange === '1000-1499')
+      rows = rows.filter((x) => x.price >= 1000 && x.price <= 1499)
+    if (priceRange === '1500plus') rows = rows.filter((x) => x.price >= 1500)
+    if (sort === 'discount')
+      rows = [...rows].sort(
+        (a, b) =>
+          (b.was > b.price ? (b.was - b.price) / b.was : 0) -
+          (a.was > a.price ? (a.was - a.price) / a.was : 0),
+      )
     if (sort === 'price-asc') rows = [...rows].sort((a, b) => a.price - b.price)
     if (sort === 'price-desc') rows = [...rows].sort((a, b) => b.price - a.price)
     if (sort === 'new')
       rows = [...rows].sort((a, b) => Number(b.topDeal) - Number(a.topDeal))
     return rows
-  }, [active, isApparel, subtype, collection, shopGender, products, sort])
+  }, [active, isApparel, subtype, collection, shopGender, products, sort, priceRange])
 
   const genderSubtypes = useMemo(() => {
     if (active === 'men')
@@ -180,18 +194,47 @@ export function CategoryPage() {
 
         {showProductGrid && (
           <>
-            <div className="mb-5 flex items-center justify-end gap-3 border-b border-[#e9e1db] pb-4">
-              <label className="flex items-center gap-2 text-sm font-semibold text-[#6a6667]">
+            <div className="mb-5 flex flex-wrap items-center gap-3 border-b border-[#e9e1db] pb-4">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="mr-1 text-[0.68rem] font-bold tracking-[0.14em] text-[#6a6667] uppercase">
+                  Price
+                </span>
+                {[
+                  { id: 'all', label: 'All prices' },
+                  { id: 'under500', label: 'Under ₹500' },
+                  { id: '500-999', label: '₹500 – ₹999' },
+                  { id: '1000-1499', label: '₹1,000 – ₹1,499' },
+                  { id: '1500plus', label: '₹1,500+' },
+                ].map((r) => (
+                  <button
+                    key={r.id}
+                    type="button"
+                    onClick={() => {
+                      setPriceRange(r.id)
+                      setVisibleCount(48)
+                    }}
+                    className={`rounded-full border px-3.5 py-1.5 text-xs font-bold transition ${
+                      priceRange === r.id
+                        ? 'border-[#141414] bg-[#141414] text-white'
+                        : 'border-[#d9d9d9] bg-white text-[#262626] hover:border-[#141414]'
+                    }`}
+                  >
+                    {r.label}
+                  </button>
+                ))}
+              </div>
+              <label className="ml-auto flex items-center gap-2 text-[0.68rem] font-bold tracking-[0.14em] text-[#6a6667] uppercase">
                 Sort
                 <select
                   value={sort}
                   onChange={(e) => setSort(e.target.value)}
-                  className="border border-[#d9d9d9] bg-white px-3 py-1.5 text-sm font-semibold text-[#070001] outline-none"
+                  className="rounded-full border border-[#d9d9d9] bg-white px-3.5 py-2 text-xs font-bold tracking-normal text-[#141414] normal-case outline-none"
                 >
                   <option value="featured">Featured</option>
-                  <option value="new">New</option>
-                  <option value="price-asc">Price, low to high</option>
-                  <option value="price-desc">Price, high to low</option>
+                  <option value="new">New arrivals</option>
+                  <option value="price-asc">Price: Low to High</option>
+                  <option value="price-desc">Price: High to Low</option>
+                  <option value="discount">Discount</option>
                 </select>
               </label>
             </div>
