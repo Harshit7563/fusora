@@ -77,8 +77,8 @@ cp "$ROOT/hostinger/api/orders/"*.php "$OUT/api/orders/" 2>/dev/null || true
 cp "$ROOT/hostinger/api/orders/.htaccess" "$OUT/api/orders/.htaccess"
 touch "$OUT/api/orders/data/.gitkeep"
 if [[ -f "$ROOT/.env" ]]; then
-  ADMIN_PASSWORD="$(grep -E '^ADMIN_PASSWORD=' "$ROOT/.env" | head -1 | cut -d= -f2-)"
-  ADMIN_SALT="$(grep -E '^ADMIN_SALT=' "$ROOT/.env" | head -1 | cut -d= -f2-)"
+  ADMIN_PASSWORD="$(grep -E '^ADMIN_PASSWORD=' "$ROOT/.env" | head -1 | cut -d= -f2- | sed -e 's/^"//' -e 's/"$//' -e "s/^'//" -e "s/'$//")"
+  ADMIN_SALT="$(grep -E '^ADMIN_SALT=' "$ROOT/.env" | head -1 | cut -d= -f2- | sed -e 's/^"//' -e 's/"$//' -e "s/^'//" -e "s/'$//")"
   ADMIN_HASH="$(python3 -c "import hashlib,sys; print(hashlib.sha256((sys.argv[1]+sys.argv[2]).encode()).hexdigest())" "$ADMIN_SALT" "$ADMIN_PASSWORD")"
   cat > "$OUT/api/admin/config.php" <<PHP
 <?php

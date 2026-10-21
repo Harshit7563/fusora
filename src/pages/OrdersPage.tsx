@@ -381,12 +381,15 @@ export function OrderDetailPage() {
                         ? 'Net banking'
                         : 'UPI'}
                 </span>
-                {order.payment === 'upi' && order.utr && (
+                {order.paymentId && (
                   <span className="mt-1 block text-xs normal-case text-bb-muted">
-                    UTR: <strong className="text-bb-text">{order.utr}</strong>
-                    {order.paymentPending
-                      ? ' · Verification in 2–3 hours'
-                      : ''}
+                    Payment ID:{' '}
+                    <strong className="text-bb-text">{order.paymentId}</strong>
+                  </span>
+                )}
+                {order.paymentPending && (
+                  <span className="mt-1 block text-xs normal-case text-bb-muted">
+                    Payment confirmation pending
                   </span>
                 )}
               </li>

@@ -731,8 +731,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       syncOrderToServer(order)
       setCart([])
       setToast(
-        input.payment === 'upi'
-          ? `Order ${order.id} received · UTR under verification`
+        order.paymentPending
+          ? `Order ${order.id} received · Payment confirmation pending`
           : `Order ${order.id} placed`,
       )
       return order
