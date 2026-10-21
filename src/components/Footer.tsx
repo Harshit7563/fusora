@@ -6,7 +6,6 @@ import {
   Landmark,
   RotateCcw,
   ShieldCheck,
-  Smartphone,
   Truck,
 } from 'lucide-react'
 
@@ -145,8 +144,16 @@ export function Footer() {
               </span>
               Razorpay
             </span>
+            <span className="inline-flex items-center gap-1 rounded-full border border-[#dcdcdc] bg-white px-3 py-1.5 font-semibold text-[#3d3d3d]">
+              <span className="text-[0.68rem] font-black tracking-tight text-[#3d3d3d] italic">
+                UPI
+              </span>
+              <span className="flex -space-x-1 text-[0.6rem] font-black">
+                <span className="text-[#3d9b35]">›</span>
+                <span className="text-[#ed752e]">›</span>
+              </span>
+            </span>
             {[
-              { label: 'UPI', Icon: Smartphone },
               { label: 'Cards', Icon: CreditCard },
               { label: 'Net Banking', Icon: Landmark },
               { label: 'COD', Icon: Banknote },
