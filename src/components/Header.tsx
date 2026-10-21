@@ -17,8 +17,6 @@ const nav = [
   { label: 'Dresses', to: '/category/women/dresses' },
   { label: 'Jeans', to: '/category/men/jeans' },
   { label: 'Jewellery', to: '/category/jewelry-eyewear-watches' },
-  { label: 'New In', to: '/deals' },
-  { label: 'Sale', to: '/deals', hot: true },
 ]
 
 export function Header() {
