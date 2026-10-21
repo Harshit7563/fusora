@@ -162,8 +162,13 @@ export function Footer() {
               </span>
               Cards
             </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-[#dcdcdc] bg-white px-3 py-1.5 font-semibold text-[#3d3d3d]">
+              <span className="grid size-4 place-items-center rounded-[4px] bg-[#0e4d92] text-white">
+                <Landmark className="size-3" />
+              </span>
+              Net Banking
+            </span>
             {[
-              { label: 'Net Banking', Icon: Landmark },
               { label: 'COD', Icon: Banknote },
             ].map(({ label, Icon }) => (
               <span
