@@ -7,7 +7,7 @@ import {
   denimCollections,
   type ApparelSubtype,
 } from '../data/apparel'
-import { type CategoryId } from '../data'
+import { formatMoney, type CategoryId } from '../data'
 import { ProductCard } from '../components/ProductCard'
 import { useCatalog } from '../hooks/useCatalog'
 import { usePageTitle } from '../hooks/usePageTitle'
@@ -138,11 +138,46 @@ export function CategoryPage() {
 
   return (
     <main className="bg-[#f8f6ee]">
-      <div className="bbb-red-band px-3 py-12 text-center sm:px-5 sm:py-14">
-        <h1 className="font-display text-5xl tracking-[0.1em] text-[#ffc462] sm:text-6xl">
-          {title}
-        </h1>
-        <p className="mx-auto mt-2 max-w-lg text-sm text-white/80">{blurb}</p>
+      <div className="relative overflow-hidden bg-[#420404]">
+        {list[0]?.image && (
+          <img
+            src={list[0].image}
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover object-center opacity-35"
+          />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#2b0202]/95 via-[#5c0606]/80 to-[#7c0909]/40" />
+        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#2b0202]/60 to-transparent" />
+        <div className="relative mx-auto max-w-[1280px] px-4 py-12 sm:px-6 sm:py-16">
+          <p className="text-[0.65rem] font-bold tracking-[0.34em] text-[#ffc462] uppercase">
+            Fusora Collection
+          </p>
+          <h1 className="mt-2 font-heading text-6xl leading-[0.9] tracking-wide text-white uppercase drop-shadow-[0_2px_12px_rgba(0,0,0,0.45)] sm:text-7xl lg:text-8xl">
+            {title}
+          </h1>
+          <p className="mt-3 max-w-lg text-sm leading-relaxed text-white/85 sm:text-base">
+            {blurb}
+          </p>
+          <div className="mt-6 flex flex-wrap gap-2">
+            {list.length > 0 && (
+              <span className="rounded-full bg-white/12 px-3.5 py-1.5 text-[0.68rem] font-bold tracking-[0.08em] text-white uppercase ring-1 ring-white/25 backdrop-blur">
+                {list.length}+ styles
+              </span>
+            )}
+            {list.length > 0 && (
+              <span className="rounded-full bg-[#ffc462] px-3.5 py-1.5 text-[0.68rem] font-bold tracking-[0.08em] text-[#4a0505] uppercase">
+                Starting at{' '}
+                {formatMoney(Math.min(...list.map((x) => x.price)))}
+              </span>
+            )}
+            <span className="rounded-full bg-white/12 px-3.5 py-1.5 text-[0.68rem] font-bold tracking-[0.08em] text-white uppercase ring-1 ring-white/25 backdrop-blur">
+              Delivery in 1–7 days
+            </span>
+            <span className="rounded-full bg-white/12 px-3.5 py-1.5 text-[0.68rem] font-bold tracking-[0.08em] text-white uppercase ring-1 ring-white/25 backdrop-blur">
+              7-day easy returns
+            </span>
+          </div>
+        </div>
       </div>
 
       <div className="mx-auto max-w-[1200px] px-3 py-6 sm:px-5 lg:px-4">
