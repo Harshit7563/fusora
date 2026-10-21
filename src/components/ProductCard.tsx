@@ -32,7 +32,7 @@ export function ProductCard({ product: p }: Props) {
 
   return (
     <article className="group flex h-full flex-col bg-white transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_34px_rgba(0,0,0,0.10)]">
-      <div className="relative overflow-hidden bg-[#f4f2ee]">
+      <div className="relative overflow-hidden rounded-[1.1rem] bg-[#f8f6ee]">
         <Link to={`/product/${p.id}`} className="relative block">
           <SafeImage
             src={p.image}
@@ -48,17 +48,16 @@ export function ProductCard({ product: p }: Props) {
           )}
         </Link>
 
-        <div className="absolute top-2.5 left-2.5 flex flex-col items-start gap-1.5">
-          {isNew(p) && (
-            <span className="bg-[#141414] px-2 py-0.5 text-[0.6rem] font-bold tracking-[0.12em] text-white uppercase">
-              New
-            </span>
-          )}
-          {p.topDeal && (
-            <span className="bg-[#ffc462] px-2 py-0.5 text-[0.6rem] font-bold tracking-[0.12em] text-[#7f1714] uppercase">
+        <div className="absolute top-2.5 left-2.5">
+          {p.topDeal ? (
+            <span className="rounded-full bg-[#cf2028] px-2.5 py-1 text-[0.6rem] font-bold tracking-[0.12em] text-white uppercase shadow-sm">
               Bestseller
             </span>
-          )}
+          ) : isNew(p) ? (
+            <span className="rounded-full bg-[#141414] px-2.5 py-1 text-[0.6rem] font-bold tracking-[0.12em] text-white uppercase shadow-sm">
+              New
+            </span>
+          ) : null}
         </div>
 
         <button
@@ -76,25 +75,18 @@ export function ProductCard({ product: p }: Props) {
         </button>
 
         {off >= 5 && (
-          <span className="absolute bottom-2.5 left-2.5 bg-[#cf2028] px-1.5 py-0.5 text-[0.62rem] font-bold tracking-wide text-white uppercase shadow-sm">
+          <span className="absolute bottom-2.5 left-2.5 rounded-full bg-[#cf2028] px-2 py-1 text-[0.62rem] font-bold tracking-wide text-white uppercase shadow-sm">
             {off}% off
           </span>
         )}
       </div>
 
       <div className="flex flex-1 flex-col px-1.5 pt-3 pb-1.5">
-        <div className="flex items-center justify-between gap-2">
-          <p className="text-[0.62rem] font-bold tracking-[0.14em] text-[#8a8585] uppercase">
-            {categoryLabel(p)}
-          </p>
-          {p.brand && (
-            <p className="line-clamp-1 text-[0.62rem] font-semibold tracking-[0.08em] text-[#b3aca4] uppercase">
-              {p.brand}
-            </p>
-          )}
-        </div>
+        <p className="text-[0.62rem] font-bold tracking-[0.16em] text-[#cf2028] uppercase">
+          {categoryLabel(p)}
+        </p>
         <Link to={`/product/${p.id}`} className="block">
-          <p className="mt-1 line-clamp-2 min-h-[2.55em] text-[0.86rem] leading-snug font-medium text-[#262626] transition group-hover:text-[#cf2028]">
+          <p className="mt-1 line-clamp-2 min-h-[2.55em] text-[0.88rem] leading-snug font-semibold text-[#262626] transition group-hover:text-[#cf2028]">
             {p.name}
           </p>
         </Link>
@@ -104,7 +96,7 @@ export function ProductCard({ product: p }: Props) {
           </p>
         )}
         <div className="mt-1.5 flex flex-wrap items-baseline gap-x-1.5">
-          <span className="text-[1rem] font-bold text-[#070001]">
+          <span className="font-heading text-[1.35rem] leading-none font-bold tracking-wide text-[#141414]">
             {formatMoney(p.price)}
           </span>
           {onSale && (
@@ -123,7 +115,7 @@ export function ProductCard({ product: p }: Props) {
         <button
           type="button"
           onClick={() => addToCart(p)}
-          className="mt-3 w-full rounded-full border border-[#262626] py-2.5 text-[0.68rem] font-bold tracking-[0.16em] text-[#262626] uppercase transition hover:border-[#cf2028] hover:bg-[#cf2028] hover:text-white active:scale-[0.99]"
+          className="mt-3 w-full rounded-full border-[1.5px] border-[#141414] bg-white py-2.5 text-[0.68rem] font-bold tracking-[0.16em] text-[#141414] uppercase transition hover:border-[#cf2028] hover:bg-[#cf2028] hover:text-white active:scale-[0.99]"
         >
           Add to cart
         </button>
