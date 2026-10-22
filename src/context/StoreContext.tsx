@@ -224,6 +224,8 @@ type StoreContextValue = {
   toggleWish: (id: string) => void
   wishToast: { id: string; added: boolean; key: number } | null
   dismissWishToast: () => void
+  cartToast: { id: string; size?: string; key: number } | null
+  dismissCartToast: () => void
   toast: string | null
 }
 
@@ -350,6 +352,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [wishToast, setWishToast] = useState<{
     id: string
     added: boolean
+    key: number
+  } | null>(null)
+  const [cartToast, setCartToast] = useState<{
+    id: string
+    size?: string
     key: number
   } | null>(null)
   const startedRef = useRef(false)
@@ -493,6 +500,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   }, [wishToast])
 
   useEffect(() => {
+    if (!cartToast) return
+    const t = window.setTimeout(() => setCartToast(null), 1500)
+    return () => window.clearTimeout(t)
+  }, [cartToast])
+
+  useEffect(() => {
     if (!toast) return
     const t = window.setTimeout(() => setToast(null), 3200)
     return () => window.clearTimeout(t)
@@ -515,9 +528,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       }
       return [...prev, { ...product, qty: 1, selectedSize: sizeKey }]
     })
-    setToast(
-      sizeKey ? `Added · size ${sizeKey}` : 'Added to cart',
-    )
+    setCartToast({ id: product.id, size: sizeKey, key: Date.now() })
   }, [])
 
   const registerAccount = useCallback(
@@ -833,6 +844,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     },
     wishToast,
     dismissWishToast: () => setWishToast(null),
+    cartToast,
+    dismissCartToast: () => setCartToast(null),
     toast,
   }
 

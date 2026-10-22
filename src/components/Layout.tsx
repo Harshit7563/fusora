@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { Heart, X } from 'lucide-react'
+import { Heart, ShoppingBag, X } from 'lucide-react'
 import { Link, Outlet } from 'react-router-dom'
 import { useCatalog } from '../hooks/useCatalog'
 import { useStore } from '../context/StoreContext'
@@ -19,10 +19,16 @@ export function Layout() {
     toast,
     wishToast,
     dismissWishToast,
+    cartToast,
+    dismissCartToast,
+    openCart,
   } = useStore()
   const { products } = useCatalog()
   const wishProduct = wishToast
     ? products.find((p) => p.id === wishToast.id)
+    : undefined
+  const cartProduct = cartToast
+    ? products.find((p) => p.id === cartToast.id)
     : undefined
 
   return (
@@ -95,6 +101,81 @@ export function Layout() {
                 <button
                   type="button"
                   onClick={dismissWishToast}
+                  aria-label="Close"
+                  className="grid size-7 shrink-0 place-items-center rounded-full text-white/50 transition hover:bg-white/10 hover:text-white"
+                >
+                  <X className="size-4" />
+                </button>
+              </div>
+              <motion.div
+                initial={{ width: '100%' }}
+                animate={{ width: '0%' }}
+                transition={{ duration: 1.5, ease: 'linear' }}
+                className="h-[3px] bg-[#ffc462]"
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Cart popup - same design as the wishlist popup */}
+      <AnimatePresence>
+        {cartToast && (
+          <motion.div
+            key={cartToast.key}
+            initial={{ opacity: 0, y: 48 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 48 }}
+            transition={{ duration: 0.28, ease: 'easeOut' }}
+            className={`fixed right-3 left-3 z-[86] sm:left-auto sm:w-[23rem] sm:right-5 ${
+              wishToast
+                ? 'bottom-[max(7.5rem,calc(env(safe-area-inset-bottom)+6.5rem))]'
+                : 'bottom-[max(1rem,env(safe-area-inset-bottom))]'
+            }`}
+            role="status"
+          >
+            <div className="relative overflow-hidden rounded-3xl bg-[#141414] shadow-[0_20px_50px_rgba(0,0,0,0.35)] ring-1 ring-white/10">
+              <div className="flex items-center gap-3 px-4 py-3.5">
+                <span className="relative shrink-0">
+                  {cartProduct?.image ? (
+                    <img
+                      src={cartProduct.image}
+                      alt=""
+                      className="size-14 rounded-2xl object-cover ring-1 ring-white/15"
+                    />
+                  ) : (
+                    <span className="grid size-14 place-items-center rounded-2xl bg-[#cf2028]/20">
+                      <ShoppingBag className="size-6 text-[#cf2028]" />
+                    </span>
+                  )}
+                  <span className="absolute -right-1.5 -bottom-1.5 grid size-5 place-items-center rounded-full bg-[#cf2028] ring-2 ring-[#141414]">
+                    <ShoppingBag className="size-3 text-white" />
+                  </span>
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="font-heading text-lg leading-none tracking-wide text-white uppercase">
+                    Added to cart
+                  </p>
+                  {cartProduct && (
+                    <p className="mt-1 line-clamp-1 text-xs text-white/65">
+                      {cartProduct.name}
+                      {cartToast.size ? ` · Size ${cartToast.size}` : ''}
+                    </p>
+                  )}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    dismissCartToast()
+                    openCart()
+                  }}
+                  className="shrink-0 rounded-full bg-[#cf2028] px-4 py-2 text-[0.65rem] font-bold tracking-[0.12em] text-white uppercase transition hover:bg-white hover:text-[#141414]"
+                >
+                  View cart
+                </button>
+                <button
+                  type="button"
+                  onClick={dismissCartToast}
                   aria-label="Close"
                   className="grid size-7 shrink-0 place-items-center rounded-full text-white/50 transition hover:bg-white/10 hover:text-white"
                 >
