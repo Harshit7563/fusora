@@ -7,7 +7,6 @@ import { CartDrawer } from './CartDrawer'
 import { Footer } from './Footer'
 import { Header } from './Header'
 import { LocationModal } from './LocationModal'
-import { NewsletterPopup } from './NewsletterPopup'
 import { ScamAlert } from './ScamAlert'
 
 export function Layout() {
@@ -43,7 +42,6 @@ export function Layout() {
         onRemove={removeFromCart}
       />
       <LocationModal />
-      <NewsletterPopup />
 
       {/* Wishlist popup - bottom, Fusora dark theme, auto-dismiss in 1.5s */}
       <AnimatePresence>
